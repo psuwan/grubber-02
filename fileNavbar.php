@@ -8,7 +8,8 @@
                     <span class="navbar-toggler-bar bar3"></span>
                 </button>
             </div>
-            <a class="navbar-brand" href="#">ภาพรวมระบบ</a>
+            <!-- <a class="navbar-brand" href="#">Show Current Time</a> -->
+            <a href="#">Show Current Time</a>
         </div>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation"
                 aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,13 +53,20 @@
                         <a class="dropdown-item" href="#">Something else here</a>
                     </div>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <i class="now-ui-icons users_single-02"></i>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdownMenuUser" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        <i class="now-ui-icons users_circle-08"></i>
                         <p>
                             <span class="d-lg-none d-md-block">Account</span>
                         </p>
                     </a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="#">Login</a>
+                        <a class="dropdown-item" href="#">Logout</a>
+                        <a class="dropdown-item" href="#">Change Password</a>
+                    </div>
                 </li>
             </ul>
         </div>

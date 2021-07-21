@@ -41,7 +41,12 @@
         <!-- End Navbar -->
 
         <div class="panel-header panel-header-lg">
-            <canvas id="bigDashboardChart"></canvas>
+            <div class="jumbotron ml-5 mr-5 display-1 text-center font-weight-bold text-warning bg-transparent d-none d-sm-block">
+                บริษัท โกลด์รับเบอร์ จำกัด
+            </div>
+            <div class="jumbotron display-4 text-center d-block d-sm-none text-warning bg-transparent font-weight-bold">
+                Gold Rubber
+            </div>
         </div>
         <div class="content">
             <div class="row">
