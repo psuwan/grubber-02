@@ -9,7 +9,7 @@
                 </button>
             </div>
             <!-- <a class="navbar-brand" href="#">Show Current Time</a> -->
-            <a href="#">Show Current Time</a>
+            <p class="display-6 text-light" id="showTimeNow"></p>
         </div>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation"
                 aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
@@ -72,3 +72,15 @@
         </div>
     </div>
 </nav>
+
+<script>
+    let timeDisplay = document.getElementById("showTimeNow");
+
+    function refreshTime() {
+        let dateString = new Date().toLocaleString("th-TH", {timeZone: "Asia/Bangkok"});
+        let formattedString = dateString.replace(", ", " - ");
+        timeDisplay.innerHTML = formattedString;
+    }
+
+    setInterval(refreshTime, 800);
+</script>

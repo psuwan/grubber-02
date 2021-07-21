@@ -1,8 +1,16 @@
+<?php
+require_once './lib/apksFunctions.php';
+
+date_default_timezone_set('Asia/Bangkok');
+$dateNow = date("Y-m-d");
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="utf-8"/>
+    <meta charset="utf-8">
+    <!--    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />-->
     <!--    <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">-->
     <!--    <link rel="icon" type="image/png" href="../assets/img/favicon.png">-->
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
@@ -15,6 +23,7 @@
     <!-- Fonts and icons -->
     <!-- <link rel="stylesheet" href="./css/font.css">-->
     <link rel="stylesheet" href="./css/all.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300&display=swap" rel="stylesheet">
 
     <!-- CSS Files -->
     <link href="./css/bootstrap.min.css" rel="stylesheet"/>
@@ -50,12 +59,13 @@
         </div>
         <div class="content">
             <div class="row">
-                <div class="col-lg-4">
+                <div class="col-md-6">
                     <div class="card card-chart">
                         <div class="card-header">
-                            <h5 class="card-category">Global Sales</h5>
-                            <h4 class="card-title">Shipped Products</h4>
-                            <div class="dropdown">
+                            <h5 class="card-category">ข้อมูลรายสัปดาห์</h5>
+                            <h4 class="card-title">ข้อมูลการซื้อวันที่ <?= (date("d") - 7); ?>
+                                - <?= monthThai(dateBE($dateNow)); ?></h4>
+                            <!--<div class="dropdown">
                                 <button type="button"
                                         class="btn btn-round btn-outline-default dropdown-toggle btn-simple btn-icon no-caret"
                                         data-toggle="dropdown">
@@ -67,11 +77,12 @@
                                     <a class="dropdown-item" href="#">Something else here</a>
                                     <a class="dropdown-item text-danger" href="#">Remove Data</a>
                                 </div>
-                            </div>
+                            </div>-->
                         </div>
                         <div class="card-body">
                             <div class="chart-area">
-                                <canvas id="lineChartExample"></canvas>
+                                <!--                                <canvas id="lineChartExample"></canvas>-->
+                                <canvas id="myChartLine" height="105px"></canvas>
                             </div>
                         </div>
                         <div class="card-footer">
@@ -81,12 +92,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6">
+                <div class="col-md-6">
                     <div class="card card-chart">
                         <div class="card-header">
-                            <h5 class="card-category">2018 Sales</h5>
-                            <h4 class="card-title">All products</h4>
-                            <div class="dropdown">
+                            <h5 class="card-category">ข้อมูลรายวัน</h5>
+                            <h4 class="card-title">ประเภทยางที่ซื้อวันที่ <?= monthThai(dateBE($dateNow)); ?></h4>
+                            <!--<div class="dropdown">
                                 <button type="button"
                                         class="btn btn-round btn-outline-default dropdown-toggle btn-simple btn-icon no-caret"
                                         data-toggle="dropdown">
@@ -98,11 +109,12 @@
                                     <a class="dropdown-item" href="#">Something else here</a>
                                     <a class="dropdown-item text-danger" href="#">Remove Data</a>
                                 </div>
-                            </div>
+                            </div>-->
                         </div>
                         <div class="card-body">
                             <div class="chart-area">
-                                <canvas id="lineChartExampleWithNumbersAndGrid"></canvas>
+                                <!-- <canvas id="lineChartExampleWithNumbersAndGrid"></canvas>-->
+                                <canvas id="myChart" height="105px"></canvas>
                             </div>
                         </div>
                         <div class="card-footer">
@@ -112,10 +124,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6">
+                <!--<div class="col-lg-4 col-md-6">
                     <div class="card card-chart">
                         <div class="card-header">
-                            <h5 class="card-category">Email Statistics</h5>
+                            <h5 class="card-category">ข้อมูลรายวัน</h5>
                             <h4 class="card-title">24 Hours Performance</h4>
                         </div>
                         <div class="card-body">
@@ -129,14 +141,14 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>-->
             </div>
             <div class="row">
-                <div class="col-md-6">
+                <!--<div class="col-md-6">
                     <div class="card  card-tasks">
                         <div class="card-header ">
-                            <h5 class="card-category">Backend development</h5>
-                            <h4 class="card-title">Tasks</h4>
+                            <h5 class="card-category">ข้อมูลรายวัน</h5>
+                            <h4 class="card-title">รายการซื้อ</h4>
                         </div>
                         <div class="card-body ">
                             <div class="table-full-width table-responsive">
@@ -229,36 +241,32 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-6">
+                </div>-->
+                <div class="col-md-12">
                     <div class="card">
                         <div class="card-header">
-                            <h5 class="card-category">All Persons List</h5>
-                            <h4 class="card-title"> Employees Stats</h4>
+                            <h5 class="card-category">ข้อมูลรายวัน</h5>
+                            <h4 class="card-title"> รายการซื้อ </h4>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table">
                                     <thead class=" text-primary">
                                     <tr>
-                                        <th>
-                                            Name
-                                        </th>
-                                        <th>
-                                            Country
-                                        </th>
-                                        <th>
-                                            City
-                                        </th>
-                                        <th class="text-right">
-                                            Salary
-                                        </th>
+                                        <th>เลขอ้างอิง</th>
+                                        <th>วัน-เวลา</th>
+                                        <th>ผู้ขาย</th>
+                                        <th>ทะเบียนรถ</th>
+                                        <th>หมายเลขติดต่อ</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr>
                                         <td>
-                                            Dakota Rice
+                                            <a href="#" data-toggle="tooltip" data-placement="bottom" title="คลิกดูบิล">PO20210721XXX</a>
+                                        </td>
+                                        <td>
+                                            <?= monthThai(dateBE($dateNow)); ?> <?= date("H:m"); ?>
                                         </td>
                                         <td>
                                             Niger
@@ -266,13 +274,16 @@
                                         <td>
                                             Oud-Turnhout
                                         </td>
-                                        <td class="text-right">
-                                            $36,738
+                                        <td>
+                                            09302312xx
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>
-                                            Minerva Hooper
+                                            <a href="#" data-toggle="tooltip" data-placement="bottom" title="คลิกดูบิล">PO20210721XXX</a>
+                                        </td>
+                                        <td>
+                                            <?= monthThai(dateBE($dateNow)); ?> <?= date("H:m"); ?>
                                         </td>
                                         <td>
                                             Curaçao
@@ -280,13 +291,16 @@
                                         <td>
                                             Sinaai-Waas
                                         </td>
-                                        <td class="text-right">
-                                            $23,789
+                                        <td>
+                                            09302312xx
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>
-                                            Sage Rodriguez
+                                            <a href="#" data-toggle="tooltip" data-placement="bottom" title="คลิกดูบิล">PO20210721XXX</a>
+                                        </td>
+                                        <td>
+                                            <?= monthThai(dateBE($dateNow)); ?> <?= date("H:m"); ?>
                                         </td>
                                         <td>
                                             Netherlands
@@ -294,13 +308,16 @@
                                         <td>
                                             Baileux
                                         </td>
-                                        <td class="text-right">
-                                            $56,142
+                                        <td>
+                                            09302312xx
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>
-                                            Doris Greene
+                                            <a href="#" data-toggle="tooltip" data-placement="bottom" title="คลิกดูบิล">PO20210721XXX</a>
+                                        </td>
+                                        <td>
+                                            <?= monthThai(dateBE($dateNow)); ?> <?= date("H:m"); ?>
                                         </td>
                                         <td>
                                             Malawi
@@ -308,13 +325,16 @@
                                         <td>
                                             Feldkirchen in Kärnten
                                         </td>
-                                        <td class="text-right">
-                                            $63,542
+                                        <td>
+                                            09302312xx
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>
-                                            Mason Porter
+                                            <a href="#" data-toggle="tooltip" data-placement="bottom" title="คลิกดูบิล">PO20210721XXX</a>
+                                        </td>
+                                        <td>
+                                            <?= monthThai(dateBE($dateNow)); ?> <?= date("H:m"); ?>
                                         </td>
                                         <td>
                                             Chile
@@ -322,12 +342,15 @@
                                         <td>
                                             Gloucester
                                         </td>
-                                        <td class="text-right">
-                                            $78,615
+                                        <td>
+                                            09302312xx
                                         </td>
                                     </tr>
                                     </tbody>
                                 </table>
+                            </div>
+                            <div class="text-right">
+                                <a href="#">ดูทั้งหมด</a>
                             </div>
                         </div>
                     </div>
@@ -350,6 +373,90 @@
 <!--<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>-->
 <!-- Chart JS -->
 <script src="./js/plugins/chartjs.min.js"></script>
+<!-- Demo Chart to show -->
+<script>
+    var ctx = document.getElementById("myChart");
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ["แผ่นสวย", "แผ่นคละ", "แผ่นหนา", "บล๊อก_1", "บล๊อก_2", "ยางฟอง", "เศษยาง"],
+            datasets: [{
+                label: '# of Votes',
+                data: [12, 19, 3, 5, 2, 3, 7],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(25, 230, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255,99,132,1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(25, 230, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+</script>
+
+<script>
+    var ctx = document.getElementById("myChartLine");
+    var myChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ["-6", "-5", "-4", "-3", "-2", "-1", "วันนี้"],
+            datasets: [{
+                label: '# of Votes',
+                data: [120, 190, 30, 50, 21, 119, 56],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(25, 230, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255,99,132,1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(25, 230, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+</script><!-- Demo chart to show -->
 <!--  Notifications Plugin    -->
 <script src="./js/plugins/bootstrap-notify.js"></script>
 <!-- Control Center for Now Ui Dashboard: parallax effects, scripts for the example pages etc -->
