@@ -62,7 +62,7 @@ $dateNow = date("Y-m-d");
         </div>
         <div class="content">
             <div class="row">
-                <div class="col-md-8 order-sm-1 order-md-0">
+                <div class="col-md-8 order-1 order-md-0">
                     <div class="card">
                         <div class="card-header">
                             <h5 class="title">แก้ไขข้อมูล</h5>
@@ -172,7 +172,7 @@ $dateNow = date("Y-m-d");
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 order-sm-0 order-md-1">
+                <div class="col-md-4 order-0 order-md-1">
                     <div class="card card-user">
                         <div class="image">
                             <img src="./assets/img/xbg.jpg" alt="...">
