@@ -1,6 +1,7 @@
 <?php
 
-include_once 'lib/apksFunctions.php';
+include_once './lib/apksPagination.php';
+include_once './lib/apksFunctions.php';
 $dbConn = dbConnect();
 
 date_default_timezone_set('Asia/Bangkok');
@@ -30,6 +31,7 @@ $dateNow = date("Y-m-d");
     <!-- CSS Files -->
     <link href="./css/bootstrap.min.css" rel="stylesheet"/>
     <link href="./css/now-ui-dashboard.css?v=1.5.0" rel="stylesheet"/>
+    <link href="./css/style4Paginator.css" rel="stylesheet">
 </head>
 
 <body>
@@ -87,14 +89,41 @@ $dateNow = date("Y-m-d");
                                     $sqlres_listPO = mysqli_query($dbConn, $sqlcmd_listPO);
 
                                     if ($sqlres_listPO) {
+                                        // Paginator setup rows per page
+                                        $Num_Rows = mysqli_num_rows($sqlres_listPO);
+
+                                        $Per_Page = 2;   // Per Page
+
+                                        $Page = $_GET["Page"];
+                                        if (!$_GET["Page"]) {
+                                            $Page = 1;
+                                        }
+
+                                        $Prev_Page = $Page - 1;
+                                        $Next_Page = $Page + 1;
+
+                                        $Page_Start = (($Per_Page * $Page) - $Per_Page);
+                                        if ($Num_Rows <= $Per_Page) {
+                                            $Num_Pages = 1;
+                                        } else if (($Num_Rows % $Per_Page) == 0) {
+                                            $Num_Pages = ($Num_Rows / $Per_Page);
+                                        } else {
+                                            $Num_Pages = ($Num_Rows / $Per_Page) + 1;
+                                            $Num_Pages = (int)$Num_Pages;
+                                        }
+
+                                        $sqlcmd_listPO .= " LIMIT $Page_Start , $Per_Page";
+                                        $sqlres_listPO = mysqli_query($dbConn, $sqlcmd_listPO);
+                                        // Paginator setup rows per page
+
                                         while ($sqlfet_listPO = mysqli_fetch_assoc($sqlres_listPO)) {
                                             ?>
                                             <tr>
                                                 <td><?= $sqlfet_listPO['po_number']; ?></td>
                                                 <td><?= substr($sqlfet_listPO['po_createdat'], 0, -3); ?></td>
-                                                <td><?= getValue('tbl_suppliers', 'supp_code', $sqlfet_listPO['po_suppcode'], 2, 'supp_name') . " " . getValue('tbl_suppliers', 'supp_code', $sqlfet_listPO['po_suppcode'], 2, 'supp_surname'); ?></td>
+                                                <td><?= getValue('tbl_suppliers', 'old_code', $sqlfet_listPO['po_suppcode'], 2, 'supp_name') . " " . getValue('tbl_suppliers', 'old_code', $sqlfet_listPO['po_suppcode'], 2, 'supp_surname'); ?></td>
                                                 <td><?= $sqlfet_listPO['po_vlpn']; ?></td>
-                                                <td><?= getValue('tbl_suppliers', 'supp_code', $sqlfet_listPO['po_suppcode'], 2, 'supp_phone'); ?></td>
+                                                <td><?= getValue('tbl_suppliers', 'old_code', $sqlfet_listPO['po_suppcode'], 2, 'supp_phone'); ?></td>
                                                 <td>
                                                     <?php
                                                     if ($sqlfet_listPO['po_status'] == 1) {
@@ -116,6 +145,26 @@ $dateNow = date("Y-m-d");
                     </div>
                 </div>
             </div>
+            <!-- Paginator -->
+            มีรายการซื้อทั้งหมด <strong><?= $Num_Rows; ?></strong> รายการ
+            <br><br>
+            <div class="row">
+                <div class="col-md-auto">
+                    <?php
+                    $pages = new Paginator;
+                    $pages->items_total = $Num_Rows;
+                    $pages->mid_range = 10;
+                    $pages->current_page = $Page;
+                    $pages->default_ipp = $Per_Page;
+                    $pages->url_next = $_SERVER["PHP_SELF"] . "?QueryString=value&Page=";
+
+                    $pages->paginate();
+
+                    echo $pages->display_pages()
+                    ?>
+                </div>
+            </div>
+            <!-- Paginator -->
         </div>
 
         <!-- Footer -->

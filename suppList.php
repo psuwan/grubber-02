@@ -1,6 +1,7 @@
 <?php
 
-include_once 'lib/apksFunctions.php';
+include_once './lib/apksPagination.php';
+include_once './lib/apksFunctions.php';
 $dbConn = dbConnect();
 
 date_default_timezone_set('Asia/Bangkok');
@@ -30,6 +31,7 @@ $dateNow = date("Y-m-d");
     <!-- CSS Files -->
     <link href="./css/bootstrap.min.css" rel="stylesheet"/>
     <link href="./css/now-ui-dashboard.css?v=1.5.0" rel="stylesheet"/>
+    <link rel="stylesheet" href="./css/style4Paginator.css">
 </head>
 
 <body>
@@ -88,6 +90,33 @@ $dateNow = date("Y-m-d");
                                     $sqlres_listSupp = mysqli_query($dbConn, $sqlcmd_listSupp);
 
                                     if ($sqlres_listSupp) {
+
+                                        // Paginator setup rows per page
+                                        $Num_Rows = mysqli_num_rows($sqlres_listSupp);
+
+                                        $Per_Page = 4;   // Per Page
+
+                                        $Page = $_GET["Page"];
+                                        if (!$_GET["Page"]) {
+                                            $Page = 1;
+                                        }
+
+                                        $Prev_Page = $Page - 1;
+                                        $Next_Page = $Page + 1;
+
+                                        $Page_Start = (($Per_Page * $Page) - $Per_Page);
+                                        if ($Num_Rows <= $Per_Page) {
+                                            $Num_Pages = 1;
+                                        } else if (($Num_Rows % $Per_Page) == 0) {
+                                            $Num_Pages = ($Num_Rows / $Per_Page);
+                                        } else {
+                                            $Num_Pages = ($Num_Rows / $Per_Page) + 1;
+                                            $Num_Pages = (int)$Num_Pages;
+                                        }
+
+                                        $sqlcmd_listSupp .= " LIMIT $Page_Start , $Per_Page";
+                                        $sqlres_listSupp = mysqli_query($dbConn, $sqlcmd_listSupp);
+                                        // Paginator setup rows per page
                                         while ($sqlfet_listSupp = mysqli_fetch_assoc($sqlres_listSupp)) {
                                             ?>
                                             <tr>
@@ -115,6 +144,27 @@ $dateNow = date("Y-m-d");
                     </div>
                 </div>
             </div>
+            <!-- Paginator -->
+            รายชื่อผู้ขายยางทั้งหมด <strong><?= $Num_Rows; ?></strong> คน
+            <br><br>
+            <div class="row">
+                <div class="col-md-auto">
+                    <?php
+                    $value = $sqlcmd_listSupp;
+                    $pages = new Paginator;
+                    $pages->items_total = $Num_Rows;
+                    $pages->mid_range = 7;
+                    $pages->current_page = $Page;
+                    $pages->default_ipp = $Per_Page;
+                    $pages->url_next = $_SERVER["PHP_SELF"] . "?QueryString=" . $value . "&Page=";
+
+                    $pages->paginate();
+
+                    echo $pages->display_pages()
+                    ?>
+                </div>
+            </div>
+            <!-- Paginator -->
         </div>
 
         <!-- Footer -->
