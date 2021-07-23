@@ -242,7 +242,7 @@
     },
     styleURL: function() {
       this.$ele.find('[data-notify="url"]').css({
-        backgroundImage: 'url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7)',
+        backgroundImage: 'url(data:img/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7)',
         height: '100%',
         left: 0,
         position: 'absolute',

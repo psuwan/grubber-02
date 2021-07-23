@@ -8,8 +8,8 @@
 </div>
 <div class="sidebar-wrapper" id="sidebar-wrapper">
     <ul class="nav">
-        <li class="active">
-            <a href="#">
+        <li id="id4MenuDB">
+            <a href="./index0.php">
                 <i class="now-ui-icons design_app"></i>
                 <p>ภาพรวม</p>
             </a>
@@ -18,12 +18,10 @@
         <!-- -->
 
         <!-- Buy work section -->
-        <li>
-            <a data-toggle="collapse" href="#sub4Buy">
-                <i class="now-ui-icons shopping_cart-simple"></i>
-                <p>
-                    งานซื้อ <b class="caret"></b>
-                </p>
+        <li id="id4MenuBuy">
+            <a data-toggle="collapse" href="#sub4Buy" id="id4AlinkMenuBuy">
+                <i class="now-ui-icons shopping_cart-simple" id="id4IconMenuBuy"></i>
+                <p>งานซื้อ <b class="caret"></b></p>
             </a>
 
             <div class="collapse " id="sub4Buy">
@@ -35,7 +33,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="poList.php">
                             <!-- <span class="sidebar-mini-icon">I</span>-->
                             <span class="sidebar-normal"> รายการซื้อ </span>
                         </a>
@@ -72,9 +70,9 @@
         </li>--><!-- Sell work section -->
 
         <!-- Backend or Administrator section -->
-        <li>
-            <a data-toggle="collapse" href="#sub4Backend">
-                <i class="now-ui-icons files_single-copy-04"></i>
+        <li id="id4MenuAdmin">
+            <a data-toggle="collapse" href="#sub4Backend" id="id4AlinkMenuAdmin">
+                <i class="now-ui-icons files_single-copy-04" id="id4IconMenuAdmin"></i>
                 <p>
                     งานธุรการ <b class="caret"></b>
                 </p>
@@ -83,27 +81,21 @@
             <div class="collapse " id="sub4Backend">
                 <ul class="nav pl-5">
                     <li>
-                        <a href="#">
+                        <a href="./suppList.php">
                             <!-- <span class="sidebar-mini-icon">P</span>-->
                             <span class="sidebar-normal"> รายชื่อผู้ขายยาง </span>
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="./suppProfile.php">
                             <!-- <span class="sidebar-mini-icon">P</span>-->
-                            <span class="sidebar-normal"> เพิ่มผู้ขายยาง </span>
+                            <span class="sidebar-normal"> เพิ่มข้อมูลผู้ขายยาง </span>
                         </a>
                     </li>
                     <li>
                         <a href="#">
                             <!-- <span class="sidebar-mini-icon">P</span>-->
                             <span class="sidebar-normal"> สินค้า </span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <!-- <span class="sidebar-mini-icon">P</span>-->
-                            <span class="sidebar-normal"> เพิ่มผู้ขายยาง </span>
                         </a>
                     </li>
                     <li>
@@ -128,9 +120,9 @@
             </div>
         </li><!-- End of Backend or Administrator section -->
         <!-- -->
-        <li>
-            <a href="#">
-                <i class="now-ui-icons users_single-02"></i>
+        <li id="id4MenuUser">
+            <a href="./userProfile.php">
+                <i class="now-ui-icons business_badge"></i>
                 <p>ข้อมูลผู้ใช้งาน</p>
             </a>
         </li>

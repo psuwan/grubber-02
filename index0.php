@@ -1,5 +1,7 @@
 <?php
-require_once './lib/apksFunctions.php';
+
+include_once 'lib/apksFunctions.php';
+$dbConn = dbConnect();
 
 date_default_timezone_set('Asia/Bangkok');
 $dateNow = date("Y-m-d");
@@ -81,8 +83,8 @@ $dateNow = date("Y-m-d");
                         </div>
                         <div class="card-body">
                             <div class="chart-area">
-                                <!--                                <canvas id="lineChartExample"></canvas>-->
-                                <canvas id="myChartLine" height="105px"></canvas>
+                                <!-- <canvas id="lineChartExample"></canvas>-->
+                                <canvas id="myChartLine" class="w-100 h-100"></canvas>
                             </div>
                         </div>
                         <div class="card-footer">
@@ -114,7 +116,7 @@ $dateNow = date("Y-m-d");
                         <div class="card-body">
                             <div class="chart-area">
                                 <!-- <canvas id="lineChartExampleWithNumbersAndGrid"></canvas>-->
-                                <canvas id="myChart" height="105px"></canvas>
+                                <canvas id="myChart" class="w-100 h-100"></canvas>
                             </div>
                         </div>
                         <div class="card-footer">
@@ -124,124 +126,9 @@ $dateNow = date("Y-m-d");
                         </div>
                     </div>
                 </div>
-                <!--<div class="col-lg-4 col-md-6">
-                    <div class="card card-chart">
-                        <div class="card-header">
-                            <h5 class="card-category">ข้อมูลรายวัน</h5>
-                            <h4 class="card-title">24 Hours Performance</h4>
-                        </div>
-                        <div class="card-body">
-                            <div class="chart-area">
-                                <canvas id="barChartSimpleGradientsNumbers"></canvas>
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                            <div class="stats">
-                                <i class="now-ui-icons ui-2_time-alarm"></i> Last 7 days
-                            </div>
-                        </div>
-                    </div>
-                </div>-->
             </div>
+
             <div class="row">
-                <!--<div class="col-md-6">
-                    <div class="card  card-tasks">
-                        <div class="card-header ">
-                            <h5 class="card-category">ข้อมูลรายวัน</h5>
-                            <h4 class="card-title">รายการซื้อ</h4>
-                        </div>
-                        <div class="card-body ">
-                            <div class="table-full-width table-responsive">
-                                <table class="table">
-                                    <tbody>
-                                    <tr>
-                                        <td>
-                                            <div class="form-check">
-                                                <label class="form-check-label">
-                                                    <input class="form-check-input" type="checkbox" checked>
-                                                    <span class="form-check-sign"></span>
-                                                </label>
-                                            </div>
-                                        </td>
-                                        <td class="text-left">Sign contract for "What are conference organizers afraid
-                                            of?"
-                                        </td>
-                                        <td class="td-actions text-right">
-                                            <button type="button" rel="tooltip" title=""
-                                                    class="btn btn-info btn-round btn-icon btn-icon-mini btn-neutral"
-                                                    data-original-title="Edit Task">
-                                                <i class="now-ui-icons ui-2_settings-90"></i>
-                                            </button>
-                                            <button type="button" rel="tooltip" title=""
-                                                    class="btn btn-danger btn-round btn-icon btn-icon-mini btn-neutral"
-                                                    data-original-title="Remove">
-                                                <i class="now-ui-icons ui-1_simple-remove"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="form-check">
-                                                <label class="form-check-label">
-                                                    <input class="form-check-input" type="checkbox">
-                                                    <span class="form-check-sign"></span>
-                                                </label>
-                                            </div>
-                                        </td>
-                                        <td class="text-left">Lines From Great Russian Literature? Or E-mails From My
-                                            Boss?
-                                        </td>
-                                        <td class="td-actions text-right">
-                                            <button type="button" rel="tooltip" title=""
-                                                    class="btn btn-info btn-round btn-icon btn-icon-mini btn-neutral"
-                                                    data-original-title="Edit Task">
-                                                <i class="now-ui-icons ui-2_settings-90"></i>
-                                            </button>
-                                            <button type="button" rel="tooltip" title=""
-                                                    class="btn btn-danger btn-round btn-icon btn-icon-mini btn-neutral"
-                                                    data-original-title="Remove">
-                                                <i class="now-ui-icons ui-1_simple-remove"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="form-check">
-                                                <label class="form-check-label">
-                                                    <input class="form-check-input" type="checkbox" checked>
-                                                    <span class="form-check-sign"></span>
-                                                </label>
-                                            </div>
-                                        </td>
-                                        <td class="text-left">Flooded: One year later, assessing what was lost and what
-                                            was found when a
-                                            ravaging rain swept through metro Detroit
-                                        </td>
-                                        <td class="td-actions text-right">
-                                            <button type="button" rel="tooltip" title=""
-                                                    class="btn btn-info btn-round btn-icon btn-icon-mini btn-neutral"
-                                                    data-original-title="Edit Task">
-                                                <i class="now-ui-icons ui-2_settings-90"></i>
-                                            </button>
-                                            <button type="button" rel="tooltip" title=""
-                                                    class="btn btn-danger btn-round btn-icon btn-icon-mini btn-neutral"
-                                                    data-original-title="Remove">
-                                                <i class="now-ui-icons ui-1_simple-remove"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="card-footer ">
-                            <hr>
-                            <div class="stats">
-                                <i class="now-ui-icons loader_refresh spin"></i> Updated 3 minutes ago 555
-                            </div>
-                        </div>
-                    </div>
-                </div>-->
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header">
@@ -258,99 +145,46 @@ $dateNow = date("Y-m-d");
                                         <th>ผู้ขาย</th>
                                         <th>ทะเบียนรถ</th>
                                         <th>หมายเลขติดต่อ</th>
+                                        <th>สถานะ</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <td>
-                                            <a href="#" data-toggle="tooltip" data-placement="bottom" title="คลิกดูบิล">PO20210721XXX</a>
-                                        </td>
-                                        <td>
-                                            <?= monthThai(dateBE($dateNow)); ?> <?= date("H:m"); ?>
-                                        </td>
-                                        <td>
-                                            Niger
-                                        </td>
-                                        <td>
-                                            Oud-Turnhout
-                                        </td>
-                                        <td>
-                                            09302312xx
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <a href="#" data-toggle="tooltip" data-placement="bottom" title="คลิกดูบิล">PO20210721XXX</a>
-                                        </td>
-                                        <td>
-                                            <?= monthThai(dateBE($dateNow)); ?> <?= date("H:m"); ?>
-                                        </td>
-                                        <td>
-                                            Curaçao
-                                        </td>
-                                        <td>
-                                            Sinaai-Waas
-                                        </td>
-                                        <td>
-                                            09302312xx
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <a href="#" data-toggle="tooltip" data-placement="bottom" title="คลิกดูบิล">PO20210721XXX</a>
-                                        </td>
-                                        <td>
-                                            <?= monthThai(dateBE($dateNow)); ?> <?= date("H:m"); ?>
-                                        </td>
-                                        <td>
-                                            Netherlands
-                                        </td>
-                                        <td>
-                                            Baileux
-                                        </td>
-                                        <td>
-                                            09302312xx
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <a href="#" data-toggle="tooltip" data-placement="bottom" title="คลิกดูบิล">PO20210721XXX</a>
-                                        </td>
-                                        <td>
-                                            <?= monthThai(dateBE($dateNow)); ?> <?= date("H:m"); ?>
-                                        </td>
-                                        <td>
-                                            Malawi
-                                        </td>
-                                        <td>
-                                            Feldkirchen in Kärnten
-                                        </td>
-                                        <td>
-                                            09302312xx
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <a href="#" data-toggle="tooltip" data-placement="bottom" title="คลิกดูบิล">PO20210721XXX</a>
-                                        </td>
-                                        <td>
-                                            <?= monthThai(dateBE($dateNow)); ?> <?= date("H:m"); ?>
-                                        </td>
-                                        <td>
-                                            Chile
-                                        </td>
-                                        <td>
-                                            Gloucester
-                                        </td>
-                                        <td>
-                                            09302312xx
-                                        </td>
-                                    </tr>
+                                    <?php
+                                    $sqlcmd_listPO = "SELECT * FROM tbl_purchaseorder WHERE 1 ORDER BY po_createdat DESC LIMIT 5";
+                                    $sqlres_listPO = mysqli_query($dbConn, $sqlcmd_listPO);
+
+                                    if ($sqlres_listPO) {
+                                        while ($sqlfet_listPO = mysqli_fetch_assoc($sqlres_listPO)) {
+                                            ?>
+                                            <tr>
+                                                <td>
+                                                    <a href="#" data-toggle="modal" data-target="#exampleModal">
+                                                        <?= $sqlfet_listPO['po_number']; ?>
+                                                    </a>
+                                                </td>
+                                                <td><?= $sqlfet_listPO['po_createdat']; ?></td>
+                                                <td><?= $sqlfet_listPO['po_suppcode']; ?></td>
+                                                <td><?= $sqlfet_listPO['po_vlpn']; ?></td>
+                                                <td><?= getValue('tbl_suppliers', 'supp_code', $sqlfet_listPO['po_suppcode'], 2, 'supp_phone'); ?></td>
+                                                <td>
+                                                    <?php
+                                                    if ($sqlfet_listPO['po_status'] == 1) {
+                                                        echo "ยังไม่สรุปบิล";
+                                                    } else {
+                                                        echo "สรุปบิลแล้ว";
+                                                    }
+                                                    ?>
+                                                </td>
+                                            </tr>
+                                            <?php
+                                        }
+                                    }
+                                    ?>
                                     </tbody>
                                 </table>
                             </div>
                             <div class="text-right">
-                                <a href="#">ดูทั้งหมด</a>
+                                <a href="./poList.php">ดูทั้งหมด</a>
                             </div>
                         </div>
                     </div>
@@ -364,6 +198,28 @@ $dateNow = date("Y-m-d");
         ?><!-- End Footer -->
     </div>
 </div>
+
+<!-- Modal show PO details -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div><!-- Modal show PO details -->
+
 <!--   Core JS Files   -->
 <script src="./js/core/jquery.min.js"></script>
 <script src="./js/core/popper.min.js"></script>
@@ -375,8 +231,8 @@ $dateNow = date("Y-m-d");
 <script src="./js/plugins/chartjs.min.js"></script>
 <!-- Demo Chart to show -->
 <script>
-    var ctx = document.getElementById("myChart");
-    var myChart = new Chart(ctx, {
+    let ctx = document.getElementById("myChart");
+    let myChart = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: ["แผ่นสวย", "แผ่นคละ", "แผ่นหนา", "บล๊อก_1", "บล๊อก_2", "ยางฟอง", "เศษยาง"],
@@ -417,14 +273,14 @@ $dateNow = date("Y-m-d");
 </script>
 
 <script>
-    var ctx = document.getElementById("myChartLine");
-    var myChart = new Chart(ctx, {
+    let ctxA = document.getElementById("myChartLine");
+    let myChartLine = new Chart(ctxA, {
         type: 'pie',
         data: {
-            labels: ["-6", "-5", "-4", "-3", "-2", "-1", "วันนี้"],
+            labels: ["แผ่นสวย", "แผ่นคละ", "แผ่นหนา", "บล๊อก_1", "บล๊อก_2", "ยางฟอง", "เศษยาง"],
             datasets: [{
                 label: '# of Votes',
-                data: [120, 190, 30, 50, 21, 119, 56],
+                data: [12, 19, 3, 5, 2, 3, 7],
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
                     'rgba(54, 162, 235, 0.2)',
@@ -457,10 +313,15 @@ $dateNow = date("Y-m-d");
         }
     });
 </script><!-- Demo chart to show -->
+
 <!--  Notifications Plugin    -->
 <script src="./js/plugins/bootstrap-notify.js"></script>
 <!-- Control Center for Now Ui Dashboard: parallax effects, scripts for the example pages etc -->
 <script src="./js/now-ui-dashboard.min.js?v=1.5.0" type="text/javascript"></script>
+
+<script>
+    $("#id4MenuDB").addClass("active");
+</script>
 
 </body>
 

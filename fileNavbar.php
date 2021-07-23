@@ -57,7 +57,7 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdownMenuUser" data-toggle="dropdown"
                        aria-haspopup="true" aria-expanded="false">
-                        <i class="now-ui-icons users_circle-08"></i>
+                        <i class="now-ui-icons users_single-02"></i>
                         <p>
                             <span class="d-lg-none d-md-block">Account</span>
                         </p>
