@@ -22,7 +22,7 @@ $prodDetails = $prodData['prodDetails'];
 if (!empty($varpost_processName)) {
     switch ($varpost_processName) {
         case 'addProd':
-            insertDB('tbl_products', 'product_code', $prodCode, 2,);
+            insertDB('tbl_products', 'product_code', $prodCode, 2);
             updateDB('tbl_products', 'product_code', $prodCode, 2, 'product_name', $prodName, 2);
             updateDB('tbl_products', 'product_code', $prodCode, 2, 'product_group', $prodGroup, 2);
             updateDB('tbl_products', 'product_code', $prodCode, 2, 'product_details', $prodDetails, 2);

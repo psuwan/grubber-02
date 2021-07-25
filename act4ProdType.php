@@ -20,7 +20,7 @@ $prodTypeDetails = $prodTypeData['prodTypeDetails'];
 if (!empty($varpost_processName)) {
     switch ($varpost_processName) {
         case 'addProdType':
-            insertDB('tbl_prdtypes', 'prdtype_code', $prodTypeCode, 2,);
+            insertDB('tbl_prdtypes', 'prdtype_code', $prodTypeCode, 2);
             updateDB('tbl_prdtypes', 'prdtype_code', $prodTypeCode, 2, 'prdtype_name', $prodTypeName, 2);
             updateDB('tbl_prdtypes', 'prdtype_code', $prodTypeCode, 2, 'prdtype_details', $prodTypeDetails, 2);
 

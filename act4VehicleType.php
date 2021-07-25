@@ -20,7 +20,7 @@ $vehicleTypeDetails = $vehicleTypeData['vehicleTypeDetails'];
 if (!empty($varpost_processName)) {
     switch ($varpost_processName) {
         case 'addVehicleType':
-            insertDB('tbl_vehicletype', 'vehicletype_code', $vehicleTypeCode, 2,);
+            insertDB('tbl_vehicletype', 'vehicletype_code', $vehicleTypeCode, 2);
             updateDB('tbl_vehicletype', 'vehicletype_code', $vehicleTypeCode, 2, 'vehicletype_name', $vehicleTypeName, 2);
             updateDB('tbl_vehicletype', 'vehicletype_code', $vehicleTypeCode, 2, 'vehicletype_details', $vehicleTypeDetails, 2);
 

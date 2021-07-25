@@ -20,7 +20,7 @@ $buyTypeDetails = $buyTypeData['buyTypeDetails'];
 if (!empty($varpost_processName)) {
     switch ($varpost_processName) {
         case 'addBuyType':
-            insertDB('tbl_buytype', 'buytype_code', $buyTypeCode, 2,);
+            insertDB('tbl_buytype', 'buytype_code', $buyTypeCode, 2);
             updateDB('tbl_buytype', 'buytype_code', $buyTypeCode, 2, 'buytype_name', $buyTypeName, 2);
             updateDB('tbl_buytype', 'buytype_code', $buyTypeCode, 2, 'buytype_details', $buyTypeDetails, 2);
 
