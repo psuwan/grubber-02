@@ -45,7 +45,7 @@ class Paginator
             //$this->return = ($this->current_page != 1 and $this->items_total >= 10) ? "<a class=\"paginate\" href=\"" . $this->url_next . $this->$prev_page . "\">&laquo; Previous</a>\n " : "<span class=\"inactive\" href=\"#\">&laquo; Previous</span> ";
 
 //            $this->return .= (($this->current_page != 1 and $this->items_total >= 10) and ($_GET['Page'] != 'All')) ? "<a class=\"paginate\" href=\"" . $this->url_next . $prev_page . "\">&laquo; Previous</a>\n" : "<span class=\"inactive\" href=\"#\">&laquo; Previous</span>\n";
-            $this->return .= (($this->current_page != 1 and $this->items_total >= 10) and ($_GET['Page'] != 'All')) ? "<a class=\"paginate\" href=\"" . $this->url_next . $prev_page . "\">&laquo;</a>\n" : "<span class=\"inactive\" href=\"#\">&laquo;</span>\n";
+            $this->return .= (($this->current_page != 1 and $this->items_total >= 10) and ($_GET['Page'] != 'All')) ? "<a class=\"btn btn-round btn-outline-warning btn-icon btn-sm\" href=\"" . $this->url_next . $prev_page . "\">&laquo;</a>\n" : "<span class=\"btn btn-round btn-outline-warning btn-icon btn-sm disabled\" href=\"#\">&laquo;</span>\n";
 
             $this->start_range = $this->current_page - floor($this->mid_range / 2);
             $this->end_range = $this->current_page + floor($this->mid_range / 2);
@@ -63,15 +63,15 @@ class Paginator
             for ($i = 1; $i <= $this->num_pages; $i++) {
                 if ($this->range[0] > 2 and $i == $this->range[0]) $this->return .= " ... ";
                 if ($i == 1 or $i == $this->num_pages or in_array($i, $this->range)) {
-                    $this->return .= ($i == $this->current_page and $_GET['Page'] != 'All') ? "<a title=\"Go to page $i of $this->num_pages\" class=\"current\" href=\"#\">$i</a> " : "<a class=\"paginate\" title=\"Go to page $i of $this->num_pages\" href=\"" . $this->url_next . $i . "\">$i</a> ";
+                    $this->return .= ($i == $this->current_page and $_GET['Page'] != 'All') ? "<a title=\"Go to page $i of $this->num_pages\" class=\"btn btn-round btn-outline-warning btn-icon btn-sm bg-warning text-info\" href=\"#\">$i</a> " : "<a class=\"btn btn-round btn-outline-warning btn-icon btn-sm\" title=\"Go to page $i of $this->num_pages\" href=\"" . $this->url_next . $i . "\">$i</a> ";
                 }
                 if ($this->range[$this->mid_range - 1] < $this->num_pages - 1 and $i == $this->range[$this->mid_range - 1]) $this->return .= " ... ";
             }
 //            $this->return .= (($this->current_page != $this->num_pages and $this->items_total >= 10) and ($_GET['Page'] != 'All')) ? "<a class=\"paginate\" href=\"" . $this->url_next . $next_page . "\">Next &raquo;</a>\n" : "<span class=\"inactive\" href=\"#\">&raquo; Next</span>\n";
-            $this->return .= (($this->current_page != $this->num_pages and $this->items_total >= 10) and ($_GET['Page'] != 'All')) ? "<a class=\"paginate\" href=\"" . $this->url_next . $next_page . "\">&raquo;</a>\n" : "<span class=\"inactive\" href=\"#\">&raquo;</span>\n";
+            $this->return .= (($this->current_page != $this->num_pages and $this->items_total >= 10) and ($_GET['Page'] != 'All')) ? "<a class=\"btn btn-round btn-outline-warning btn-icon btn-sm\" href=\"" . $this->url_next . $next_page . "\">&raquo;</a>\n" : "<span class=\"btn btn-round btn-outline-warning btn-icon btn-sm disabled\" href=\"#\">&raquo;</span>\n";
         } else {
             for ($i = 1; $i <= $this->num_pages; $i++) {
-                $this->return .= ($i == $this->current_page) ? "<a class=\"current\" href=\"#\">$i</a> " : "<a class=\"paginate\" href=\"" . $this->url_next . $i . "\">$i</a> ";
+                $this->return .= ($i == $this->current_page) ? "<a class=\"btn btn-round btn-outline-warning btn-icon btn-sm bg-warning text-info\" href=\"#\">$i</a> " : "<a class=\"btn btn-round btn-outline-warning btn-icon btn-sm\" href=\"" . $this->url_next . $i . "\">$i</a> ";
             }
         }
         $this->low = ($this->current_page - 1) * $this->items_per_page;

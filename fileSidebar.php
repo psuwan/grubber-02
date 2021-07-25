@@ -29,7 +29,7 @@
                     <li>
                         <a href="#">
                             <!-- <span class="sidebar-mini-icon">P</span>-->
-                            <span class="sidebar-normal"> ซื้อยาง </span>
+                            <span class="sidebar-normal"> รับซื้อ </span>
                         </a>
                     </li>
                     <li>
@@ -83,25 +83,25 @@
                     <li>
                         <a href="./suppList.php">
                             <!-- <span class="sidebar-mini-icon">P</span>-->
-                            <span class="sidebar-normal"> รายชื่อผู้ขายยาง </span>
+                            <span class="sidebar-normal"> รายชื่อผู้ขาย </span>
                         </a>
                     </li>
                     <li>
                         <a href="./suppProfile.php">
                             <!-- <span class="sidebar-mini-icon">P</span>-->
-                            <span class="sidebar-normal"> เพิ่มข้อมูลผู้ขายยาง </span>
+                            <span class="sidebar-normal"> เพิ่มข้อมูลผู้ขาย </span>
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="./prodList.php">
                             <!-- <span class="sidebar-mini-icon">P</span>-->
                             <span class="sidebar-normal"> สินค้า </span>
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="./prodType.php">
                             <!-- <span class="sidebar-mini-icon">P</span>-->
-                            <span class="sidebar-normal"> ประเภทยาง </span>
+                            <span class="sidebar-normal"> ประเภทสินค้า </span>
                         </a>
                     </li>
                     <li>
@@ -111,7 +111,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="./vehicleType.php">
                             <!-- <span class="sidebar-mini-icon">P</span>-->
                             <span class="sidebar-normal"> ประเภทรถ </span>
                         </a>

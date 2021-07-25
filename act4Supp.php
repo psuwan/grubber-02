@@ -70,7 +70,8 @@ if (isset($varpost_suppSubmitBtn)) {
             break;
 
         default:
-            // Do nothing
+            echo "<script>alert('ไม่มีข้อมูลการทำงาน');</script>";
+            echo "<script>window.history.go(-1);</script>";
             break;
     }
 }

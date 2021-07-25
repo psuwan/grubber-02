@@ -13,6 +13,17 @@ a.paginate {
     color: orange;
 }
 
+/* apks down */
+.apksPaginate{
+    font-size: 1em;
+}
+a.apksPaginate:hover {
+    background-color: orange;
+    color: #FFF;
+    text-decoration: none;
+}
+/* apks up */
+
 a.paginate:hover {
     background-color: orange;
     color: #FFF;

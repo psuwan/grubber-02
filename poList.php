@@ -92,7 +92,7 @@ $dateNow = date("Y-m-d");
                                         // Paginator setup rows per page
                                         $Num_Rows = mysqli_num_rows($sqlres_listPO);
 
-                                        $Per_Page = 2;   // Per Page
+                                        $Per_Page = 10;   // Per Page
 
                                         $Page = $_GET["Page"];
                                         if (!$_GET["Page"]) {
@@ -121,9 +121,9 @@ $dateNow = date("Y-m-d");
                                             <tr>
                                                 <td><?= $sqlfet_listPO['po_number']; ?></td>
                                                 <td><?= substr($sqlfet_listPO['po_createdat'], 0, -3); ?></td>
-                                                <td><?= getValue('tbl_suppliers', 'old_code', $sqlfet_listPO['po_suppcode'], 2, 'supp_name') . " " . getValue('tbl_suppliers', 'old_code', $sqlfet_listPO['po_suppcode'], 2, 'supp_surname'); ?></td>
+                                                <td><?= getValue('tbl_suppliers', 'supp_code', $sqlfet_listPO['po_suppcode'], 2, 'supp_name') . " " . getValue('tbl_suppliers', 'supp_code', $sqlfet_listPO['po_suppcode'], 2, 'supp_surname'); ?></td>
                                                 <td><?= $sqlfet_listPO['po_vlpn']; ?></td>
-                                                <td><?= getValue('tbl_suppliers', 'old_code', $sqlfet_listPO['po_suppcode'], 2, 'supp_phone'); ?></td>
+                                                <td><?= getValue('tbl_suppliers', 'supp_code', $sqlfet_listPO['po_suppcode'], 2, 'supp_phone'); ?></td>
                                                 <td>
                                                     <?php
                                                     if ($sqlfet_listPO['po_status'] == 1) {

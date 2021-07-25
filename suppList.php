@@ -60,7 +60,7 @@ $dateNow = date("Y-m-d");
             <div class="jumbotron display-4 text-center d-block d-sm-none text-warning bg-transparent font-weight-bold">
                 Gold Rubber
             </div>-->
-            <h2 class="text-warning text-center">รายชื่อผู้ขายยางทั้งหมด</h2>
+            <h2 class="text-warning text-center">รายชื่อผู้ขายทั้งหมด</h2>
         </div>
         <div class="content">
             <div class="row">
@@ -94,7 +94,7 @@ $dateNow = date("Y-m-d");
                                         // Paginator setup rows per page
                                         $Num_Rows = mysqli_num_rows($sqlres_listSupp);
 
-                                        $Per_Page = 4;   // Per Page
+                                        $Per_Page = 10;   // Per Page
 
                                         $Page = $_GET["Page"];
                                         if (!$_GET["Page"]) {
@@ -120,17 +120,21 @@ $dateNow = date("Y-m-d");
                                         while ($sqlfet_listSupp = mysqli_fetch_assoc($sqlres_listSupp)) {
                                             ?>
                                             <tr>
-                                                <td><?= ++$suppCnt; ?></td>
+                                                <td><?= ++$suppCnt + (($Page - 1) * $Per_Page); ?></td>
                                                 <td><?= $sqlfet_listSupp['supp_code']; ?></td>
                                                 <td><?= $sqlfet_listSupp['supp_name'] . " " . $sqlfet_listSupp['supp_surname']; ?></td>
                                                 <td><?= getValue('tbl_supptypes', 'supptype_code', $sqlfet_listSupp['supp_category'], 2, 'supptype_name'); ?></td>
                                                 <td><?= $sqlfet_listSupp['supp_phone']; ?></td>
                                                 <td>
-                                                    <a href="./suppProfile.php?id2edit=<?= $sqlfet_listSupp['id']; ?>"><i
-                                                                class="fas fa-edit text-info"></i></a> &nbsp;
-                                                    <a href="./act4Supp.php?id2delete=<?= $sqlfet_listSupp['id']; ?>"
-                                                       onclick="return confirm('ต้องการลบข้อมูล');"><i
-                                                                class="fas fa-trash text-danger"></i></a>
+                                                    <a class="btn btn-round btn-outline-info btn-icon btn-sm"
+                                                       href="./suppProfile.php?id2edit=<?= $sqlfet_listSupp['id']; ?>"
+                                                       data-toggle="tooltip" data-placement="right" title="แก้ไข"><i
+                                                                class="now-ui-icons ui-1_check"></i></a>
+                                                    <a class="btn btn-round btn-outline-danger btn-icon btn-sm"
+                                                       href="./act4Supp.php?id2delete=<?= $sqlfet_listSupp['id']; ?>"
+                                                       onclick="return confirm('ต้องการลบข้อมูล');"
+                                                       data-toggle="tooltip" data-placement="right" title=" ลบ "><i
+                                                                class="now-ui-icons ui-1_simple-remove"></i></a>
                                                 </td>
                                             </tr>
                                             <?php
@@ -156,8 +160,8 @@ $dateNow = date("Y-m-d");
                     $pages->mid_range = 7;
                     $pages->current_page = $Page;
                     $pages->default_ipp = $Per_Page;
-                    $pages->url_next = $_SERVER["PHP_SELF"] . "?QueryString=" . $value . "&Page=";
-
+                    // $pages->url_next = $_SERVER["PHP_SELF"] . "?QueryString=" . $value . "&Page=";
+                    $pages->url_next = $_SERVER["PHP_SELF"] . "?QueryString=value&Page=";
                     $pages->paginate();
 
                     echo $pages->display_pages()
@@ -191,6 +195,12 @@ $dateNow = date("Y-m-d");
     $("#id4AlinkMenuAdmin").addClass("text-primary");
     $("#id4IconMenuAdmin").addClass("text-primary");
 </script><!-- Hi-light active menu -->
+
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+</script>
 
 </body>
 
