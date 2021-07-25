@@ -297,9 +297,12 @@ if (empty($varget_id2edit)) {
 
 <!-- Hi-light active menu -->
 <script>
-    $("#id4MenuAdmin").addClass("active");
-    $("#id4AlinkMenuAdmin").addClass("text-primary");
-    $("#id4IconMenuAdmin").addClass("text-primary");
+    // $("#id4MenuAdmin").addClass("active");
+    // $("#id4AlinkMenuAdmin").addClass("text-primary");
+    // $("#id4IconMenuAdmin").addClass("text-primary");
+    // Try to still open submenu
+    $("#sub4Backend").addClass("show");
+    $("#id4SubMenuBackendProducts").addClass("active");
 </script><!-- Hi-light active menu -->
 
 <script>

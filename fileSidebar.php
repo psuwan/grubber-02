@@ -32,7 +32,7 @@
                             <span class="sidebar-normal"> รับซื้อ </span>
                         </a>
                     </li>
-                    <li>
+                    <li id="id4SubMenuBuyPoList">
                         <a href="poList.php">
                             <!-- <span class="sidebar-mini-icon">I</span>-->
                             <span class="sidebar-normal"> รายการซื้อ </span>
@@ -80,37 +80,37 @@
 
             <div class="collapse " id="sub4Backend">
                 <ul class="nav pl-5">
-                    <li>
+                    <li id="id4SubMenuBackendSuppList">
                         <a href="./suppList.php">
                             <!-- <span class="sidebar-mini-icon">P</span>-->
                             <span class="sidebar-normal"> รายชื่อผู้ขาย </span>
                         </a>
                     </li>
-                    <li>
+                    <li id="id4SubMenuBackendSuppProfile">
                         <a href="./suppProfile.php">
                             <!-- <span class="sidebar-mini-icon">P</span>-->
                             <span class="sidebar-normal"> เพิ่มข้อมูลผู้ขาย </span>
                         </a>
                     </li>
-                    <li>
+                    <li id="id4SubMenuBackendProducts">
                         <a href="./prodList.php">
                             <!-- <span class="sidebar-mini-icon">P</span>-->
                             <span class="sidebar-normal"> สินค้า </span>
                         </a>
                     </li>
-                    <li>
+                    <li id="id4SubMenuBackendProdType">
                         <a href="./prodType.php">
                             <!-- <span class="sidebar-mini-icon">P</span>-->
                             <span class="sidebar-normal"> ประเภทสินค้า </span>
                         </a>
                     </li>
-                    <li>
-                        <a href="#">
+                    <li id="id4SubMenuBackendBuyType">
+                        <a href="./buyType.php">
                             <!-- <span class="sidebar-mini-icon">P</span>-->
                             <span class="sidebar-normal"> ประเภทการซื้อ </span>
                         </a>
                     </li>
-                    <li>
+                    <li id="id4SubMenuBackendVehicle">
                         <a href="./vehicleType.php">
                             <!-- <span class="sidebar-mini-icon">P</span>-->
                             <span class="sidebar-normal"> ประเภทรถ </span>

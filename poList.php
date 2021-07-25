@@ -187,9 +187,12 @@ $dateNow = date("Y-m-d");
 
 <!-- Hi-light active menu -->
 <script>
-    $("#id4MenuBuy").addClass("active");
-    $("#id4AlinkMenuBuy").addClass("text-primary");
-    $("#id4IconMenuBuy").addClass("text-primary");
+    // $("#id4MenuBuy").addClass("active");
+    // $("#id4AlinkMenuBuy").addClass("text-primary");
+    // $("#id4IconMenuBuy").addClass("text-primary");
+    // Try to still open submenu
+    $("#sub4Buy").addClass("show");
+    $("#id4SubMenuBuyPoList").addClass("active");
 </script><!-- Hi-light active menu -->
 
 </body>

@@ -9,34 +9,34 @@ $timeNow = date("H:i:s");
 
 $varget_id2edit = filter_input(INPUT_GET, 'id2edit');
 if (empty($varget_id2edit)) {
-    $processName = "addProdType";
-    $text2Show = "เพิ่มข้อมูลประเภทสินค้า";
+    $processName = "addBuyType";
+    $text2Show = "เพิ่มข้อมูลประเภทการซื้อสินค้า";
     $editAble = "";
 
-    $sqlcmd_listProdType = "SELECT * FROM tbl_prdtypes WHERE 1";
-    $sqlres_listProdType = mysqli_query($dbConn, $sqlcmd_listProdType);
-    if ($sqlres_listProdType) {
-        $sqlnum_listProdType = mysqli_num_rows($sqlres_listProdType);
-        $prodTypeCode = str_pad(($sqlnum_listProdType + 1), 4, "0", STR_PAD_LEFT);
+    $sqlcmd_listBuyType = "SELECT * FROM tbl_buytype WHERE 1";
+    $sqlres_listBuyType = mysqli_query($dbConn, $sqlcmd_listBuyType);
+    if ($sqlres_listBuyType) {
+        $sqlnum_listBuyType = mysqli_num_rows($sqlres_listBuyType);
+        $buyTypeCode = str_pad(($sqlnum_listBuyType + 1), 4, "0", STR_PAD_LEFT);
     }
 
-    $prodTypeName = '';
-    $prodtypeDetails = '';
+    $buyTypeName = '';
+    $buyTypeDetails = '';
 
 } else {
-    $processName = "editProdType";
-    $text2Show = "แก้ไขข้อมูลประเภทสินค้า";
+    $processName = "editBuyType";
+    $text2Show = "แก้ไขข้อมูลประเภทการซื้อสินค้า";
     $editAble = "readonly";
 
     // List suppliers
-    $sqlcmd_listProdType = "SELECT * FROM tbl_prdtypes WHERE id=" . $varget_id2edit;
-    $sqlres_listProdType = mysqli_query($dbConn, $sqlcmd_listProdType);
-    if ($sqlres_listProdType) {
-        $sqlfet_listProdType = mysqli_fetch_assoc($sqlres_listProdType);
+    $sqlcmd_listBuyType = "SELECT * FROM tbl_buytype WHERE id=" . $varget_id2edit;
+    $sqlres_listBuyType = mysqli_query($dbConn, $sqlcmd_listBuyType);
+    if ($sqlres_listBuyType) {
+        $sqlfet_listBuyType = mysqli_fetch_assoc($sqlres_listBuyType);
 
-        $prodTypeCode = $sqlfet_listProdType['prdtype_code'];
-        $prodTypeName = $sqlfet_listProdType['prdtype_name'];
-        $prodTypeDetails = $sqlfet_listProdType['prdtype_details'];
+        $buyTypeCode = $sqlfet_listBuyType['buytype_code'];
+        $buyTypeName = $sqlfet_listBuyType['buytype_name'];
+        $buyTypeDetails = $sqlfet_listBuyType['buytype_details'];
     }
 }
 ?>
@@ -86,7 +86,7 @@ if (empty($varget_id2edit)) {
 
         <!-- Header section -->
         <div class="panel-header h-auto d-flex justify-content-center">
-            <h2 class="text-warning font-weight-bold">ข้อมูลประเภทสินค้า</h2>
+            <h2 class="text-warning font-weight-bold">ข้อมูลประเภทการซื้อสินค้า</h2>
         </div><!-- Header section -->
 
         <!-- Main content -->
@@ -100,7 +100,7 @@ if (empty($varget_id2edit)) {
                             <h5 class="title"><?= $text2Show; ?></h5>
                         </div>
                         <div class="card-body">
-                            <form action="./act4ProdType.php" method="post">
+                            <form action="./act4BuyType.php" method="post">
                                 <div class="row">
 
                                     <!-- Product code -->
@@ -108,8 +108,8 @@ if (empty($varget_id2edit)) {
                                         <div class="form-group">
                                             <label for="id4SuppCode">รหัสประเภทสินค้า</label>
                                             <input type="text" class="form-control" placeholder="รหัสสินค้า"
-                                                   name="prodTypeCode" id="id4ProdTypeCode"
-                                                   value="<?= $prodTypeCode; ?>" <?= $editAble; ?>>
+                                                   name="buyTypeCode" id="id4buyTypeCode"
+                                                   value="<?= $buyTypeCode; ?>" <?= $editAble; ?>>
                                         </div>
                                     </div><!-- Product code -->
 
@@ -118,8 +118,8 @@ if (empty($varget_id2edit)) {
                                         <div class="form-group">
                                             <label for="id4SuppEmail">ชื่อประเภทสินค้า</label>
                                             <input type="text" class="form-control" placeholder="ชื่อสินค้า"
-                                                   name="prodTypeName" id="id4ProdTypeName"
-                                                   value="<?= $prodTypeName; ?>" onkeyup="func2ShowName(this.value)">
+                                                   name="buyTypeName" id="id4buyTypeName"
+                                                   value="<?= $buyTypeName; ?>" onkeyup="func2ShowName(this.value)">
                                         </div>
                                     </div><!-- Product name -->
 
@@ -130,9 +130,9 @@ if (empty($varget_id2edit)) {
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label for="id4SuppDetails">เกี่ยวกับประเภทสินค้า</label>
-                                            <textarea rows="3" cols="80" class="form-control" name="prodTypeDetails"
-                                                      id="id4ProdTypeDetails"
-                                                      placeholder="ข้อมูลอื่นๆ"><?= $prodTypeDetails; ?></textarea>
+                                            <textarea rows="3" cols="80" class="form-control" name="buyTypeDetails"
+                                                      id="id4buyTypeDetails"
+                                                      placeholder="ข้อมูลอื่นๆ"><?= $buyTypeDetails; ?></textarea>
                                         </div>
                                     </div>
                                 </div><!-- About product -->
@@ -164,16 +164,19 @@ if (empty($varget_id2edit)) {
                 <div class="col-md-4 order-0 order-md-1">
                     <div class="card card-user">
                         <div class="image">
-                            <img src="assets/img/<?= $prodTypeCode; ?>bg.jpg" alt="..." id="id4ImgBg">
+                            <img src="assets/img/bgbath.jpg" alt="..." id="id4ImgBg">
                         </div>
                         <div class="card-body">
                             <div class="author">
                                 <a href="#" style="text-decoration: none;">
-                                    <img class="avatar border-gray" src="assets/img/<?= $prodTypeCode; ?>avatar.png"
+                                    <!--<img class="avatar border-gray" src="assets/img/<? /*= $vehicleTypeCode; */ ?>avatarveh.png"
+                                         alt="..."
+                                         id="id4ImgAvatar">-->
+                                    <img class="avatar border-gray" src="assets/img/avatarbath.png"
                                          alt="..."
                                          id="id4ImgAvatar">
                                     <h5 class="title"><span
-                                                id="id4ProdTypeName2Show"><?php if (empty($prodTypeName)) echo "ประเภทสินค้า"; else echo $prodTypeName; ?></span>
+                                                id="id4BuyTypeName2Show"><?php if (empty($buyTypeName)) echo "ประเภทการซื้อสินค้า"; else echo $buyTypeName; ?></span>
                                     </h5>
                                 </a>
                                 <hr>
@@ -209,23 +212,24 @@ if (empty($varget_id2edit)) {
                                     </thead>
                                     <tbody>
                                     <?php
-                                    $cntProdType = 0;
-                                    $sqlcmd_listProdType = "SELECT * FROM tbl_prdtypes WHERE 1 ORDER BY prdtype_code ASC";
-                                    $sqlres_listProdType = mysqli_query($dbConn, $sqlcmd_listProdType);
+                                    $cntBuyType = 0;
+                                    $sqlcmd_listBuyType = "SELECT * FROM tbl_buytype WHERE 1 ORDER BY buytype_code ASC";
+                                    $sqlres_listBuyType = mysqli_query($dbConn, $sqlcmd_listBuyType);
 
-                                    if ($sqlres_listProdType) {
-                                        while ($sqlfet_listProdType = mysqli_fetch_assoc($sqlres_listProdType)) {
+                                    if ($sqlres_listBuyType) {
+                                        while ($sqlfet_listBuyType = mysqli_fetch_assoc($sqlres_listBuyType)) {
                                             ?>
                                             <tr>
-                                                <td><?= ++$cntProdType; ?></td>
-                                                <td><?= $sqlfet_listProdType['prdtype_code']; ?></td>
-                                                <td><?= $sqlfet_listProdType['prdtype_name']; ?></td>
+                                                <td><?= ++$cntBuyType; ?></td>
+                                                <td><?= $sqlfet_listBuyType['buytype_code']; ?></td>
+                                                <td><?= $sqlfet_listBuyType['buytype_name']; ?></td>
                                                 <td>
-                                                    <a href="?id2edit=<?= $sqlfet_listProdType['id']; ?>"
+                                                    <a href="?id2edit=<?= $sqlfet_listBuyType['id']; ?>"
                                                        class="btn btn-round btn-outline-info btn-icon btn-sm"
                                                        data-toggle="tooltip" data-placement="right" title="แก้ไข"><i
                                                                 class="now-ui-icons ui-1_check"></i></a>
-                                                    <a href="#" class="btn btn-round btn-outline-danger btn-icon btn-sm"
+                                                    <a href="./act4BuyType.php?id2delete=<?= $sqlfet_listBuyType['id']; ?>"
+                                                       class="btn btn-round btn-outline-danger btn-icon btn-sm"
                                                        onclick="return confirm('ต้องการลบข้อมูลนี้');"
                                                        data-toggle="tooltip" data-placement="right" title=" ลบ "><i
                                                                 class="now-ui-icons ui-1_simple-remove"></i></a>
@@ -270,12 +274,12 @@ if (empty($varget_id2edit)) {
 
 <!-- Hi-light active menu -->
 <script>
-    // $("#id4MenuAdmin").addClass("active");
-    // $("#id4AlinkMenuAdmin").addClass("text-primary");
-    // $("#id4IconMenuAdmin").addClass("text-primary");
+    //$("#id4MenuAdmin").addClass("active");
+    //$("#id4AlinkMenuAdmin").addClass("text-primary");
+    //$("#id4IconMenuAdmin").addClass("text-primary");
     // Try to still open submenu
     $("#sub4Backend").addClass("show");
-    $("#id4SubMenuBackendProdType").addClass("active");
+    $("#id4SubMenuBackendBuyType").addClass("active");
 </script><!-- Hi-light active menu -->
 
 <script>
@@ -286,7 +290,7 @@ if (empty($varget_id2edit)) {
 
 <script>
     let func2ShowName = function (txtName) {
-        let name2Show = document.getElementById('id4ProdTypeName2Show');
+        let name2Show = document.getElementById('id4BuyTypeName2Show');
         name2Show.innerHTML = txtName;
     }
 
@@ -294,8 +298,8 @@ if (empty($varget_id2edit)) {
         let imgBg = document.getElementById('id4ImgBg');
         let imgAvatar = document.getElementById('id4ImgAvatar');
 
-        imgBg.src = './assets/img/' + typeCode + 'bg.jpg';
-        imgAvatar.src = './assets/img/' + typeCode + 'avatar.png';
+        // imgBg.src = './assets/img/' + typeCode + 'bg.jpg';
+        // imgAvatar.src = './assets/img/' + typeCode + 'avatar.png';
     }
 </script>
 
