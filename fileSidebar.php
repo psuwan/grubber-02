@@ -26,8 +26,8 @@
 
             <div class="collapse " id="sub4Buy">
                 <ul class="nav pl-5">
-                    <li>
-                        <a href="#">
+                    <li id="id4SubMenuBuyPO">
+                        <a href="./file4PO.php">
                             <!-- <span class="sidebar-mini-icon">P</span>-->
                             <span class="sidebar-normal"> รับซื้อ </span>
                         </a>
@@ -114,6 +114,12 @@
                         <a href="./vehicleType.php">
                             <!-- <span class="sidebar-mini-icon">P</span>-->
                             <span class="sidebar-normal"> ประเภทรถ </span>
+                        </a>
+                    </li>
+                    <li id="id4SubMenuBackendWgScale">
+                        <a href="./wgScale.php">
+                            <!-- <span class="sidebar-mini-icon">P</span>-->
+                            <span class="sidebar-normal"> เครื่องชั่ง </span>
                         </a>
                     </li>
                 </ul>
