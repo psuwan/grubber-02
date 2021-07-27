@@ -54,20 +54,21 @@ function list4PO(txt2Query, inpTxtName, extQuery) {
 }
 
 function chkAvailableVLPN(lpn2Check) {
-    if (lpn2Check != "") {
-        queryData("chkvlpnclose.php?command=checkVLPN&vlpn=" + lpn2Check);
+    let chkResult = document.getElementById("chkresult");
+    console.log('lpn to check ' + lpn2Check);
+    if (lpn2Check !== '') {
+        queryData("php4PO.php?command=checkVLPN&vlpn=" + lpn2Check);
         {
-            if (xhr_object.responseText === 1) {
-                document.getElementById("chkresult").style.color = "red";
-                document.getElementById("chkresult").innerHTML =
-                    "รถทะเบียน " + lpn2Check + " ยังไม่ปิดการซื้อ ชั่งเข้าไม่ได้";
+            if (xhr_object.responseText === '1') {
+                chkResult.style.color = "red";
+                chkResult.innerHTML = "&nbsp;(รถทะเบียน " + lpn2Check + " ยังไม่ปิดการซื้อ)";
             } else {
-                document.getElementById("chkresult").style.color = "green";
-                document.getElementById("chkresult").innerHTML =
-                    "รถทะเบียน " + lpn2Check + " ชั่งเข้าได้";
-                //console.log(lpn2chk);
+                chkResult.style.color = "green";
+                chkResult.innerHTML = "&nbsp;(รถทะเบียน " + lpn2Check + " ชั่งเข้าได้)";
             }
         }
+    } else {
+        chkResult.innerHTML = "";
     }
 }
 

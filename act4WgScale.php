@@ -24,8 +24,8 @@ if (!empty($varpost_processName)) {
             updateDB('tbl_wgscale', 'wgscale_code', $wgScaleCode, 2, 'wgscale_name', $wgScaleName, 2);
             updateDB('tbl_wgscale', 'wgscale_code', $wgScaleCode, 2, 'wgscale_details', $wgScaleDetails, 2);
 
-//            echo "<script>alert('เพิ่มข้อมูลเครื่องชั่งแล้ว');</script>";
-//            echo "<script>window.location.href='./vehicleType.php';</script>";
+            echo "<script>alert('เพิ่มข้อมูลเครื่องชั่งแล้ว');</script>";
+            echo "<script>window.location.href='./vehicleType.php';</script>";
             break;
 
         case 'editWgScale':

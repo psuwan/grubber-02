@@ -16,12 +16,12 @@ $varget_fieldValue = filter_input(INPUT_GET, 'fieldValue');
 $varget_fieldValue = trim($varget_fieldValue);
 $unescaped = str_replace("%u", "\u", $varget_fieldValue);
 $varget_fieldValue = json_decode('"' . $unescaped . '"');
-if($varget_fieldReturn=='po_suppcode'){
+if ($varget_fieldReturn == 'po_suppcode') {
     $varget_fieldValue = getValue('tbl_suppliers', 'supp_name', $varget_fieldValue, 2, 'supp_code');
 }
 # unicode
-
 $varget_suppName = filter_input(INPUT_GET, 'suppName');
+$varget_vlpn2Check = filter_input(INPUT_GET, 'vlpn');
 
 $varpost_processName = filter_input(INPUT_POST, 'processName');
 
@@ -72,15 +72,18 @@ if (!empty($varget_command)) {
                 echo $sqlfet['supp_code'];
             }
             break;
+
+        case 'checkVLPN':
+            $sqlcmd = "SELECT * FROM tbl_purchaseorder WHERE po_vlpn='" . $varget_vlpn2Check . "' AND po_status=1";
+            $sqlres = mysqli_query($dbConn, $sqlcmd);
+            if ($sqlres) {
+                $sqlnum = mysqli_num_rows($sqlres);
+                if ($sqlnum == 0) {
+                    echo "0";
+                } else {
+                    echo "1";
+                }
+            }
+            break;
     }
-}
-
-function je2utf8($jed)
-{
-    return preg_replace("/(\\\|%)u([0-9A-F]{4})/e", "ncr_utf8_2('&#x\\2;')", $jed);
-}
-
-function je2utf8_2($jed)
-{
-    return preg_replace("/(\\\|%)u([A-Z0-9]{4})/e","mb_convert_encoding(('&#'.hexdec('\\2').';'), 'UTF-8','HTML-ENTITIES')", $jed);
 }

@@ -112,11 +112,12 @@ $dateNow = date("Y-m-d");
                                     </div>
                                     <div class="col-md-4 px-md-1">
                                         <div class="form-group">
-                                            <label for="id4SuppAmphoe">เลขทะเบียนรถ</label>
+                                            <label for="id4SuppAmphoe">เลขทะเบียนรถ</label>&nbsp;<span
+                                                    id="chkresult"></span>&nbsp;
                                             <input type="text" class="form-control" placeholder="เลขทะเบียนรถ"
                                                    name="vlpnNumber" id="id4VlpnNumber" required
-                                                   value=""
-                                                   onchange="list4PO(this.value, 'VlpnNumber', 'po_vlpn')">
+                                                   onchange="list4PO(this.value, 'VlpnNumber', 'po_vlpn');"
+                                                   onkeyup="chkAvailableVLPN(this.value);">
                                         </div>
                                     </div>
                                     <div class="col-md-4 pl-md-1">
@@ -132,7 +133,7 @@ $dateNow = date("Y-m-d");
 
                                 <!-- Row #02 -->
                                 <div class="row">
-                                    <div class="col-md-4 pr-md-1">
+                                    <div class="col-md-3 pr-md-1">
                                         <div class="form-group">
                                             <label for="id4SuppZipcode">ประเภทการซื้อ</label>
                                             <select class="form-control" name="POBuyType" id="id4POBuyType" required>
@@ -151,7 +152,20 @@ $dateNow = date("Y-m-d");
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-4 px-md-1">
+
+                                    <div class="col-md-3 px-md-1">
+                                        <div class="form-group">
+                                            <label for="id4SuppZipcode">ประเภทการชั่ง</label>
+                                            <select class="form-control" name="POWgType" id="id4POWgType" required>
+                                                <option value="">เลือกประเภทการชั่ง</option>
+                                                <option value="0001">ชั่งเข้า</option>
+                                                <option value="0002">ชั่งแยก</option>
+                                                <option value="0003">ชั่งออก</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3 px-md-1">
                                         <div class="form-group">
                                             <label for="id4SuppProvince">เครื่องชั่ง</label>
                                             <select class="form-control" name="POWgScale" id="id4POWgScale" required>
@@ -170,14 +184,24 @@ $dateNow = date("Y-m-d");
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-4 pl-md-1">
+
+                                    <div class="col-md-3 pl-md-1">
                                         <div class="form-group">
-                                            <label for="id4SuppZipcode">ประเภทการชั่ง</label>
-                                            <select class="form-control" name="POWgType" id="id4POWgType" required>
-                                                <option value="">เลือกประเภทการชั่ง</option>
-                                                <option value="0001">ชั่งเข้า</option>
-                                                <option value="">ชั่งแยก</option>
-                                                <option value="">ชั่งออก</option>
+                                            <label for="id4SuppProvince">สินค้าที่ชั่ง</label>
+                                            <select class="form-control" name="POWgScale" id="id4POWgScale" required>
+                                                <option value="">เลือกสินค้า</option>
+                                                <option value="">ชั่งรถ</option>
+                                                <?php
+                                                $sqlcmd_listWgScale = "SELECT * FROM tbl_products WHERE 1 ORDER BY product_order";
+                                                $sqlres_listWgScale = mysqli_query($dbConn, $sqlcmd_listWgScale);
+                                                if ($sqlres_listWgScale) {
+                                                    while ($sqlfet_listWgScale = mysqli_fetch_assoc($sqlres_listWgScale)) {
+                                                        ?>
+                                                        <option value="<?= $sqlfet_listWgScale['product_code']; ?>"><?= $sqlfet_listWgScale['product_name']; ?></option>
+                                                        <?php
+                                                    }
+                                                }
+                                                ?>
                                             </select>
                                         </div>
                                     </div>
@@ -330,9 +354,14 @@ $dateNow = date("Y-m-d");
         let inpPONumber = document.getElementById("id4PONumber");
         let inpPOVLPN = document.getElementById("id4VlpnNumber");
         let inpPOSupp = document.getElementById("id4POSuppName");
+        let VLPN2Checked = '';
 
         if (isNewPO === "1") {
             $("#id4PONumber").attr("readonly", true);
+            $("#chkresult").removeClass("d-none");
+            $("#id4POWgType option[value='0001']").prop("disabled", false);
+            $("#id4POWgType option[value='0002']").prop("disabled", true);
+            $("#id4POWgType option[value='0003']").prop("disabled", true);
             $.ajax({
                 type: "POST",
                 url: "php4PO.php",
@@ -348,7 +377,10 @@ $dateNow = date("Y-m-d");
             inpPOSupp.setAttribute("list", "id4ListAllSupp");
         } else {
             $("#id4PONumber").attr("readonly", false);
-
+            $("#chkresult").addClass("d-none");
+            $("#id4POWgType option[value='0001']").prop("disabled", true);
+            $("#id4POWgType option[value='0002']").prop("disabled", false);
+            $("#id4POWgType option[value='0003']").prop("disabled", false);
             inpPONumber.value = "";
             inpPOVLPN.setAttribute("list", "id4ListVLPN");
             inpPOSupp.setAttribute("list", "id4ListOpenSupp");
