@@ -22,6 +22,7 @@ if ($varget_fieldReturn == 'po_suppcode') {
 # unicode
 $varget_suppName = filter_input(INPUT_GET, 'suppName');
 $varget_vlpn2Check = filter_input(INPUT_GET, 'vlpn');
+$varget_wgScaleCode = filter_input(INPUT_GET, 'wgSCaleCode');
 
 $varpost_processName = filter_input(INPUT_POST, 'processName');
 
@@ -84,6 +85,10 @@ if (!empty($varget_command)) {
                     echo "1";
                 }
             }
+            break;
+
+        case 'checkWgScaleLevel':
+            echo getValue('tbl_wgscale', 'wgscale_code', $varget_wgScaleCode, 2, 'wgscale_level');
             break;
     }
 }

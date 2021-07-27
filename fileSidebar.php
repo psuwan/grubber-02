@@ -27,7 +27,7 @@
             <div class="collapse " id="sub4Buy">
                 <ul class="nav pl-5">
                     <li id="id4SubMenuBuyPO">
-                        <a href="./file4PO.php">
+                        <a href="./file4PO.php#id4Content">
                             <!-- <span class="sidebar-mini-icon">P</span>-->
                             <span class="sidebar-normal"> รับซื้อ </span>
                         </a>

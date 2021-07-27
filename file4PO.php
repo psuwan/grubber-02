@@ -52,7 +52,7 @@ $dateNow = date("Y-m-d");
         ?>
         <!-- End Navbar -->
 
-        <div class="panel-header h-auto">
+        <div class="panel-header h-auto" id="id4Header">
             <!--<div class="jumbotron ml-5 mr-5 display-1 text-center font-weight-bold text-warning bg-transparent d-none d-sm-block">
                 บริษัท โกลด์รับเบอร์ จำกัด
             </div>
@@ -61,7 +61,7 @@ $dateNow = date("Y-m-d");
             </div>-->
             <h2 class="text-warning text-center">รับซื้อ</h2>
         </div>
-        <div class="content">
+        <div class="content" id="id4Content">
 
             <div class="row">
                 <div class="col-md-12">
@@ -74,23 +74,22 @@ $dateNow = date("Y-m-d");
                         <!-- Card body -->
                         <div class="card-body">
                             <!-- Form -->
-                            <form action="./act4Prod.php" method="post">
+                            <form action="./act4PO.php" method="post">
 
-                                <!-- Row #00 -->
+                                <!-- Row #00 Select PO Type (new or existing) -->
                                 <div class="row">
                                     <div class="col-md-12 pr-md-1">
                                         <div class="form-check form-check-radio form-check-inline">
                                             <label class="form-check-label">
                                                 <input class="form-check-input" type="radio" name="chkNewPO"
-                                                       id="id4ChkNewPO1" value="1"
-                                                       onclick="checkNewPO(this.value)">รับซื้อใหม่
+                                                       id="id4ChkNewPO1" value="1">รับซื้อใหม่
                                                 <span class="form-check-sign"></span>
                                             </label>
                                         </div>
                                         <div class="form-check form-check-radio form-check-inline">
                                             <label class="form-check-label">
                                                 <input class="form-check-input" type="radio" name="chkNewPO"
-                                                       id="id4ChkNewPO2" value="2" onclick="checkNewPO(this.value)">เปิดการซื้อแล้ว
+                                                       id="id4ChkNewPO2" value="2">เปิดการซื้อแล้ว
                                                 <span class="form-check-sign"></span>
                                             </label>
                                         </div>
@@ -106,17 +105,15 @@ $dateNow = date("Y-m-d");
                                             <label for="id4SuppAmphoe">เลขอ้างอิงการซื้อ</label>
                                             <input type="text" class="form-control" placeholder="เลขอ้างอิงการซื้อ"
                                                    name="poNumber" id="id4PONumber" readonly list="id4ListOpenPO"
-                                                   required value=""
-                                                   onchange="list4PO(this.value, 'PONumber', 'po_number')">
+                                                   required value="">
                                         </div>
                                     </div>
                                     <div class="col-md-4 px-md-1">
                                         <div class="form-group">
                                             <label for="id4SuppAmphoe">เลขทะเบียนรถ</label>&nbsp;<span
-                                                    id="chkresult"></span>&nbsp;
+                                                    id="VLPNCheckResult"></span>&nbsp;
                                             <input type="text" class="form-control" placeholder="เลขทะเบียนรถ"
                                                    name="vlpnNumber" id="id4VlpnNumber" required
-                                                   onchange="list4PO(this.value, 'VlpnNumber', 'po_vlpn');"
                                                    onkeyup="chkAvailableVLPN(this.value);">
                                         </div>
                                     </div>
@@ -125,8 +122,7 @@ $dateNow = date("Y-m-d");
                                             <label for="id4SuppProvince">ผู้ขาย</label>
                                             <input type="text" name="POSuppName" id="id4POSuppName" class="form-control"
                                                    required placeholder="ชื่อผู้ขาย (ถ้ามาใหม่ให้ไปลงทะเบียนผู้ขายก่อน)"
-                                                   value=""
-                                                   onchange="list4PO(this.value, 'POSuppName', 'po_suppcode')">
+                                                   value="">
                                         </div>
                                     </div>
                                 </div> <!-- End of Row #01 -->
@@ -207,28 +203,96 @@ $dateNow = date("Y-m-d");
                                     </div>
                                 </div><!-- End of Row #02 -->
 
-
-                                <!-- Row #03 -->
-                                <div class="row display-4 mt-5 font-weight-bold" style="vertical-align: center;">
-                                    <div class="col-md-4 pr-md-1">
+                                <!-- Row for pallet weight -->
+                                <div class="row mt-5 h4 font-weight-bold text-muted" id="div4WgPallet">
+                                    <div class="col-md-5 pr-md-1 my-2" id="div4Txt">
                                         <div class="form-group text-right">
-                                            น้ำหนักที่ชั่งได้ :
+                                            จำนวนพาเลท
                                         </div>
                                     </div>
-                                    <div class="col-md-7 px-md-1">
+                                    <div class="col-md-1 px-md-1" id="div4WgShow">
+                                        <div class="form-group">
+                                            <!-- <label for="id4SuppAmphoe" style="text-decoration: none;">น้ำหนักที่ชั่งได้</label>-->
+                                            <input type="number" class="form-control" placeholder="0"
+                                                   name="cntPallet" id="id4CntPallet" required
+                                                   value="" style="text-align: right;" onchange="calcWgNet();"
+                                                   onkeyup="calcWgNet();">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1 px-md-1 text-md-left my-2" id="div4Unit1">
+                                        <div class="form-group">
+                                            แผง
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-2 px-md-1 my-2" id="div4Txt">
+                                        <div class="form-group text-right">
+                                            น้ำหนักพาเลท (ต่อแผง)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 px-md-1" id="div4WgShow">
                                         <div class="form-group">
                                             <!-- <label for="id4SuppAmphoe" style="text-decoration: none;">น้ำหนักที่ชั่งได้</label>-->
                                             <input type="text" class="form-control" placeholder="0"
-                                                   name="POWeightDisp" id="id4POWeightDisp" required
-                                                   value="" style="text-align: right;">
+                                                   name="wg4Pallet" id="id4Wg4Pallet"
+                                                   value="" style="text-align: right;" onchange="calcWgNet();"
+                                                   onkeyup="calcWgNet();">
                                         </div>
                                     </div>
-                                    <div class="col-md-1 pl-md-1">
+                                    <div class="col-md-1 pl-md-1 my-2" id="div4Unit1">
+                                        <div class="form-group">
+                                            กก.
+                                        </div>
+                                    </div>
+                                </div><!-- End of row for pallet weight -->
+
+                                <!-- Row #03 -->
+                                <div class="row h4 mt-5 font-weight-bold text-muted" style="vertical-align: center;"
+                                     id="div4Wg">
+                                    <div class="col-md-7 pr-md-1 my-4" id="div4Txt">
                                         <div class="form-group text-right">
+                                            น้ำหนักที่ชั่งได้
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 px-md-1" id="div4WgShow">
+                                        <div class="form-group">
+                                            <!-- <label for="id4SuppAmphoe" style="text-decoration: none;">น้ำหนักที่ชั่งได้</label>-->
+                                            <input type="text" class="form-control font-weight-bold text-primary h3"
+                                                   placeholder="0"
+                                                   name="wgScaleRd" id="id4WgScaleRd" required
+                                                   value="" style="text-align: right;" onchange="calcWgNet();"
+                                                   onkeyup="calcWgNet();">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1 pl-md-1 text-left my-4" id="div4Unit1">
+                                        <div class="form-group">
                                             กก.
                                         </div>
                                     </div>
                                 </div><!-- End of Row #03 -->
+
+                                <!-- Row for net weight -->
+                                <div class="row h4 mt-5 font-weight-bold text-muted" id="div4Wg">
+                                    <div class="col-md-7 pr-md-1 my-4" id="div4Txt">
+                                        <div class="form-group text-right">
+                                            น้ำหนักสุทธิ
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 px-md-1" id="div4WgShow">
+                                        <div class="form-group">
+                                            <!-- <label for="id4SuppAmphoe" style="text-decoration: none;">น้ำหนักที่ชั่งได้</label>-->
+                                            <input type="text" class="form-control font-weight-bold text-primary h3"
+                                                   placeholder="0"
+                                                   name="wgScaleNet" id="id4WgScaleNet" required
+                                                   value="" style="text-align: right;">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1 pl-md-1 text-left my-4" id="div4Unit1">
+                                        <div class="form-group">
+                                            กก.
+                                        </div>
+                                    </div>
+                                </div><!-- End of row for net weight -->
 
                                 <hr>
                                 <!-- Button "Reset" and "Submit" -->
@@ -240,7 +304,8 @@ $dateNow = date("Y-m-d");
                                         </button>
                                         &nbsp;&nbsp;
                                         <button type="submit" class="btn btn-outline-success btn-round"
-                                                style="width: 120px" name="suppSubmitBtn">
+                                                style="width: 120px" name="suppSubmitBtn"
+                                                onsubmit="return confirm('ข้อมูลถูกต้อง\nต้องการบันทึกข้อมูล')">
                                             <i class="now-ui-icons arrows-1_cloud-upload-94"></i> บันทึก
                                         </button>
                                     </div>
@@ -340,9 +405,6 @@ $dateNow = date("Y-m-d");
 
 <!-- Hi-light active menu -->
 <script>
-    // $("#id4MenuBuy").addClass("active");
-    // $("#id4AlinkMenuBuy").addClass("text-primary");
-    // $("#id4IconMenuBuy").addClass("text-primary");
     // Try to still open submenu
     $("#sub4Buy").addClass("show");
     $("#id4SubMenuBuyPO").addClass("active");
@@ -350,42 +412,145 @@ $dateNow = date("Y-m-d");
 
 <!-- Check New PO or Existing PO -->
 <script>
-    let checkNewPO = function (isNewPO) {
-        let inpPONumber = document.getElementById("id4PONumber");
-        let inpPOVLPN = document.getElementById("id4VlpnNumber");
-        let inpPOSupp = document.getElementById("id4POSuppName");
-        let VLPN2Checked = '';
+    let poNumber = document.getElementById("id4PONumber");
+    let poSuppName = document.getElementById("id4POSuppName");
+    let poVlpn = document.getElementById("id4VlpnNumber");
+    let radChk = document.getElementsByName("chkNewPO");
+    let vlpnRes = document.getElementById("VLPNCheckResult");
 
-        if (isNewPO === "1") {
+    let radVal = 0;
+
+    $(document).ready(function () {
+        // Check radio button #01 checked
+        $('#id4ChkNewPO1').change(function () {
+            vlpnRes.innerHTML = "";
             $("#id4PONumber").attr("readonly", true);
-            $("#chkresult").removeClass("d-none");
-            $("#id4POWgType option[value='0001']").prop("disabled", false);
-            $("#id4POWgType option[value='0002']").prop("disabled", true);
-            $("#id4POWgType option[value='0003']").prop("disabled", true);
+            $("#VLPNCheckResult").removeClass("d-none");
+            poSuppName.setAttribute("list", "id4ListAllSupp");
+            radVal = 1;
+            // Get new PO-Number
             $.ajax({
                 type: "POST",
                 url: "php4PO.php",
                 data: {processName: 'genPONumber'},
                 success: function (response) {
-                    inpPONumber.value = response;
+                    poNumber.value = response;
                 }
             });
-            inpPOVLPN.value = "";
-            inpPOSupp.value = "";
+            poSuppName.value = "";
+            poVlpn.value = "";
 
-            inpPOVLPN.setAttribute("list", "");
-            inpPOSupp.setAttribute("list", "id4ListAllSupp");
-        } else {
+            // Enable and Disable Select Option
+            $("#id4POWgType option[value='0001']").prop("disabled", false);
+            $("#id4POWgType option[value='0002']").prop("disabled", false);
+            $("#id4POWgType option[value='0003']").prop("disabled", true);
+        });
+        // Check radio button #02 checked
+        $('#id4ChkNewPO2').change(function () {
             $("#id4PONumber").attr("readonly", false);
-            $("#chkresult").addClass("d-none");
+            $("#VLPNCheckResult").addClass("d-none");
+            poSuppName.setAttribute("list", "id4ListOpenSupp");
+            radVal = 2;
+            poNumber.value = "";
+            poSuppName.value = "";
+            poVlpn.value = "";
+
+            // Enable and Disable Select Option
             $("#id4POWgType option[value='0001']").prop("disabled", true);
             $("#id4POWgType option[value='0002']").prop("disabled", false);
             $("#id4POWgType option[value='0003']").prop("disabled", false);
-            inpPONumber.value = "";
-            inpPOVLPN.setAttribute("list", "id4ListVLPN");
-            inpPOSupp.setAttribute("list", "id4ListOpenSupp");
-        }
+        });
+
+        // Check weight type selected
+        $('#id4POWgType').change(function () {
+            let wgType = $('#id4POWgType :selected').val();
+            let cntWgScale = "<?= countAllRow('tbl_wgscale');?>";
+            let i = 0;
+            if (wgType === '0002')
+                for (i = 1; i <= cntWgScale; i++) {
+                    if (i === 1)
+                        $("#id4POWgScale option[value=" + i.toString().padStart(4, '0') + "]").prop("disabled", true);
+                    else
+                        $("#id4POWgScale option[value=" + i.toString().padStart(4, '0') + "]").prop("disabled", false);
+                }
+            else {
+                for (i = 1; i <= cntWgScale; i++) {
+                    $("#id4POWgScale option[value=" + i.toString().padStart(4, '0') + "]").prop("disabled", false);
+                }
+            }
+        });
+
+        // Check weight scale if with pallet type show pallet weight input
+        $('#id4POWgScale').change(function () {
+            let wgScale = $('#id4POWgScale :selected').val();
+            let chkLevel = queryData("php4PO.php?command=checkWgScaleLevel&wgSCaleCode=" + wgScale);
+            if (chkLevel === '1') {
+                //$("#div4WgPallet").removeClass("d-none");
+            } else if (chkLevel === '0') {
+                console.log(chkLevel);
+                //$("#div4WgPallet").addClass("d-none");
+                document.getElementById("id4CntPallet").value = 0;
+                document.getElementById("id4Wg4Pallet").value = 0;
+                $("#div4WgPallet :input").attr("disabled", true);
+            }
+            calcWgNet();
+        });
+
+        $("#id4POWgNet").on("keyup", function () {
+            console.log(document.getElementById("id4CntPallet").value);
+        });
+    });
+
+    $("#id4POSuppName").on("change", function () {
+        list4PO(radVal, poSuppName.value, 'POSuppName', 'po_suppcode');
+    });
+    $("#id4PONumber").on("change", function () {
+        list4PO(radVal, poNumber.value, 'PONumber', 'po_number');
+    });
+    $("#id4VlpnNumber").on("change", function () {
+        list4PO(radVal, poVlpn.value, 'VlpnNumber', 'po_vlpn');
+    });
+</script>
+
+<script>
+    let calcWgNet = function () {
+        let cntPallet = document.getElementById("id4CntPallet");
+        let wg4Pallet = document.getElementById("id4Wg4Pallet");
+        let wgScaleRD = document.getElementById("id4WgScaleRd");
+        let wgScaleNet = document.getElementById("id4WgScaleNet");
+        // console.log('wgscalerd :' + wgScaleRD.value);
+
+        let A = 0;
+        let B = 0;
+        let C = 0;
+        let D = 0;
+
+        if (cntPallet.value === '')
+            cntPallet.value = '0';
+        if (wg4Pallet.value === '')
+            wg4Pallet.value = '0';
+        if (wgScaleRD.value === '')
+            wgScaleRD.value = '0';
+        if (wgScaleNet.value === '')
+            wgScaleNet.value = '0';
+
+        A = parseInt(cntPallet.value);
+        B = parseFloat(wg4Pallet.value);
+        C = parseFloat(wgScaleRD.value.replace(/,/g, ''));
+        // console.log('C =' + C);
+
+        D = C - (A * B);
+
+        wgScaleNet.value = D.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
+</script>
+
+<script>
+    $("#id4WgScaleRd").on("keyup", function () {
+        this.value = this.value.replace(/,/g, '');
+        let value = this.value;
+        this.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    });
 </script>
 
 </body>

@@ -1,4 +1,4 @@
-<footer class="footer">
+<footer class="footer" id="id4Footer">
     <div class="container-fluid">
         <nav>
             <ul>
@@ -7,11 +7,11 @@
                         APKS Software House Co., Ltd.
                     </a>
                 </li>
-               <!-- <li>
-                    <a href="http://www.apks-software.com/aboutus.php" target="_blank">
-                        About Us
-                    </a>
-                </li>-->
+                <!-- <li>
+                     <a href="http://www.apks-software.com/aboutus.php" target="_blank">
+                         About Us
+                     </a>
+                 </li>-->
             </ul>
         </nav>
         <!--
