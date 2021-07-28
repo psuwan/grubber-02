@@ -121,7 +121,7 @@ $dateNow = date("Y-m-d");
                                         <div class="form-group">
                                             <label for="id4SuppProvince">ผู้ขาย</label>
                                             <input type="text" name="POSuppName" id="id4POSuppName" class="form-control"
-                                                   required placeholder="ชื่อผู้ขาย (ถ้ามาใหม่ให้ไปลงทะเบียนผู้ขายก่อน)"
+                                                   placeholder="ชื่อผู้ขาย (ถ้ามาใหม่ให้ไปลงทะเบียนผู้ขายก่อน)" required
                                                    value="">
                                         </div>
                                     </div>
@@ -132,7 +132,7 @@ $dateNow = date("Y-m-d");
                                     <div class="col-md-3 pr-md-1">
                                         <div class="form-group">
                                             <label for="id4SuppZipcode">ประเภทการซื้อ</label>
-                                            <select class="form-control" name="POBuyType" id="id4POBuyType" required>
+                                            <select class="form-control" name="POBuyType" id="id4POBuyType">
                                                 <option value="">เลือกประเภทการซื้อ</option>
                                                 <?php
                                                 $sqlcmd_listBuyType = "SELECT * FROM tbl_buytype WHERE 1 ORDER BY buytype_code ASC";
@@ -154,9 +154,9 @@ $dateNow = date("Y-m-d");
                                             <label for="id4SuppZipcode">ประเภทการชั่ง</label>
                                             <select class="form-control" name="POWgType" id="id4POWgType" required>
                                                 <option value="">เลือกประเภทการชั่ง</option>
-                                                <option value="0001">ชั่งเข้า</option>
-                                                <option value="0002">ชั่งแยก</option>
-                                                <option value="0003">ชั่งออก</option>
+                                                <option value="0001">ชั่งเข้า (รถพร้อมสินค้า)</option>
+                                                <option value="0002">ชั่งแยก (สินค้าและพาเลท)</option>
+                                                <option value="0003">ชั่งออก (รถเปล่า)</option>
                                             </select>
                                         </div>
                                     </div>
@@ -184,7 +184,7 @@ $dateNow = date("Y-m-d");
                                     <div class="col-md-3 pl-md-1">
                                         <div class="form-group">
                                             <label for="id4SuppProvince">สินค้าที่ชั่ง</label>
-                                            <select class="form-control" name="POWgScale" id="id4POWgScale" required>
+                                            <select class="form-control" name="POProduct" id="id4POProduct">
                                                 <option value="">เลือกสินค้า</option>
                                                 <option value="">ชั่งรถ</option>
                                                 <?php
@@ -312,6 +312,10 @@ $dateNow = date("Y-m-d");
                                 </div><!-- Button "Reset" and "Submit" -->
 
                         </div><!-- Card body -->
+
+                        <!-- Hidden -->
+                        <input type="hidden" name="processName" value="AddPO">
+
                         </form><!-- End of form -->
                     </div>
                 </div>
@@ -466,6 +470,7 @@ $dateNow = date("Y-m-d");
             let wgType = $('#id4POWgType :selected').val();
             let cntWgScale = "<?= countAllRow('tbl_wgscale');?>";
             let i = 0;
+            // console.log(wgType);
             if (wgType === '0002')
                 for (i = 1; i <= cntWgScale; i++) {
                     if (i === 1)
@@ -475,7 +480,10 @@ $dateNow = date("Y-m-d");
                 }
             else {
                 for (i = 1; i <= cntWgScale; i++) {
-                    $("#id4POWgScale option[value=" + i.toString().padStart(4, '0') + "]").prop("disabled", false);
+                    if (i === 1)
+                        $("#id4POWgScale option[value=" + i.toString().padStart(4, '0') + "]").prop("disabled", false);
+                    else
+                        $("#id4POWgScale option[value=" + i.toString().padStart(4, '0') + "]").prop("disabled", true);
                 }
             }
         });
@@ -487,18 +495,18 @@ $dateNow = date("Y-m-d");
             if (chkLevel === '1') {
                 //$("#div4WgPallet").removeClass("d-none");
             } else if (chkLevel === '0') {
-                console.log(chkLevel);
-                //$("#div4WgPallet").addClass("d-none");
+                // console.log(chkLevel);
+                // $("#div4WgPallet").addClass("d-none");
                 document.getElementById("id4CntPallet").value = 0;
                 document.getElementById("id4Wg4Pallet").value = 0;
-                $("#div4WgPallet :input").attr("disabled", true);
+                $("#div4WgPallet :input").attr("readonly", true);// change from disabled to readonly
             }
             calcWgNet();
         });
 
-        $("#id4POWgNet").on("keyup", function () {
+        /*$("#id4POWgNet").on("keyup", function () {
             console.log(document.getElementById("id4CntPallet").value);
-        });
+        });*/
     });
 
     $("#id4POSuppName").on("change", function () {
@@ -518,7 +526,6 @@ $dateNow = date("Y-m-d");
         let wg4Pallet = document.getElementById("id4Wg4Pallet");
         let wgScaleRD = document.getElementById("id4WgScaleRd");
         let wgScaleNet = document.getElementById("id4WgScaleNet");
-        // console.log('wgscalerd :' + wgScaleRD.value);
 
         let A = 0;
         let B = 0;
