@@ -46,7 +46,10 @@ if (!empty($varget_command)) {
     switch ($varget_command) {
         case 'query4po':
 //            $sqlcmd = "SELECT * FROM tbl_purchaseorder WHERE " . $varget_fieldReturn . "='" . $varget_fieldValue . "'";
-            $sqlcmd = "SELECT * FROM tbl_wg4buy WHERE " . $varget_fieldReturn . "='" . $varget_fieldValue . "'";
+            $sqlcmd_SetMode = "SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))";
+            $sqlres_setMode = mysqli_query($dbConn, $sqlcmd_SetMode);
+            $sqlcmd = "SELECT wg_ponum, wg_suppcode, wg_vlpn FROM tbl_wg4buy WHERE " . $varget_fieldReturn . "='" . $varget_fieldValue . "' AND po_status=1 GROUP BY wg_ponum";
+            //echo $sqlcmd;
             $sqlres = mysqli_query($dbConn, $sqlcmd);
             if ($sqlres) {
                 $sqlnum = mysqli_num_rows($sqlres);

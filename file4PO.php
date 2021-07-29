@@ -335,8 +335,10 @@ $dateNow = date("Y-m-d");
 <!-- datalist for PO -->
 <datalist id="id4ListOpenPO">
     <?php
-//    $sqlcmd_listOpenPO = "SELECT * FROM tbl_purchaseorder WHERE po_status=1";
-    $sqlcmd_listOpenPO = "SELECT * FROM tbl_wg4buy WHERE po_status=1";
+    //    $sqlcmd_listOpenPO = "SELECT * FROM tbl_purchaseorder WHERE po_status=1";
+    $sqlcmd_SetMode = "SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))";
+    $sqlres_setMode = mysqli_query($dbConn, $sqlcmd_SetMode);
+    $sqlcmd_listOpenPO = "SELECT * FROM tbl_wg4buy WHERE po_status=1 GROUP BY wg_ponum";
     $sqlres_listOpenPO = mysqli_query($dbConn, $sqlcmd_listOpenPO);
     if ($sqlres_listOpenPO) {
         while ($sqlfet_listOpenPO = mysqli_fetch_assoc($sqlres_listOpenPO)) {
@@ -351,8 +353,11 @@ $dateNow = date("Y-m-d");
 <!-- Datalist for LPN -->
 <datalist id="id4ListVLPN">
     <?php
-//    $sqlcmd_listOpenVLPN = "SELECT * FROM tbl_purchaseorder WHERE po_status=1";
-    $sqlcmd_listOpenVLPN = "SELECT * FROM tbl_wg4buy WHERE po_status=1";
+    //    $sqlcmd_listOpenVLPN = "SELECT * FROM tbl_purchaseorder WHERE po_status=1";
+    $sqlcmd_SetMode = "SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))";
+    $sqlres_setMode = mysqli_query($dbConn, $sqlcmd_SetMode);
+    $sqlcmd_listOpenVLPN = "SELECT * FROM tbl_wg4buy WHERE po_status=1 GROUP BY wg_ponum";
+    echo $sqlcmd_listOpenVLPN;
     $sqlres_listOpneVLPN = mysqli_query($dbConn, $sqlcmd_listOpenVLPN);
     if ($sqlres_listOpneVLPN) {
         while ($sqlfet_listOpenVLPN = mysqli_fetch_assoc($sqlres_listOpneVLPN)) {
@@ -384,8 +389,10 @@ $dateNow = date("Y-m-d");
 <!-- Datalist for open supplier -->
 <datalist id="id4ListOpenSupp">
     <?php
-//    $sqlcmd_listOpenSupp = "SELECT * FROM tbl_purchaseorder WHERE po_status=1 ORDER BY po_suppcode ASC";
-    $sqlcmd_listOpenSupp = "SELECT * FROM tbl_wg4buy WHERE po_status=1 ORDER BY wg_suppcode ASC";
+    //    $sqlcmd_listOpenSupp = "SELECT * FROM tbl_purchaseorder WHERE po_status=1 ORDER BY po_suppcode ASC";
+    $sqlcmd_SetMode = "SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))";
+    $sqlres_setMode = mysqli_query($dbConn, $sqlcmd_SetMode);
+    $sqlcmd_listOpenSupp = "SELECT * FROM tbl_wg4buy WHERE po_status=1 GROUP BY wg_ponum ORDER BY wg_suppcode ASC";
     $sqlres_listOpenSuup = mysqli_query($dbConn, $sqlcmd_listOpenSupp);
     if ($sqlres_listOpenSuup) {
         while ($sqlfet_listOpenSupp = mysqli_fetch_assoc($sqlres_listOpenSuup)) {
@@ -458,6 +465,7 @@ $dateNow = date("Y-m-d");
             $("#id4PONumber").attr("readonly", false);
             $("#VLPNCheckResult").addClass("d-none");
             poSuppName.setAttribute("list", "id4ListOpenSupp");
+            poVlpn.setAttribute("list", "id4ListVLPN");
             radVal = 2;
             poNumber.value = "";
             poSuppName.value = "";
