@@ -9,7 +9,7 @@ function list4PO(enFunc, txt2Query, inpTxtName, extQuery) {
         // console.log('input text name : ' + inpTxtName);
         // console.log('ext query : ' + extQuery);
         let suppName = '';
-        if (extQuery === 'po_suppcode') {
+        if (extQuery === 'wg_suppcode') {
             suppName = txt2Query.split(" ");
             txt2Query = suppName[0];
         }
@@ -24,9 +24,9 @@ function list4PO(enFunc, txt2Query, inpTxtName, extQuery) {
         });
 
         let arrShow2InpTxt = [
-            "po_number",
-            "po_vlpn",
-            "po_suppcode"
+            "wg_ponum",
+            "wg_vlpn",
+            "wg_suppcode"
         ];
         let inpTxt2show = arrShow2InpTxt.filter(function (e) {
             return e != extQuery;

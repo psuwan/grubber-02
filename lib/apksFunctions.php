@@ -33,6 +33,7 @@ function dbConnect()
 function insertDB($tblName, $colName, $colValue, $colType)
 {
     $dbConnect = dbConnect();
+    $sqlcmd = '';
 
     if ($colType == 1)
         $sqlcmd = "INSERT INTO " . $tblName . " (" . $colName . ") VALUES (" . $colValue . ")";
@@ -52,6 +53,7 @@ function insertDB($tblName, $colName, $colValue, $colType)
 function updateDB($tblName, $refColumn, $refValue, $refType, $colName, $colValue, $dataType)
 {
     $dbConnect = dbConnect();
+    $sqlcmd='';
 
     $errProtect = ($refType * 10) + $dataType;
     switch ($errProtect) {
@@ -83,6 +85,7 @@ function updateDB($tblName, $refColumn, $refValue, $refType, $colName, $colValue
 function deleteDB($tblName, $refColumn, $refValue, $refType)
 {
     $dbConnect = dbConnect();
+    $sqlcmd='';
 
     if ($refType == 1)
         $sqlcmd = "DELETE FROM " . $tblName . " WHERE " . $refColumn . "=" . $refValue;
@@ -101,6 +104,7 @@ function deleteDB($tblName, $refColumn, $refValue, $refType)
 function countDB($tblName, $refColumn, $refValue, $refType)
 {
     $dbConnect = dbConnect();
+    $sqlcmd = '';
 
     switch ($refType) {
         case 1:
@@ -238,7 +242,7 @@ function confParam($confFolder, $confFile, $retParam)
 
 // Generate token
 function getToken($length){
-    $token = "";
+    $token = '';
     $codeAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     $codeAlphabet.= "abcdefghijklmnopqrstuvwxyz";
     $codeAlphabet.= "0123456789";

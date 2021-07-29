@@ -61,9 +61,8 @@ $dateNow = date("Y-m-d");
             </div>-->
             <h2 class="text-warning text-center">รับซื้อ</h2>
         </div>
-        <!-- Start of Content -->
         <div class="content" id="id4Content">
-            <!-- Start of Row -->
+
             <div class="row">
                 <div class="col-md-12">
                     <div class="card">
@@ -103,7 +102,7 @@ $dateNow = date("Y-m-d");
                                 <div class="row">
                                     <div class="col-md-4 pr-md-1">
                                         <div class="form-group">
-                                            <label for="id4PONumber">เลขอ้างอิงการซื้อ</label>
+                                            <label for="id4SuppAmphoe">เลขอ้างอิงการซื้อ</label>
                                             <input type="text" class="form-control" placeholder="เลขอ้างอิงการซื้อ"
                                                    name="poNumber" id="id4PONumber" readonly list="id4ListOpenPO"
                                                    required value="">
@@ -111,7 +110,7 @@ $dateNow = date("Y-m-d");
                                     </div>
                                     <div class="col-md-4 px-md-1">
                                         <div class="form-group">
-                                            <label for="id4VlpnNumber">เลขทะเบียนรถ</label>&nbsp;<span
+                                            <label for="id4SuppAmphoe">เลขทะเบียนรถ</label>&nbsp;<span
                                                     id="VLPNCheckResult"></span>&nbsp;
                                             <input type="text" class="form-control" placeholder="เลขทะเบียนรถ"
                                                    name="vlpnNumber" id="id4VlpnNumber" required
@@ -120,7 +119,7 @@ $dateNow = date("Y-m-d");
                                     </div>
                                     <div class="col-md-4 pl-md-1">
                                         <div class="form-group">
-                                            <label for="id4POSuppName">ผู้ขาย</label>
+                                            <label for="id4SuppProvince">ผู้ขาย</label>
                                             <input type="text" name="POSuppName" id="id4POSuppName" class="form-control"
                                                    placeholder="ชื่อผู้ขาย (ถ้ามาใหม่ให้ไปลงทะเบียนผู้ขายก่อน)" required
                                                    value="">
@@ -132,7 +131,7 @@ $dateNow = date("Y-m-d");
                                 <div class="row">
                                     <div class="col-md-3 pr-md-1">
                                         <div class="form-group">
-                                            <label for="id4POBuyType">ประเภทการซื้อ</label>
+                                            <label for="id4SuppZipcode">ประเภทการซื้อ</label>
                                             <select class="form-control" name="POBuyType" id="id4POBuyType">
                                                 <option value="">เลือกประเภทการซื้อ</option>
                                                 <?php
@@ -152,7 +151,7 @@ $dateNow = date("Y-m-d");
 
                                     <div class="col-md-3 px-md-1">
                                         <div class="form-group">
-                                            <label for="id4POWgType">ประเภทการชั่ง</label>
+                                            <label for="id4SuppZipcode">ประเภทการชั่ง</label>
                                             <select class="form-control" name="POWgType" id="id4POWgType" required>
                                                 <option value="">เลือกประเภทการชั่ง</option>
                                                 <option value="0001">ชั่งเข้า (รถพร้อมสินค้า)</option>
@@ -164,7 +163,7 @@ $dateNow = date("Y-m-d");
 
                                     <div class="col-md-3 px-md-1">
                                         <div class="form-group">
-                                            <label for="id4POWgScale">เครื่องชั่ง</label>
+                                            <label for="id4SuppProvince">เครื่องชั่ง</label>
                                             <select class="form-control" name="POWgScale" id="id4POWgScale" required>
                                                 <option value="">เลือกเครื่องชั่ง</option>
                                                 <?php
@@ -184,10 +183,10 @@ $dateNow = date("Y-m-d");
 
                                     <div class="col-md-3 pl-md-1">
                                         <div class="form-group">
-                                            <label for="id4POProduct">สินค้าที่ชั่ง</label>
+                                            <label for="id4SuppProvince">สินค้าที่ชั่ง</label>
                                             <select class="form-control" name="POProduct" id="id4POProduct">
                                                 <option value="">เลือกสินค้า</option>
-                                                <option value="0000">ชั่งรถ</option>
+                                                <option value="">ชั่งรถ</option>
                                                 <?php
                                                 $sqlcmd_listWgScale = "SELECT * FROM tbl_products WHERE 1 ORDER BY product_order";
                                                 $sqlres_listWgScale = mysqli_query($dbConn, $sqlcmd_listWgScale);
@@ -235,7 +234,7 @@ $dateNow = date("Y-m-d");
                                         <div class="form-group">
                                             <!-- <label for="id4SuppAmphoe" style="text-decoration: none;">น้ำหนักที่ชั่งได้</label>-->
                                             <input type="text" class="form-control" placeholder="0"
-                                                   name="wg4Pallet" id="id4Wg4Pallet" pattern="^\d*(\.\d{0,2})?$"
+                                                   name="wg4Pallet" id="id4Wg4Pallet"
                                                    value="" style="text-align: right;" onchange="calcWgNet();"
                                                    onkeyup="calcWgNet();">
                                         </div>
@@ -258,9 +257,8 @@ $dateNow = date("Y-m-d");
                                     <div class="col-md-4 px-md-1" id="div4WgShow">
                                         <div class="form-group">
                                             <!-- <label for="id4SuppAmphoe" style="text-decoration: none;">น้ำหนักที่ชั่งได้</label>-->
-                                            <!-- 2 Decmial tested --><!--  pattern="^\d*(\.\d{0,2})?$" -->
                                             <input type="text" class="form-control font-weight-bold text-primary h3"
-                                                   placeholder="0.00"
+                                                   placeholder="0"
                                                    name="wgScaleRd" id="id4WgScaleRd" required
                                                    value="" style="text-align: right;" onchange="calcWgNet();"
                                                    onkeyup="calcWgNet();">
@@ -284,7 +282,7 @@ $dateNow = date("Y-m-d");
                                         <div class="form-group">
                                             <!-- <label for="id4SuppAmphoe" style="text-decoration: none;">น้ำหนักที่ชั่งได้</label>-->
                                             <input type="text" class="form-control font-weight-bold text-primary h3"
-                                                   placeholder="0.00"
+                                                   placeholder="0"
                                                    name="wgScaleNet" id="id4WgScaleNet" required
                                                    value="" style="text-align: right;">
                                         </div>
@@ -313,16 +311,17 @@ $dateNow = date("Y-m-d");
                                     </div>
                                 </div><!-- Button "Reset" and "Submit" -->
 
-                                <!-- Hidden -->
-                                <input type="hidden" name="processName" value="AddWg">
-
-                            </form><!-- End of form -->
                         </div><!-- Card body -->
+
+                        <!-- Hidden -->
+                        <input type="hidden" name="processName" value="AddWg">
+
+                        </form><!-- End of form -->
                     </div>
                 </div>
-            </div><!-- End of Row -->
+            </div>
 
-        </div><!-- End of Content -->
+        </div>
 
         <!-- Footer -->
         <?php
@@ -335,13 +334,12 @@ $dateNow = date("Y-m-d");
 <!-- datalist for PO -->
 <datalist id="id4ListOpenPO">
     <?php
-//    $sqlcmd_listOpenPO = "SELECT * FROM tbl_purchaseorder WHERE po_status=1";
-    $sqlcmd_listOpenPO = "SELECT * FROM tbl_wg4buy WHERE po_status=1";
+    $sqlcmd_listOpenPO = "SELECT * FROM tbl_purchaseorder WHERE po_status=1";
     $sqlres_listOpenPO = mysqli_query($dbConn, $sqlcmd_listOpenPO);
     if ($sqlres_listOpenPO) {
         while ($sqlfet_listOpenPO = mysqli_fetch_assoc($sqlres_listOpenPO)) {
             ?>
-            <option value="<?= $sqlfet_listOpenPO['wg_ponum']; ?>"></option>
+            <option value="<?= $sqlfet_listOpenPO['po_number']; ?>"></option>
             <?php
         }
     }
@@ -351,13 +349,12 @@ $dateNow = date("Y-m-d");
 <!-- Datalist for LPN -->
 <datalist id="id4ListVLPN">
     <?php
-//    $sqlcmd_listOpenVLPN = "SELECT * FROM tbl_purchaseorder WHERE po_status=1";
-    $sqlcmd_listOpenVLPN = "SELECT * FROM tbl_wg4buy WHERE po_status=1";
+    $sqlcmd_listOpenVLPN = "SELECT * FROM tbl_purchaseorder WHERE po_status=1";
     $sqlres_listOpneVLPN = mysqli_query($dbConn, $sqlcmd_listOpenVLPN);
     if ($sqlres_listOpneVLPN) {
         while ($sqlfet_listOpenVLPN = mysqli_fetch_assoc($sqlres_listOpneVLPN)) {
             ?>
-            <option value="<?= $sqlfet_listOpenVLPN['wg_vlpn']; ?>"></option>
+            <option value="<?= $sqlfet_listOpenVLPN['po_vlpn']; ?>"></option>
             <?php
         }
     }
@@ -384,13 +381,12 @@ $dateNow = date("Y-m-d");
 <!-- Datalist for open supplier -->
 <datalist id="id4ListOpenSupp">
     <?php
-//    $sqlcmd_listOpenSupp = "SELECT * FROM tbl_purchaseorder WHERE po_status=1 ORDER BY po_suppcode ASC";
-    $sqlcmd_listOpenSupp = "SELECT * FROM tbl_wg4buy WHERE po_status=1 ORDER BY wg_suppcode ASC";
+    $sqlcmd_listOpenSupp = "SELECT * FROM tbl_purchaseorder WHERE po_status=1 ORDER BY po_suppcode ASC";
     $sqlres_listOpenSuup = mysqli_query($dbConn, $sqlcmd_listOpenSupp);
     if ($sqlres_listOpenSuup) {
         while ($sqlfet_listOpenSupp = mysqli_fetch_assoc($sqlres_listOpenSuup)) {
             ?>
-            <option value="<?= getValue('tbl_suppliers', 'supp_code', $sqlfet_listOpenSupp['wg_suppcode'], 2, 'supp_name') . " " . getValue('tbl_suppliers', 'supp_code', $sqlfet_listOpenSupp['wg_suppcode'], 2, 'supp_surname'); ?>"></option>
+            <option value="<?= getValue('tbl_suppliers', 'supp_code', $sqlfet_listOpenSupp['po_suppcode'], 2, 'supp_name') . " " . getValue('tbl_suppliers', 'supp_code', $sqlfet_listOpenSupp['po_suppcode'], 2, 'supp_surname'); ?>"></option>
             <?php
         }
     }
@@ -473,17 +469,17 @@ $dateNow = date("Y-m-d");
         $('#id4POWgType').change(function () {
             let wgType = $('#id4POWgType :selected').val();
             let cntWgScale = "<?= countAllRow('tbl_wgscale');?>";
-
+            let i = 0;
             // console.log(wgType);
-            if (wgType === '0002') {
-                for (let i = 1; i <= cntWgScale; i++) {
+            if (wgType === '0002')
+                for (i = 1; i <= cntWgScale; i++) {
                     if (i === 1)
                         $("#id4POWgScale option[value=" + i.toString().padStart(4, '0') + "]").prop("disabled", true);
                     else
                         $("#id4POWgScale option[value=" + i.toString().padStart(4, '0') + "]").prop("disabled", false);
                 }
-            } else {
-                for (let i = 1; i <= cntWgScale; i++) {
+            else {
+                for (i = 1; i <= cntWgScale; i++) {
                     if (i === 1)
                         $("#id4POWgScale option[value=" + i.toString().padStart(4, '0') + "]").prop("disabled", false);
                     else
@@ -495,29 +491,12 @@ $dateNow = date("Y-m-d");
         // Check weight scale if with pallet type show pallet weight input
         $('#id4POWgScale').change(function () {
             let wgScale = $('#id4POWgScale :selected').val();
-            let chkWgLevel = queryData("php4PO.php?command=checkWgScaleLevel&wgSCaleCode=" + wgScale);
-            let cntPrdlist = '<?=countAllRow('tbl_products');?>';
-
-            if (chkWgLevel === '1') {
-                // Disable wgscale level 0 and enable wgscale level 1
-                $("#id4POProduct option[value=0000]").prop("disabled", true);
-                for (let i = 1; i <= cntPrdlist; i++) {
-                    $("#id4POProduct option[value=" + i.toString().padStart(4, '0') + "]").prop("disabled", false);
-                }   // Disable wgscale level 0 and enable wgscale level 1
-
-                // Enable pallet weight section
-                document.getElementById("id4CntPallet").value = 0;
-                document.getElementById("id4Wg4Pallet").value = 0;
-                $("#div4WgPallet :input").attr("readonly", false);// change from disabled to readonly
-            } else if (chkWgLevel === '0') {
-                // Check weight scale level to the big one for vehicle weighting
-                // Enable wgscale level 0 and disable wgscale level 1
-                $("#id4POProduct option[value=0000]").prop("disabled", false);
-                for (let i = 1; i <= cntPrdlist; i++) {
-                    $("#id4POProduct option[value=" + i.toString().padStart(4, '0') + "]").prop("disabled", true);
-                }   // Enable wgscale level 0 and disable wgscale level 1
-
-                // Disable pallet weight section
+            let chkLevel = queryData("php4PO.php?command=checkWgScaleLevel&wgSCaleCode=" + wgScale);
+            if (chkLevel === '1') {
+                //$("#div4WgPallet").removeClass("d-none");
+            } else if (chkLevel === '0') {
+                // console.log(chkLevel);
+                // $("#div4WgPallet").addClass("d-none");
                 document.getElementById("id4CntPallet").value = 0;
                 document.getElementById("id4Wg4Pallet").value = 0;
                 $("#div4WgPallet :input").attr("readonly", true);// change from disabled to readonly
@@ -531,16 +510,13 @@ $dateNow = date("Y-m-d");
     });
 
     $("#id4POSuppName").on("change", function () {
-        // list4PO(radVal, poSuppName.value, 'POSuppName', 'po_suppcode');
-        list4PO(radVal, poSuppName.value, 'POSuppName', 'wg_suppcode');
+        list4PO(radVal, poSuppName.value, 'POSuppName', 'po_suppcode');
     });
     $("#id4PONumber").on("change", function () {
-        // list4PO(radVal, poNumber.value, 'PONumber', 'po_number');
-        list4PO(radVal, poNumber.value, 'PONumber', 'wg_ponum');
+        list4PO(radVal, poNumber.value, 'PONumber', 'po_number');
     });
     $("#id4VlpnNumber").on("change", function () {
-        // list4PO(radVal, poVlpn.value, 'VlpnNumber', 'po_vlpn');
-        list4PO(radVal, poVlpn.value, 'VlpnNumber', 'wg_vlpn');
+        list4PO(radVal, poVlpn.value, 'VlpnNumber', 'po_vlpn');
     });
 </script>
 
@@ -551,6 +527,11 @@ $dateNow = date("Y-m-d");
         let wgScaleRD = document.getElementById("id4WgScaleRd");
         let wgScaleNet = document.getElementById("id4WgScaleNet");
 
+        let A = 0;
+        let B = 0;
+        let C = 0;
+        let D = 0;
+
         if (cntPallet.value === '')
             cntPallet.value = '0';
         if (wg4Pallet.value === '')
@@ -560,41 +541,23 @@ $dateNow = date("Y-m-d");
         if (wgScaleNet.value === '')
             wgScaleNet.value = '0';
 
-        let A = parseInt(cntPallet.value);
-        let B = parseFloat(wg4Pallet.value);
-        let C = parseFloat(wgScaleRD.value.replace(/,/g, ''));
+        A = parseInt(cntPallet.value);
+        B = parseFloat(wg4Pallet.value);
+        C = parseFloat(wgScaleRD.value.replace(/,/g, ''));
         // console.log('C =' + C);
 
-        let D = C - (A * B);
+        D = C - (A * B);
 
-        //wgScaleNet.value = D.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        wgScaleNet.value = D.toFixed(2);//.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        wgScaleNet.value = D.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 </script>
 
 <script>
-    // $("#id4WgScaleRd").on("keyup", function () {
-    //     this.value = this.value.replace(/,/g, '');
-    //     let value = this.value;
-    //     this.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    // });
-</script>
-
-<!-- 2 Decimal not test yet -->
-<!-- <input name="my_field" pattern="^\d*(\.\d{0,2})?$" /> -->
-<script>
-    /*    $(document).on('keydown', 'input[pattern]', function(e){
-            var input = $(this);
-            var oldVal = input.val();
-            var regex = new RegExp(input.attr('pattern'), 'g');
-
-            setTimeout(function(){
-                var newVal = input.val();
-                if(!regex.test(newVal)){
-                    input.val(oldVal);
-                }
-            }, 1);
-        });*/
+    $("#id4WgScaleRd").on("keyup", function () {
+        this.value = this.value.replace(/,/g, '');
+        let value = this.value;
+        this.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    });
 </script>
 
 </body>

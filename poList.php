@@ -85,7 +85,7 @@ $dateNow = date("Y-m-d");
                                     </thead>
                                     <tbody>
                                     <?php
-                                    $sqlcmd_listPO = "SELECT * FROM tbl_purchaseorder WHERE 1 ORDER BY po_createdat DESC";
+                                    $sqlcmd_listPO = "SELECT * FROM tbl_wg4buy WHERE 1 ORDER BY wg_createdat DESC";
                                     $sqlres_listPO = mysqli_query($dbConn, $sqlcmd_listPO);
 
                                     if ($sqlres_listPO) {
@@ -119,15 +119,15 @@ $dateNow = date("Y-m-d");
                                         while ($sqlfet_listPO = mysqli_fetch_assoc($sqlres_listPO)) {
                                             ?>
                                             <tr>
-                                                <td><?= $sqlfet_listPO['po_number']; ?></td>
-                                                <td><?= substr($sqlfet_listPO['po_createdat'], 0, -3); ?></td>
-                                                <td><?= getValue('tbl_suppliers', 'supp_code', $sqlfet_listPO['po_suppcode'], 2, 'supp_name') . " " . getValue('tbl_suppliers', 'supp_code', $sqlfet_listPO['po_suppcode'], 2, 'supp_surname'); ?></td>
-                                                <td><?= $sqlfet_listPO['po_vlpn']; ?></td>
-                                                <td><?= getValue('tbl_suppliers', 'supp_code', $sqlfet_listPO['po_suppcode'], 2, 'supp_phone'); ?></td>
+                                                <td><?= $sqlfet_listPO['wg_ponum']; ?></td>
+                                                <td><?= substr($sqlfet_listPO['wg_createdat'], 0, -3); ?></td>
+                                                <td><?= getValue('tbl_suppliers', 'supp_code', $sqlfet_listPO['wg_suppcode'], 2, 'supp_name') . " " . getValue('tbl_suppliers', 'supp_code', $sqlfet_listPO['wg_suppcode'], 2, 'supp_surname'); ?></td>
+                                                <td><?= $sqlfet_listPO['wg_vlpn']; ?></td>
+                                                <td><?= getValue('tbl_suppliers', 'supp_code', $sqlfet_listPO['wg_suppcode'], 2, 'supp_phone'); ?></td>
                                                 <td>
                                                     <?php
                                                     if ($sqlfet_listPO['po_status'] == 1) {
-                                                        echo "ยังไม่สรุปบิล";
+                                                        echo "<a href=\"#\">ยังไม่สรุปบิล</a>";
                                                     } else {
                                                         echo "สรุปบิลแล้ว";
                                                     }

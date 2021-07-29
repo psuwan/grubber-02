@@ -16,7 +16,7 @@ $varget_fieldValue = filter_input(INPUT_GET, 'fieldValue');
 $varget_fieldValue = trim($varget_fieldValue);
 $unescaped = str_replace("%u", "\u", $varget_fieldValue);
 $varget_fieldValue = json_decode('"' . $unescaped . '"');
-if ($varget_fieldReturn == 'po_suppcode') {
+if ($varget_fieldReturn == 'wg_suppcode') {
     $varget_fieldValue = getValue('tbl_suppliers', 'supp_name', $varget_fieldValue, 2, 'supp_code');
 }
 # unicode
@@ -29,7 +29,8 @@ $varpost_processName = filter_input(INPUT_POST, 'processName');
 switch ($varpost_processName) {
     case 'genPONumber':
         $poNumber = '';
-        $sqlcmd_cntPOToday = "SELECT * FROM tbl_purchaseorder WHERE DATE(po_createdat)='" . $dateNow . "'";
+//        $sqlcmd_cntPOToday = "SELECT * FROM tbl_purchaseorder WHERE DATE(po_createdat)='" . $dateNow . "'";
+        $sqlcmd_cntPOToday = "SELECT * FROM tbl_wg4buy WHERE DATE(wg_createdat)='" . $dateNow . "'";
         $sqlres_cntPOToday = mysqli_query($dbConn, $sqlcmd_cntPOToday);
         if ($sqlres_cntPOToday) {
             $sqlnum_cntPOToday = mysqli_num_rows($sqlres_cntPOToday);
@@ -44,13 +45,14 @@ switch ($varpost_processName) {
 if (!empty($varget_command)) {
     switch ($varget_command) {
         case 'query4po':
-            $sqlcmd = "SELECT * FROM tbl_purchaseorder WHERE " . $varget_fieldReturn . "='" . $varget_fieldValue . "'";
+//            $sqlcmd = "SELECT * FROM tbl_purchaseorder WHERE " . $varget_fieldReturn . "='" . $varget_fieldValue . "'";
+            $sqlcmd = "SELECT * FROM tbl_wg4buy WHERE " . $varget_fieldReturn . "='" . $varget_fieldValue . "'";
             $sqlres = mysqli_query($dbConn, $sqlcmd);
             if ($sqlres) {
                 $sqlnum = mysqli_num_rows($sqlres);
                 if ($sqlnum == 1) {
                     $sqlfet = mysqli_fetch_assoc($sqlres);
-                    if ($varget_field2Show == 'po_suppcode') {
+                    if ($varget_field2Show == 'wg_suppcode') {
                         echo getValue('tbl_suppliers', 'supp_code', $sqlfet[$varget_field2Show], 2, 'supp_name');
                         echo " ";
                         echo getValue('tbl_suppliers', 'supp_code', $sqlfet[$varget_field2Show], 2, 'supp_surname');
@@ -75,7 +77,8 @@ if (!empty($varget_command)) {
             break;
 
         case 'checkVLPN':
-            $sqlcmd = "SELECT * FROM tbl_purchaseorder WHERE po_vlpn='" . $varget_vlpn2Check . "' AND po_status=1";
+//            $sqlcmd = "SELECT * FROM tbl_purchaseorder WHERE po_vlpn='" . $varget_vlpn2Check . "' AND po_status=1";
+            $sqlcmd = "SELECT * FROM tbl_wg4buy WHERE wg_vlpn='" . $varget_vlpn2Check . "' AND po_status=1";
             $sqlres = mysqli_query($dbConn, $sqlcmd);
             if ($sqlres) {
                 $sqlnum = mysqli_num_rows($sqlres);
