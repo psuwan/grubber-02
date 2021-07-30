@@ -128,15 +128,9 @@ $dateNow = date("Y-m-d");
                                                 <td><?= $sqlfet_listPO['wg_vlpn']; ?></td>
                                                 <td><?= getValue('tbl_suppliers', 'supp_code', $sqlfet_listPO['wg_suppcode'], 2, 'supp_phone'); ?></td>
                                                 <td>
-                                                    <?php
-                                                    if ($sqlfet_listPO['po_status'] == 1) {
-                                                        echo "<a href=\"#\"><i class=\"bi bi-pencil-square text-info\"></i></a>";
-                                                    } else {
-                                                        echo "<a href=\"#\"><i class=\"bi bi-pencil-square text-dark\"></i></a>";
-                                                        echo "&nbsp;";
-                                                        echo "<a href=\"#\"><i class=\"bi bi-printer text-danger\"></i>";
-                                                    }
-                                                    ?>
+                                                    <a href="#" data-toggle="modal"
+                                                       data-target="#modal4POInfo"
+                                                       data-cardid="<?= $sqlfet_listPO['wg_ponum']; ?>"><i class="now-ui-icons travel_info"></i></a>
                                                 </td>
                                             </tr>
                                             <?php
@@ -240,6 +234,25 @@ $dateNow = date("Y-m-d");
     </div>
 </div>
 
+<!-- Modal to show information (call iframe) -->
+<div class="modal fade" id="modal4POInfo" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel">Card ID</h4>
+            </div>
+            <div class="modal-body"></div>
+            <!--            <div class="modal-footer">-->
+            <!--                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">ปิด</button>-->
+            <!--            </div>-->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+                <button type="button" class="btn btn-primary">บันทึก</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!--   Core JS Files   -->
 <script src="./js/core/jquery.min.js"></script>
 <script src="./js/core/popper.min.js"></script>
@@ -260,6 +273,23 @@ $dateNow = date("Y-m-d");
     $("#sub4Buy").addClass("show");
     $("#id4SubMenuBuyPoList").addClass("active");
 </script><!-- Hi-light active menu -->
+
+<!-- Pass parameter to modal -->
+
+<script>
+    $('#modal4POInfo').on('show.bs.modal', function (event) {
+        let button = $(event.relatedTarget)
+        let recipient = button.data('cardid')
+        let modal = $(this)
+        modal.find('.modal-title').text('รายละเอียดของ PO : ' + recipient)
+        modal.find('.modal-body').html('<iframe src="info4PO.php?ponumber=' + recipient + '" style="text-align:center;width: 100%;height:400px;border: 0px;font-size: smaller;">')
+    })
+
+    $('#modal4POInfo').on('hidden.bs.modal', function () {
+        window.location.reload();
+    })
+
+</script>
 
 </body>
 
