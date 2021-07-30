@@ -1,6 +1,7 @@
 <div class="logo">
     <a href="#" class="simple-text logo-mini">
-        GR
+        <!-- GR-->
+        <img src="./assets/img/logoWSm.png" alt="gold rubber co., ltd.">
     </a>
     <a href="#" class="simple-text logo-normal">
         โกลด์รับเบอร์

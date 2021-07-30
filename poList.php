@@ -15,7 +15,7 @@ $dateNow = date("Y-m-d");
     <meta charset="utf-8">
     <!--    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />-->
     <!--    <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">-->
-    <!--    <link rel="icon" type="image/png" href="../assets/img/favicon.png">-->
+    <link rel="icon" type="image/png" href="./assets/img/faviconW.ico">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 
     <title>Gold Rubber : Template</title>
@@ -32,6 +32,7 @@ $dateNow = date("Y-m-d");
     <link href="./css/bootstrap.min.css" rel="stylesheet"/>
     <link href="./css/now-ui-dashboard.css?v=1.5.0" rel="stylesheet"/>
     <link href="./css/style4Paginator.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
 </head>
 
 <body>
@@ -60,7 +61,7 @@ $dateNow = date("Y-m-d");
             <div class="jumbotron display-4 text-center d-block d-sm-none text-warning bg-transparent font-weight-bold">
                 Gold Rubber
             </div>-->
-            <h2 class="text-warning text-center">รายการซื้อยางทั้งหมด</h2>
+            <h2 class="text-warning text-center font-weight-bold">รายการซื้อยางทั้งหมด</h2>
         </div>
         <div class="content">
             <div class="row">
@@ -85,7 +86,9 @@ $dateNow = date("Y-m-d");
                                     </thead>
                                     <tbody>
                                     <?php
-                                    $sqlcmd_listPO = "SELECT * FROM tbl_wg4buy WHERE 1 ORDER BY wg_createdat DESC";
+                                    $sqlcmd_SetMode = "SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))";
+                                    $sqlres_setMode = mysqli_query($dbConn, $sqlcmd_SetMode);
+                                    $sqlcmd_listPO = "SELECT * FROM tbl_wg4buy WHERE 1 GROUP BY wg_ponum ORDER BY wg_createdat DESC";
                                     $sqlres_listPO = mysqli_query($dbConn, $sqlcmd_listPO);
 
                                     if ($sqlres_listPO) {
@@ -127,9 +130,11 @@ $dateNow = date("Y-m-d");
                                                 <td>
                                                     <?php
                                                     if ($sqlfet_listPO['po_status'] == 1) {
-                                                        echo "<a href=\"#\">ยังไม่สรุปบิล</a>";
+                                                        echo "<a href=\"#\"><i class=\"bi bi-pencil-square text-info\"></i></a>";
                                                     } else {
-                                                        echo "สรุปบิลแล้ว";
+                                                        echo "<a href=\"#\"><i class=\"bi bi-pencil-square text-dark\"></i></a>";
+                                                        echo "&nbsp;";
+                                                        echo "<a href=\"#\"><i class=\"bi bi-printer text-danger\"></i>";
                                                     }
                                                     ?>
                                                 </td>
@@ -145,6 +150,67 @@ $dateNow = date("Y-m-d");
                     </div>
                 </div>
             </div>
+
+            <!--
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-category"> ข้อมูลทั้งหมด </h5>
+                    <h4 class="card-title"> รายการซื้อ </h4>
+                </div>
+                <div class="card-body">
+
+                    <div class="accordion" id="accordionExample">
+                        <?php
+            /*                        $cntList = 0;
+                                    $sqlcmd_SetMode = "SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))";
+                                    $sqlres_setMode = mysqli_query($dbConn, $sqlcmd_SetMode);
+                                    $sqlcmd_listPOx = "SELECT * FROM tbl_wg4buy WHERE 1 GROUP BY wg_ponum ORDER BY wg_createdat DESC";
+                                    $sqlres_listPOx = mysqli_query($dbConn, $sqlcmd_listPOx);
+
+                                    if ($sqlres_listPOx) {
+                                        while ($sqlfet_listPOx = mysqli_fetch_assoc($sqlres_listPOx)) {
+                                            */ ?>
+                                <div class="card">
+                                    <div class="card-header" id="heading<? /*= ++$cntList; */ ?>">
+                                        <h2 class="mb-0">
+                                            <a class="btn btn-sm btn-round w-100 text-left <?php /*if ($sqlfet_listPOx['po_status'] == 0) echo "btn-success"; else echo "btn-primary"; */ ?>"
+                                               type="button"
+                                               data-toggle="collapse" href="#"
+                                               data-target="#collapse<? /*= $cntList; */ ?>">
+                                                <? /*= $sqlfet_listPOx['wg_ponum']; */ ?>
+                                                &nbsp;<? /*= getValue('tbl_suppliers', 'supp_code', $sqlfet_listPOx['wg_suppcode'], 2, 'supp_name') . " " . getValue('tbl_suppliers', 'supp_code', $sqlfet_listPOx['wg_suppcode'], 2, 'supp_surname'); */ ?>
+                                            </a>
+                                        </h2>
+                                    </div>
+
+                                    <div id="collapse<? /*= $cntList; */ ?>" class="collapse" data-parent="#accordionExample">
+                                        <div class="card-body">
+                                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry
+                                            richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard
+                                            dolor
+                                            brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon
+                                            tempor, sunt
+                                            aliqua put a bird on it squid single-origin coffee nulla assumenda
+                                            shoreditch et.
+                                            Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt
+                                            sapiente
+                                            ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft
+                                            beer
+                                            farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard
+                                            of them
+                                            accusamus labore sustainable VHS.
+                                        </div>
+                                    </div>
+                                </div>
+                                <?php
+            /*                            }
+                                    }
+                                    */ ?>
+
+                    </div>
+                </div>
+            </div>
+-->
             <!-- Paginator -->
             มีรายการซื้อทั้งหมด <strong><?= $Num_Rows; ?></strong> รายการ
             <br><br>

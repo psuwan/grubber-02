@@ -14,7 +14,7 @@ $dateNow = date("Y-m-d");
     <meta charset="utf-8">
     <!--    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />-->
     <!--    <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">-->
-    <!--    <link rel="icon" type="image/png" href="../assets/img/favicon.png">-->
+    <link rel="icon" type="image/png" href="./assets/img/faviconW.ico">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 
     <title>Gold Rubber : Template</title>
@@ -475,6 +475,17 @@ $dateNow = date("Y-m-d");
             $("#id4POWgType option[value='0001']").prop("disabled", true);
             $("#id4POWgType option[value='0002']").prop("disabled", false);
             $("#id4POWgType option[value='0003']").prop("disabled", false);
+
+            // Disable keyboard input
+            $("#id4PONumber").keydown(function () {
+                return false;
+            });
+            $("#id4VlpnNumber").keydown(function () {
+                return false;
+            });
+            $("#id4POSuppName").keydown(function () {
+                return false;
+            });
         });
 
         // Check weight type selected
@@ -498,6 +509,17 @@ $dateNow = date("Y-m-d");
                         $("#id4POWgScale option[value=" + i.toString().padStart(4, '0') + "]").prop("disabled", true);
                 }
             }
+
+            // Enable keyboard input
+            $("#id4PONumber").keydown(function () {
+                return true;
+            });
+            $("#id4VlpnNumber").keydown(function () {
+                return true;
+            });
+            $("#id4POSuppName").keydown(function () {
+                return true;
+            });
         });
 
         // Check weight scale if with pallet type show pallet weight input
