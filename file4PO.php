@@ -459,6 +459,17 @@ $dateNow = date("Y-m-d");
             $("#id4POWgType option[value='0001']").prop("disabled", false);
             $("#id4POWgType option[value='0002']").prop("disabled", false);
             $("#id4POWgType option[value='0003']").prop("disabled", true);
+
+            // Enable keyboard input
+            $("#id4PONumber").keydown(function () {
+                return true;
+            });
+            $("#id4VlpnNumber").keydown(function () {
+                return true;
+            });
+            $("#id4POSuppName").keydown(function () {
+                return true;
+            });
         });
         // Check radio button #02 checked
         $('#id4ChkNewPO2').change(function () {

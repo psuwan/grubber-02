@@ -130,7 +130,8 @@ $dateNow = date("Y-m-d");
                                                 <td>
                                                     <a href="#" data-toggle="modal"
                                                        data-target="#modal4POInfo"
-                                                       data-cardid="<?= $sqlfet_listPO['wg_ponum']; ?>"><i class="now-ui-icons travel_info"></i></a>
+                                                       data-ponumber="<?= $sqlfet_listPO['wg_ponum']; ?>"><i
+                                                                class="now-ui-icons travel_info"></i></a>
                                                 </td>
                                             </tr>
                                             <?php
@@ -238,17 +239,19 @@ $dateNow = date("Y-m-d");
 <div class="modal fade" id="modal4POInfo" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="exampleModalLabel">Card ID</h4>
-            </div>
-            <div class="modal-body"></div>
-            <!--            <div class="modal-footer">-->
-            <!--                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">ปิด</button>-->
-            <!--            </div>-->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
-                <button type="button" class="btn btn-primary">บันทึก</button>
-            </div>
+            <form action="xxxx.php" method="post">
+                <div class="modal-header">
+                    <h4 class="modal-title font-weight-bold" id=""></h4>
+                </div>
+
+                <div class="modal-body"></div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+                    <button type="submit" class="btn btn-primary">บันทึก</button>
+                </div>
+
+            </form>
         </div>
     </div>
 </div>
@@ -279,16 +282,18 @@ $dateNow = date("Y-m-d");
 <script>
     $('#modal4POInfo').on('show.bs.modal', function (event) {
         let button = $(event.relatedTarget)
-        let recipient = button.data('cardid')
+        let poNumber = button.data('ponumber')
         let modal = $(this)
-        modal.find('.modal-title').text('รายละเอียดของ PO : ' + recipient)
-        modal.find('.modal-body').html('<iframe src="info4PO.php?ponumber=' + recipient + '" style="text-align:center;width: 100%;height:400px;border: 0px;font-size: smaller;">')
+        modal.find('.modal-title').text('รายละเอียดของ PO : ' + poNumber)
+        //modal.find('.modal-body').html('<iframe src="info4PO.php?ponumber=' + recipient + '" style="text-align:center;width: 100%;height:600px;border: 0px;font-size: smaller;">')
+        modal.find('.modal-body').html(
+            '<input type="text" class="form-control" name="xxxxTst">'
+        );
     })
 
     $('#modal4POInfo').on('hidden.bs.modal', function () {
         window.location.reload();
     })
-
 </script>
 
 </body>
