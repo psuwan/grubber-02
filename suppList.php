@@ -32,6 +32,7 @@ $dateNow = date("Y-m-d");
     <link href="./css/bootstrap.min.css" rel="stylesheet"/>
     <link href="./css/now-ui-dashboard.css?v=1.5.0" rel="stylesheet"/>
     <link rel="stylesheet" href="./css/style4Paginator.css">
+    <link rel="stylesheet" href="./css/jquery.dataTables.min.css">
 </head>
 
 <body>
@@ -72,7 +73,7 @@ $dateNow = date("Y-m-d");
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table">
+                                <table class="table" id="example">
                                     <thead class=" text-primary">
                                     <tr>
                                         <th>#</th>
@@ -92,7 +93,7 @@ $dateNow = date("Y-m-d");
                                     if ($sqlres_listSupp) {
 
                                         // Paginator setup rows per page
-                                        $Num_Rows = mysqli_num_rows($sqlres_listSupp);
+                                        /*$Num_Rows = mysqli_num_rows($sqlres_listSupp);
 
                                         $Per_Page = 10;   // Per Page
 
@@ -115,12 +116,13 @@ $dateNow = date("Y-m-d");
                                         }
 
                                         $sqlcmd_listSupp .= " LIMIT $Page_Start , $Per_Page";
-                                        $sqlres_listSupp = mysqli_query($dbConn, $sqlcmd_listSupp);
+                                        $sqlres_listSupp = mysqli_query($dbConn, $sqlcmd_listSupp);*/
                                         // Paginator setup rows per page
                                         while ($sqlfet_listSupp = mysqli_fetch_assoc($sqlres_listSupp)) {
                                             ?>
                                             <tr>
-                                                <td><?= ++$suppCnt + (($Page - 1) * $Per_Page); ?></td>
+                                                <td><?= ++$suppCnt/* + (($Page - 1) * $Per_Page)*/
+                                                    ; ?></td>
                                                 <td><?= $sqlfet_listSupp['supp_code']; ?></td>
                                                 <td><?= $sqlfet_listSupp['supp_name'] . " " . $sqlfet_listSupp['supp_surname']; ?></td>
                                                 <td><?= getValue('tbl_supptypes', 'supptype_code', $sqlfet_listSupp['supp_category'], 2, 'supptype_name'); ?></td>
@@ -149,25 +151,25 @@ $dateNow = date("Y-m-d");
                 </div>
             </div>
             <!-- Paginator -->
-            รายชื่อผู้ขายยางทั้งหมด <strong><?= $Num_Rows; ?></strong> คน
+            <!--รายชื่อผู้ขายยางทั้งหมด <strong><? /*= $Num_Rows; */ ?></strong> คน
             <br><br>
             <div class="row">
                 <div class="col-md-auto">
                     <?php
-                    $value = $sqlcmd_listSupp;
-                    $pages = new Paginator;
-                    $pages->items_total = $Num_Rows;
-                    $pages->mid_range = 7;
-                    $pages->current_page = $Page;
-                    $pages->default_ipp = $Per_Page;
-                    // $pages->url_next = $_SERVER["PHP_SELF"] . "?QueryString=" . $value . "&Page=";
-                    $pages->url_next = $_SERVER["PHP_SELF"] . "?QueryString=value&Page=";
-                    $pages->paginate();
+            /*                    $value = $sqlcmd_listSupp;
+                                $pages = new Paginator;
+                                $pages->items_total = $Num_Rows;
+                                $pages->mid_range = 7;
+                                $pages->current_page = $Page;
+                                $pages->default_ipp = $Per_Page;
+                                // $pages->url_next = $_SERVER["PHP_SELF"] . "?QueryString=" . $value . "&Page=";
+                                $pages->url_next = $_SERVER["PHP_SELF"] . "?QueryString=value&Page=";
+                                $pages->paginate();
 
-                    echo $pages->display_pages()
-                    ?>
+                                echo $pages->display_pages()
+                                */ ?>
                 </div>
-            </div>
+            </div>-->
             <!-- Paginator -->
         </div>
 
@@ -188,6 +190,7 @@ $dateNow = date("Y-m-d");
 <script src="./js/plugins/bootstrap-notify.js"></script>
 <!-- Control Center for Now Ui Dashboard: parallax effects, scripts for the example pages etc -->
 <script src="./js/now-ui-dashboard.min.js?v=1.5.0" type="text/javascript"></script>
+<script src="./js/jquery.dataTables.min.js"></script>
 
 <!-- Hi-light active menu -->
 <script>
@@ -203,6 +206,38 @@ $dateNow = date("Y-m-d");
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()
     })
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('#example').DataTable({
+            language:
+                {
+                    "decimal": "",
+                    "emptyTable": "ไม่มีข้อมูล",
+                    "info": "แสดงผล _START_ ถึง _END_ จากทั้งหมด _TOTAL_ ข้อมูล",
+                    "infoEmpty": "แสดงผล 0 ถึง 0 จากทั้งหมด 0 ข้อมูล",
+                    "infoFiltered": "(กรองจากทั้งหมด _MAX_ ข้อมูล)",
+                    "infoPostFix": "",
+                    "thousands": ",",
+                    "lengthMenu": "แสดง _MENU_ ข้อมูลต่อหน้า",
+                    "loadingRecords": "กำลังโหลดข้อมูล...",
+                    "processing": "กำลังประมวลผล...",
+                    "search": "ค้นหาในตาราง :  ",
+                    "zeroRecords": "ไม่มีข้อมูลตรงกับที่ค้นหา",
+                    "paginate": {
+                        "first": "หน้าแรก",
+                        "last": "หน้าสุดท้าย",
+                        "next": "ถัดไป",
+                        "previous": "ก่อนหน้า"
+                    },
+                    "aria": {
+                        "sortAscending": ": activate to sort column ascending",
+                        "sortDescending": ": activate to sort column descending"
+                    }
+                }
+        });
+    });
 </script>
 
 </body>

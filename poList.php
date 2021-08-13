@@ -1,6 +1,6 @@
 <?php
 
-include_once './lib/apksPagination.php';
+//include_once './lib/apksPagination.php';
 include_once './lib/apksFunctions.php';
 $dbConn = dbConnect();
 
@@ -33,6 +33,7 @@ $dateNow = date("Y-m-d");
     <link href="./css/now-ui-dashboard.css?v=1.5.0" rel="stylesheet"/>
     <link href="./css/style4Paginator.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="./css/jquery.dataTables.min.css">
 </head>
 
 <body>
@@ -73,15 +74,15 @@ $dateNow = date("Y-m-d");
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table">
+                                <table class="table table-striped" id="example">
                                     <thead class=" text-primary">
                                     <tr>
                                         <th>เลขอ้างอิง</th>
                                         <th>วัน-เวลา</th>
                                         <th>ผู้ขาย</th>
                                         <th>ทะเบียนรถ</th>
-                                        <th>หมายเลขติดต่อ</th>
-                                        <th>สถานะ</th>
+                                        <th>โทรศัพท์</th>
+                                        <th></th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -92,46 +93,25 @@ $dateNow = date("Y-m-d");
                                     $sqlres_listPO = mysqli_query($dbConn, $sqlcmd_listPO);
 
                                     if ($sqlres_listPO) {
-                                        // Paginator setup rows per page
-                                        $Num_Rows = mysqli_num_rows($sqlres_listPO);
-
-                                        $Per_Page = 10;   // Per Page
-
-                                        $Page = $_GET["Page"];
-                                        if (!$_GET["Page"]) {
-                                            $Page = 1;
-                                        }
-
-                                        $Prev_Page = $Page - 1;
-                                        $Next_Page = $Page + 1;
-
-                                        $Page_Start = (($Per_Page * $Page) - $Per_Page);
-                                        if ($Num_Rows <= $Per_Page) {
-                                            $Num_Pages = 1;
-                                        } else if (($Num_Rows % $Per_Page) == 0) {
-                                            $Num_Pages = ($Num_Rows / $Per_Page);
-                                        } else {
-                                            $Num_Pages = ($Num_Rows / $Per_Page) + 1;
-                                            $Num_Pages = (int)$Num_Pages;
-                                        }
-
-                                        $sqlcmd_listPO .= " LIMIT $Page_Start , $Per_Page";
-                                        $sqlres_listPO = mysqli_query($dbConn, $sqlcmd_listPO);
-                                        // Paginator setup rows per page
-
                                         while ($sqlfet_listPO = mysqli_fetch_assoc($sqlres_listPO)) {
                                             ?>
                                             <tr>
                                                 <td><?= $sqlfet_listPO['wg_ponum']; ?></td>
-                                                <td><?= substr($sqlfet_listPO['wg_createdat'], 0, -3); ?></td>
+                                                <td><?= substr($sqlfet_listPO['wg_createdat'], 0, -3) . " น."; ?></td>
                                                 <td><?= getValue('tbl_suppliers', 'supp_code', $sqlfet_listPO['wg_suppcode'], 2, 'supp_name') . " " . getValue('tbl_suppliers', 'supp_code', $sqlfet_listPO['wg_suppcode'], 2, 'supp_surname'); ?></td>
                                                 <td><?= $sqlfet_listPO['wg_vlpn']; ?></td>
                                                 <td><?= getValue('tbl_suppliers', 'supp_code', $sqlfet_listPO['wg_suppcode'], 2, 'supp_phone'); ?></td>
                                                 <td>
-                                                    <a href="#" data-toggle="modal"
-                                                       data-target="#modal4POInfo"
-                                                       data-ponumber="<?= $sqlfet_listPO['wg_ponum']; ?>"><i
-                                                                class="now-ui-icons travel_info"></i></a>
+                                                    <a href="./poMgr.php?poNumber=<?= $sqlfet_listPO['wg_ponum']; ?>"
+                                                       data-toggle="tooltip" data-placement="top"
+                                                       title="จัดการ PO"><i
+                                                                class="now-ui-icons design-2_ruler-pencil"></i></a>
+
+                                                    <span data-toggle="modal" data-target="#modal4POInfo"
+                                                          data-ponumber="<?= $sqlfet_listPO['wg_ponum']; ?>">
+                                                        <a href="#" data-toggle="tooltip" data-placement="top"
+                                                           title="ข้อมูล PO"><i
+                                                                    class="now-ui-icons travel_info"></i></a></span>
                                                 </td>
                                             </tr>
                                             <?php
@@ -207,24 +187,24 @@ $dateNow = date("Y-m-d");
             </div>
 -->
             <!-- Paginator -->
-            มีรายการซื้อทั้งหมด <strong><?= $Num_Rows; ?></strong> รายการ
+            <!--มีรายการซื้อทั้งหมด <strong><? /*= $Num_Rows; */ ?></strong> รายการ
             <br><br>
             <div class="row">
                 <div class="col-md-auto">
                     <?php
-                    $pages = new Paginator;
-                    $pages->items_total = $Num_Rows;
-                    $pages->mid_range = 10;
-                    $pages->current_page = $Page;
-                    $pages->default_ipp = $Per_Page;
-                    $pages->url_next = $_SERVER["PHP_SELF"] . "?QueryString=value&Page=";
+            /*                    $pages = new Paginator;
+                                $pages->items_total = $Num_Rows;
+                                $pages->mid_range = 10;
+                                $pages->current_page = $Page;
+                                $pages->default_ipp = $Per_Page;
+                                $pages->url_next = $_SERVER["PHP_SELF"] . "?QueryString=value&Page=";
 
-                    $pages->paginate();
+                                $pages->paginate();
 
-                    echo $pages->display_pages()
-                    ?>
+                                echo $pages->display_pages()
+                                */ ?>
                 </div>
-            </div>
+            </div>-->
             <!-- Paginator -->
         </div>
 
@@ -244,7 +224,9 @@ $dateNow = date("Y-m-d");
                     <h4 class="modal-title font-weight-bold" id=""></h4>
                 </div>
 
-                <div class="modal-body"></div>
+                <div class="modal-body" id="modalBody">
+
+                </div>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
@@ -266,6 +248,7 @@ $dateNow = date("Y-m-d");
 <script src="./js/plugins/bootstrap-notify.js"></script>
 <!-- Control Center for Now Ui Dashboard: parallax effects, scripts for the example pages etc -->
 <script src="./js/now-ui-dashboard.min.js?v=1.5.0" type="text/javascript"></script>
+<script src="./js/jquery.dataTables.min.js"></script>
 
 <!-- Hi-light active menu -->
 <script>
@@ -277,22 +260,76 @@ $dateNow = date("Y-m-d");
     $("#id4SubMenuBuyPoList").addClass("active");
 </script><!-- Hi-light active menu -->
 
-<!-- Pass parameter to modal -->
+<!-- Datatable Setup -->
+<script>
+    $(document).ready(function () {
+        $('#example').DataTable({
+            language:
+                {
+                    "decimal": "",
+                    "emptyTable": "ไม่มีข้อมูล",
+                    "info": "แสดงผล _START_ ถึง _END_ จากทั้งหมด _TOTAL_ ข้อมูล",
+                    "infoEmpty": "แสดงผล 0 ถึง 0 จากทั้งหมด 0 ข้อมูล",
+                    "infoFiltered": "(กรองจากทั้งหมด _MAX_ ข้อมูล)",
+                    "infoPostFix": "",
+                    "thousands": ",",
+                    "lengthMenu": "แสดง _MENU_ ข้อมูลต่อหน้า",
+                    "loadingRecords": "กำลังโหลดข้อมูล...",
+                    "processing": "กำลังประมวลผล...",
+                    "search": "ค้นหาในตาราง :  ",
+                    "zeroRecords": "ไม่มีข้อมูลตรงกับที่ค้นหา",
+                    "paginate": {
+                        "first": "หน้าแรก",
+                        "last": "หน้าสุดท้าย",
+                        "next": "ถัดไป",
+                        "previous": "ก่อนหน้า"
+                    },
+                    "aria": {
+                        "sortAscending": ": activate to sort column ascending",
+                        "sortDescending": ": activate to sort column descending"
+                    }
+                }
+        });
+    });
+</script><!-- Datatable Setup -->
 
+
+<!-- Pass parameter to modal -->
 <script>
     $('#modal4POInfo').on('show.bs.modal', function (event) {
-        let button = $(event.relatedTarget)
-        let poNumber = button.data('ponumber')
-        let modal = $(this)
+        let button = $(event.relatedTarget);
+        let poNumber = button.data('ponumber');
+
+        let modal = $(this);
+
         modal.find('.modal-title').text('รายละเอียดของ PO : ' + poNumber)
+
+        $.ajax({
+            url: "poData.php",
+            type: "POST",
+            data: {poNumber: poNumber},
+            success: function (response) {
+                console.log(response.length);
+                for (let i = 0; i < response.length; i++) {
+                    modal.find('#modalBody').append('<button type="button" class="btn btn-primary">ปุ่มที่ ' + i + '</button>');
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(textStatus, errorThrown);
+            }
+        });
+
         //modal.find('.modal-body').html('<iframe src="info4PO.php?ponumber=' + recipient + '" style="text-align:center;width: 100%;height:600px;border: 0px;font-size: smaller;">')
-        modal.find('.modal-body').html(
-            '<input type="text" class="form-control" name="xxxxTst">'
-        );
     })
 
     $('#modal4POInfo').on('hidden.bs.modal', function () {
         window.location.reload();
+    })
+</script>
+
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
     })
 </script>
 

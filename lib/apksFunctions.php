@@ -53,7 +53,7 @@ function insertDB($tblName, $colName, $colValue, $colType)
 function updateDB($tblName, $refColumn, $refValue, $refType, $colName, $colValue, $dataType)
 {
     $dbConnect = dbConnect();
-    $sqlcmd='';
+    $sqlcmd = '';
 
     $errProtect = ($refType * 10) + $dataType;
     switch ($errProtect) {
@@ -85,7 +85,7 @@ function updateDB($tblName, $refColumn, $refValue, $refType, $colName, $colValue
 function deleteDB($tblName, $refColumn, $refValue, $refType)
 {
     $dbConnect = dbConnect();
-    $sqlcmd='';
+    $sqlcmd = '';
 
     if ($refType == 1)
         $sqlcmd = "DELETE FROM " . $tblName . " WHERE " . $refColumn . "=" . $refValue;
@@ -241,16 +241,58 @@ function confParam($confFolder, $confFile, $retParam)
 }
 
 // Generate token
-function getToken($length){
+function getToken($length)
+{
     $token = '';
     $codeAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    $codeAlphabet.= "abcdefghijklmnopqrstuvwxyz";
-    $codeAlphabet.= "0123456789";
+    $codeAlphabet .= "abcdefghijklmnopqrstuvwxyz";
+    $codeAlphabet .= "0123456789";
     $max = strlen($codeAlphabet); // edited
 
-    for ($i=0; $i < $length; $i++) {
-        $token .= $codeAlphabet[rand(0, $max-1)];
+    for ($i = 0; $i < $length; $i++) {
+        $token .= $codeAlphabet[rand(0, $max - 1)];
     }
 
     return $token;
 }
+
+/* --------------------------------------- */
+// Function only use for GoldRubber's project
+function calcWgMinusWater4PO($poNumber)
+{
+    $dbConn = dbConnect();
+
+    $sqlcmd = "SELECT FORMAT(SUM((wg_net - (((97-wg_percent)*wg_net)/100))), 2) AS MINUSWATER FROM tbl_wg4buy WHERE wg_ponum='" . $poNumber . "' AND wg_product<>'0000'";
+    $sqlres = mysqli_query($dbConn, $sqlcmd);
+
+    if ($sqlres) {
+        $sqlfet = mysqli_fetch_assoc($sqlres);
+        if (empty($sqlfet['MINUSWATER']))
+            echo "ไม่มีข้อมูล";
+        else
+            return $sqlfet['MINUSWATER'];
+    } else {
+        echo "ERROR !!! [" . mysqli_errno($dbConn) . "]--[" . mysqli_error($dbConn) . "]";
+    }
+}
+
+function calcWgWithBuyPrice($poNumber)
+{
+    $dbConn = dbConnect();
+
+    $sqlcmd = "SELECT FORMAT(SUM(wg_buyprc*((wg_net - (((97-wg_percent)*wg_net)/100)))), 2) AS BUYPRICE FROM tbl_wg4buy WHERE wg_ponum='" . $poNumber . "' AND wg_product<>'0000'";
+    $sqlres = mysqli_query($dbConn, $sqlcmd);
+
+    if ($sqlres) {
+        $sqlfet = mysqli_fetch_assoc($sqlres);
+        if (empty($sqlfet['BUYPRICE']))
+            echo "ไม่มีข้อมูล";
+        else
+            return $sqlfet['BUYPRICE'];
+    } else {
+        echo "ERROR !!! [" . mysqli_errno($dbConn) . "]--[" . mysqli_error($dbConn) . "]";
+    }
+}
+
+// Function only use for GoldRubber's project
+/* --------------------------------------- */
