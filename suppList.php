@@ -33,6 +33,23 @@ $dateNow = date("Y-m-d");
     <link href="./css/now-ui-dashboard.css?v=1.5.0" rel="stylesheet"/>
     <link rel="stylesheet" href="./css/style4Paginator.css">
     <link rel="stylesheet" href="./css/jquery.dataTables.min.css">
+
+
+    <style>
+        #example_filter input {
+            border-radius: 30px;
+            width: 300px;
+            height: 35px;
+            margin-right: 18px;
+        }
+
+        /* Selects any <input> when focused */
+        #example_filter input:focus {
+            border: solid 1px orange;
+            outline: none !important;
+        }
+    </style>
+
 </head>
 
 <body>
@@ -208,9 +225,11 @@ $dateNow = date("Y-m-d");
     })
 </script>
 
+<!-- Datatable Setup -->
 <script>
     $(document).ready(function () {
         $('#example').DataTable({
+            "order": [[0, "asc"]],
             language:
                 {
                     "decimal": "",
@@ -223,7 +242,8 @@ $dateNow = date("Y-m-d");
                     "lengthMenu": "แสดง _MENU_ ข้อมูลต่อหน้า",
                     "loadingRecords": "กำลังโหลดข้อมูล...",
                     "processing": "กำลังประมวลผล...",
-                    "search": "ค้นหาในตาราง :  ",
+                    "search": "",
+                    "searchPlaceholder": "   ค้นหาในตาราง",
                     "zeroRecords": "ไม่มีข้อมูลตรงกับที่ค้นหา",
                     "paginate": {
                         "first": "หน้าแรก",
@@ -238,7 +258,7 @@ $dateNow = date("Y-m-d");
                 }
         });
     });
-</script>
+</script><!-- Datatable Setup -->
 
 </body>
 

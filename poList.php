@@ -1,6 +1,5 @@
 <?php
 
-//include_once './lib/apksPagination.php';
 include_once './lib/apksFunctions.php';
 $dbConn = dbConnect();
 
@@ -34,6 +33,21 @@ $dateNow = date("Y-m-d");
     <link href="./css/style4Paginator.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="./css/jquery.dataTables.min.css">
+
+    <style>
+        #example_filter input {
+            border-radius: 30px;
+            width: 300px;
+            height: 35px;
+            margin-right: 18px;
+        }
+
+        /* Selects any <input> when focused */
+        #example_filter input:focus {
+            border: solid 1px orange;
+            outline: none !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -89,7 +103,8 @@ $dateNow = date("Y-m-d");
                                     <?php
                                     $sqlcmd_SetMode = "SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))";
                                     $sqlres_setMode = mysqli_query($dbConn, $sqlcmd_SetMode);
-                                    $sqlcmd_listPO = "SELECT * FROM tbl_wg4buy WHERE 1 GROUP BY wg_ponum ORDER BY wg_createdat DESC";
+
+                                    $sqlcmd_listPO = "SELECT * FROM tbl_wg4buy WHERE po_status=1 GROUP BY wg_ponum ORDER BY wg_ponum DESC";
                                     $sqlres_listPO = mysqli_query($dbConn, $sqlcmd_listPO);
 
                                     if ($sqlres_listPO) {
@@ -97,7 +112,9 @@ $dateNow = date("Y-m-d");
                                             ?>
                                             <tr>
                                                 <td><?= $sqlfet_listPO['wg_ponum']; ?></td>
-                                                <td><?= substr($sqlfet_listPO['wg_createdat'], 0, -3) . " น."; ?></td>
+                                                <td><?= monthThai(dateBE(substr($sqlfet_listPO['wg_createdat'], 0, 10)));
+                                                    ?>&nbsp;
+                                                    <?= substr($sqlfet_listPO['wg_createdat'], 11, -3) . " น."; ?></td>
                                                 <td><?= getValue('tbl_suppliers', 'supp_code', $sqlfet_listPO['wg_suppcode'], 2, 'supp_name') . " " . getValue('tbl_suppliers', 'supp_code', $sqlfet_listPO['wg_suppcode'], 2, 'supp_surname'); ?></td>
                                                 <td><?= $sqlfet_listPO['wg_vlpn']; ?></td>
                                                 <td><?= getValue('tbl_suppliers', 'supp_code', $sqlfet_listPO['wg_suppcode'], 2, 'supp_phone'); ?></td>
@@ -106,6 +123,10 @@ $dateNow = date("Y-m-d");
                                                        data-toggle="tooltip" data-placement="top"
                                                        title="จัดการ PO"><i
                                                                 class="now-ui-icons design-2_ruler-pencil"></i></a>
+
+                                                    <a href="./prnWgCard.php?poNumber=<?= $sqlfet_listPO['wg_ponum']; ?>"
+                                                       data-toggle="tooltip" data-placement="top"
+                                                       title="พิมพ์บัตรชั่ง"><i class="now-ui-icons files_box"></i></a>
 
                                                     <span data-toggle="modal" data-target="#modal4POInfo"
                                                           data-ponumber="<?= $sqlfet_listPO['wg_ponum']; ?>">
@@ -125,87 +146,6 @@ $dateNow = date("Y-m-d");
                     </div>
                 </div>
             </div>
-
-            <!--
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-category"> ข้อมูลทั้งหมด </h5>
-                    <h4 class="card-title"> รายการซื้อ </h4>
-                </div>
-                <div class="card-body">
-
-                    <div class="accordion" id="accordionExample">
-                        <?php
-            /*                        $cntList = 0;
-                                    $sqlcmd_SetMode = "SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))";
-                                    $sqlres_setMode = mysqli_query($dbConn, $sqlcmd_SetMode);
-                                    $sqlcmd_listPOx = "SELECT * FROM tbl_wg4buy WHERE 1 GROUP BY wg_ponum ORDER BY wg_createdat DESC";
-                                    $sqlres_listPOx = mysqli_query($dbConn, $sqlcmd_listPOx);
-
-                                    if ($sqlres_listPOx) {
-                                        while ($sqlfet_listPOx = mysqli_fetch_assoc($sqlres_listPOx)) {
-                                            */ ?>
-                                <div class="card">
-                                    <div class="card-header" id="heading<? /*= ++$cntList; */ ?>">
-                                        <h2 class="mb-0">
-                                            <a class="btn btn-sm btn-round w-100 text-left <?php /*if ($sqlfet_listPOx['po_status'] == 0) echo "btn-success"; else echo "btn-primary"; */ ?>"
-                                               type="button"
-                                               data-toggle="collapse" href="#"
-                                               data-target="#collapse<? /*= $cntList; */ ?>">
-                                                <? /*= $sqlfet_listPOx['wg_ponum']; */ ?>
-                                                &nbsp;<? /*= getValue('tbl_suppliers', 'supp_code', $sqlfet_listPOx['wg_suppcode'], 2, 'supp_name') . " " . getValue('tbl_suppliers', 'supp_code', $sqlfet_listPOx['wg_suppcode'], 2, 'supp_surname'); */ ?>
-                                            </a>
-                                        </h2>
-                                    </div>
-
-                                    <div id="collapse<? /*= $cntList; */ ?>" class="collapse" data-parent="#accordionExample">
-                                        <div class="card-body">
-                                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry
-                                            richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard
-                                            dolor
-                                            brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon
-                                            tempor, sunt
-                                            aliqua put a bird on it squid single-origin coffee nulla assumenda
-                                            shoreditch et.
-                                            Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt
-                                            sapiente
-                                            ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft
-                                            beer
-                                            farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard
-                                            of them
-                                            accusamus labore sustainable VHS.
-                                        </div>
-                                    </div>
-                                </div>
-                                <?php
-            /*                            }
-                                    }
-                                    */ ?>
-
-                    </div>
-                </div>
-            </div>
--->
-            <!-- Paginator -->
-            <!--มีรายการซื้อทั้งหมด <strong><? /*= $Num_Rows; */ ?></strong> รายการ
-            <br><br>
-            <div class="row">
-                <div class="col-md-auto">
-                    <?php
-            /*                    $pages = new Paginator;
-                                $pages->items_total = $Num_Rows;
-                                $pages->mid_range = 10;
-                                $pages->current_page = $Page;
-                                $pages->default_ipp = $Per_Page;
-                                $pages->url_next = $_SERVER["PHP_SELF"] . "?QueryString=value&Page=";
-
-                                $pages->paginate();
-
-                                echo $pages->display_pages()
-                                */ ?>
-                </div>
-            </div>-->
-            <!-- Paginator -->
         </div>
 
         <!-- Footer -->
@@ -264,6 +204,7 @@ $dateNow = date("Y-m-d");
 <script>
     $(document).ready(function () {
         $('#example').DataTable({
+            "order": [[0, "desc"]],
             language:
                 {
                     "decimal": "",
@@ -276,7 +217,8 @@ $dateNow = date("Y-m-d");
                     "lengthMenu": "แสดง _MENU_ ข้อมูลต่อหน้า",
                     "loadingRecords": "กำลังโหลดข้อมูล...",
                     "processing": "กำลังประมวลผล...",
-                    "search": "ค้นหาในตาราง :  ",
+                    "search": "",
+                    "searchPlaceholder": "   ค้นหาในตาราง",
                     "zeroRecords": "ไม่มีข้อมูลตรงกับที่ค้นหา",
                     "paginate": {
                         "first": "หน้าแรก",

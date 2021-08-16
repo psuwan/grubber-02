@@ -70,6 +70,33 @@
             </div>
         </li>--><!-- Sell work section -->
 
+        <!-- Report section -->
+        <li id="id4MenuReport">
+            <a data-toggle="collapse" href="#sub4Report" id="id4AlinkMenuReport">
+                <i class="now-ui-icons education_paper" id="id4IconMenuReport"></i>
+                <p>
+                    รายงาน <b class="caret"></b>
+                </p>
+            </a>
+
+            <div class="collapse " id="sub4Report">
+                <ul class="nav pl-5">
+                    <li id="id4SubMenuReportBuy">
+                        <a href="./report4Buy.php">
+                            <!--<span class="sidebar-mini-icon">P</span>-->
+                            <span class="sidebar-normal"> งานซื้อ </span>
+                        </a>
+                    </li>
+                    <li id="id4SubMenuReportProduct">
+                        <a href="#">
+                            <!--<span class="sidebar-mini-icon">I</span>-->
+                            <span class="sidebar-normal"> สินค้า </span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </li><!-- Report section -->
+
         <!-- Backend or Administrator section -->
         <li id="id4MenuAdmin">
             <a data-toggle="collapse" href="#sub4Backend" id="id4AlinkMenuAdmin">

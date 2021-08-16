@@ -58,26 +58,97 @@ $poNumber = filter_input(INPUT_GET, 'poNumber');
         <!-- End Navbar -->
 
         <div class="panel-header h-auto">
-            <h2 class="text-warning text-center font-weight-bold">รายงานซื้อ</h2>
+            <h2 class="text-warning text-center font-weight-bold">พิมพ์บัตรชั่ง</h2>
         </div>
         <div class="content">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="card px-3">
+                    <div class="card px-3" id="tstPDF">
 
                         <div class="card-header">
                             <!-- Start of weighting card -->
 
+                            <!-- Row of weighting card header -->
+                            <div class="row mt-2">
+                                <div class="col-md-2">&nbsp;</div>
+                                <div class="col-md-2">
+                                    <br>
+                                    <img src="./assets/img/logoSm.png" alt="GoldRubber" width="175px">
+                                    <br>
+                                </div>
+                                <div class="col-md-8">
+                                    <h5><strong>บริษัท โกลด์ รับเบอร์ จำกัด</strong></h5>
+                                    <h6>1/14 หมู่ 10 ตำบลดอนยาง อำเภอปะทิว จังหวัดชุมพร 86210 โทร. 081-894-4548,
+                                        080-697-8799</h6>
+                                    <h5><strong>Gold Rubber Co., Ltd.</strong></h5>
+                                    <h6>1/14 Moo 10 Donyang, Pathiu, Chumphon 86210 Tel. 081-894-4548,
+                                        080-697-8799</h6>
+                                </div>
+                            </div><!-- Row of weighting card header -->
+                            <hr>
                             <!-- Row of weighting card details -->
                             <div class="row">
-                                <div class="col-md-3 h4" style="margin-top:5px!important;">
-                                    <strong>เลือกวันที่ต้องการ</strong>
-                                </div>
-                                <div class="col-md-3 h4" style="margin-top:5px!important;">
-                                    <input type="text" name="" id="id4Date2Report">
+                                <div class="col-md-12 text-center h4" style="margin-top:5px!important;">
+                                    <strong>บัตรชั่งน้ำหนัก</strong>
                                 </div>
                             </div>
 
+                            <!--<h4 class="card-title">PO Number: <? /*= $poNumber; */ ?> </h4>-->
+                            <?php
+                            $sqlcmd_1stPOData = "SELECT * FROM tbl_wg4buy WHERE wg_ponum='" . $poNumber . "' ORDER BY wg_createdat ASC LIMIT 1";
+                            $sqlres_1stPOData = mysqli_query($dbConn, $sqlcmd_1stPOData);
+                            if ($sqlres_1stPOData)
+                                $sqlfet_1stPOData = mysqli_fetch_assoc($sqlres_1stPOData);
+
+
+                            $sqlcmd_lastPOData = "SELECT * FROM tbl_wg4buy WHERE wg_ponum='" . $poNumber . "' ORDER BY wg_createdat DESC LIMIT 1";
+                            $sqlres_lastPOData = mysqli_query($dbConn, $sqlcmd_lastPOData);
+                            if ($sqlres_lastPOData)
+                                $sqlfet_lastPOData = mysqli_fetch_assoc($sqlres_lastPOData);
+                            ?>
+
+                            <div class="row font-weight-bold">
+                                <div class="col-md-2" style="font-size:16px;">หมายเลขบัตรชั่ง</div>
+                                <div class="col-md-2 text-primary" style="font-size:16px;"><?= $poNumber; ?></div>
+                                <div class="col-md-2" style="font-size:16px;">หมายเลขทะเบียน</div>
+                                <div class="col-md-2 text-primary"
+                                     style="font-size:16px;"><?= $sqlfet_1stPOData['wg_vlpn']; ?></div>
+                                <div class="col-md-2" style="font-size:16px;">ชื่อลูกค้า</div>
+                                <div class="col-md-2 text-primary"
+                                     style="font-size:16px;"><?= getValue('tbl_suppliers', 'supp_code', $sqlfet_1stPOData['wg_suppcode'], 2, 'supp_name'); ?> <?= getValue('tbl_suppliers', 'supp_code', $sqlfet_1stPOData['wg_suppcode'], 2, 'supp_surname'); ?></div>
+                            </div>
+                            <div class="row font-weight-bold">
+                                <div class="col-md-2" style="font-size:16px;">วันที่เข้า</div>
+                                <div class="col-md-2 text-primary"
+                                     style="font-size:16px;"><?php
+                                    list($yy, $mm, $dd) = explode("-", dateBE(substr($sqlfet_1stPOData['wg_createdat'], 0, 10)));
+                                    echo number_format($dd) . "/" . number_format($mm) . "/" . $yy;
+                                    ?>
+                                </div>
+                                <div class="col-md-2" style="font-size:16px;">เวลาเข้า</div>
+                                <div class="col-md-2 text-primary"
+                                     style="font-size:16px;"><?= substr($sqlfet_1stPOData['wg_createdat'], 11, 27); ?></div>
+                                <div class="col-md-2" style="font-size:16px;">น้ำหนักรวม</div>
+                                <div class="col-md-2 text-primary"
+                                     style="font-size:16px;"><?= number_format(sumWg4PO($poNumber), 0, '.', ',') . " กก."; ?></div>
+                            </div>
+                            <div class="row font-weight-bold">
+                                <div class="col-md-2" style="font-size:16px;">วันที่ออก</div>
+                                <div class="col-md-2 text-primary"
+                                     style="font-size:16px;"><?php
+                                    list($yy, $mm, $dd) = explode("-", dateBE(substr($sqlfet_lastPOData['wg_createdat'], 0, 10)));
+                                    echo number_format($dd) . "/" . number_format($mm) . "/" . $yy;
+                                    ?>
+                                </div>
+                                <div class="col-md-2" style="font-size:16px;">เวลาออก</div>
+                                <div class="col-md-2 text-primary"
+                                     style="font-size:16px;"><?= substr($sqlfet_lastPOData['wg_createdat'], 11, 27); ?></div>
+                                <div class="col-md-2" style="font-size:16px;">น้ำหนักรถ</div>
+                                <div class="col-md-2 text-primary"
+                                     style="font-size:16px;"><?= number_format((sumWg4PO($poNumber) - sumWgNoCar($poNumber)), 0, '.', ',') . " กก."; ?></div>
+                            </div><!-- Row of weighting card details -->
+
+                            <hr>
                         </div>
 
                         <div class="card-body">
@@ -89,11 +160,11 @@ $poNumber = filter_input(INPUT_GET, 'poNumber');
                                             <th class="text-center">#</th>
                                             <!--<th>ประเภทการชั่ง</th>-->
                                             <th>สินค้า</th>
-                                            <th class="text-center">น้ำหนักสุทธิ</th>
-                                            <th class="text-center">DRC (%)</th>
+                                            <th class="text-center" style="width: 200px;">น้ำหนักสุทธิ</th>
+                                            <th class="text-center" style="width: 100px;">DRC (%)</th>
                                             <!-- <th class="text-center" style="width: 100px;">หักน้ำ</th>-->
                                             <!-- <th class="text-center" style="width: 200px;">น้ำหนักสุทธิ</th>-->
-                                            <th class="text-center">ชั่งเวลา</th>
+                                            <th class="text-center" style="width: 150px;">ชั่งเวลา</th>
                                             </thead>
                                         </tr>
                                         <tbody>
@@ -216,15 +287,47 @@ $poNumber = filter_input(INPUT_GET, 'poNumber');
                                 </div>
                             </div>
 
+                            <!-- WGCARD FOOTER -->
+                            <div class="row">
+                                <div class="col-md-12">&nbsp;</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">ผู้ชั่ง _____________________________________</div>
+                                <div class="col-md-3">ผู้รับของ __________________________________</div>
+                                <div class="col-md-3">ผู้จ่ายเงิน _________________________________</div>
+                                <div class="col-md-3">ผู้รับเงิน __________________________________</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">&nbsp;</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 text-right">WGCARD.REV.0.0.1</div>
+                            </div><!-- WGCARD FOOTER -->
+
                         </div>
                         <!-- End of weighting card -->
 
+                        <!--<div class="row mt-2 mb-5">
+                            <div class="col-md-12 text-center">
+                                <a href="wgcard_<? /*= $poNumber; */ ?>.pdf" class="btn btn-sm btn-success" target="_blank">พิมพ์บัตรชั่ง</a>
+                            </div>
+                        </div>-->
                     </div>
+
+                    <!--<div class="row mt-2 mb-5">
+                        <div class="col-md-12 text-center">
+                            <a href="#" class="btn btn-info">
+                                พิมพ์บัตรชั่ง
+                            </a>
+                        </div>
+                    </div>-->
 
                 </div>
             </div>
 
         </div>
+
+        <!--        <div id="bypassme">--><? //= $html2PRN; ?><!--</div>-->
 
         <!-- Footer -->
         <?php
@@ -261,8 +364,8 @@ $poNumber = filter_input(INPUT_GET, 'poNumber');
     // $("#id4AlinkMenuBuy").addClass("text-primary");
     // $("#id4IconMenuBuy").addClass("text-primary");
     // Try to still open submenu
-    $("#sub4Report").addClass("show");
-    $("#id4SubMenuReportBuy").addClass("active");
+    $("#sub4Buy").addClass("show");
+    $("#id4SubMenuBuyPoList").addClass("active");
 </script><!-- Hi-light active menu -->
 
 <!-- Bootstrap Tooltip -->
@@ -272,6 +375,109 @@ $poNumber = filter_input(INPUT_GET, 'poNumber');
     })
 </script><!-- Bootstrap Tooltip -->
 
+<!-- Calculation for PO -->
+<script>
+    let poNumber2Upd = '<?=$poNumber;?>';
+
+    let updateBuyPrice = function (wgBuyPrice, wgID) {
+        $.ajax({
+            url: "calc4PO.php",
+            type: "POST",
+            data: {
+                // poNumber: poNumber2Upd,
+                processName: "updatePrice",
+                id: wgID,
+                buyPrice: wgBuyPrice
+            },
+            success: function (response) {
+                // console.log(response);
+                location.reload();
+                // You will get response from your PHP page (what you echo or print)
+            }
+            ,
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(textStatus, errorThrown);
+            }
+        })
+        ;
+    }
+
+    let chkKeyEnter4BuyPrice = function (buyPrice, buyPrice_ID) {
+// Execute a function when the user releases a key on the keyboard
+        $("#id4BuyPrice_" + buyPrice_ID).on("keyup", function (event) {
+            // Number 13 is the "Enter" key on the keyboard
+            if (event.keyCode === 13) {
+                console.log(event.keyCode);
+                // Cancel the default action, if needed
+                event.preventDefault();
+                // Trigger the button element with a click
+                updateBuyPrice(buyPrice, buyPrice_ID);
+            }
+        });
+    }
+
+    let updateDRC = function (wgDRC, wgID) {
+        $.ajax({
+            url: "calc4PO.php",
+            type: "POST",
+            data: {
+                // poNumber: poNumber2Upd,
+                processName: "updateDRC",
+                id: wgID,
+                valueDRC: wgDRC
+            },
+            success: function (response) {
+                // console.log(response);
+                location.reload();
+                // You will get response from your PHP page (what you echo or print)
+            }
+            ,
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(textStatus, errorThrown);
+            }
+        })
+        ;
+    }
+
+    let chkKeyEnter4DRC = function (DRC, DRC_ID) {
+        let input = document.getElementById("id4DRC_" + DRC_ID);
+// Execute a function when the user releases a key on the keyboard
+        $("#id4DRC_" + DRC_ID).on("keyup", function (event) {
+            // Number 13 is the "Enter" key on the keyboard
+            if (event.keyCode === 13) {
+                // Cancel the default action, if needed
+                event.preventDefault();
+                // Trigger the button element with a click
+                updateDRC(DRC, DRC_ID);
+            } else {
+                if (input.value > 97) {
+                    input.value = 97;
+                    updateDRC(97, DRC_ID);
+                }
+            }
+        });
+    }
+</script><!-- Calculation for PO -->
+
+<script>
+    // OK waiting to config page size
+    /*
+    html2canvas(document.getElementById('tstPDF'), {
+        onrendered: function (canvas) {
+            let data = canvas.toDataURL();
+            let docDefinition = {
+                content: [{
+                    image: data,
+                    width: 500
+                }]
+            };
+            pdfMake.createPdf(docDefinition).download("test.pdf");
+        }
+    });
+    */
+    // OK waiting to config page size
+    // pdfMake.createPdf(docDefinication).download();
+</script>
 
 </body>
 

@@ -262,7 +262,7 @@ function calcWgMinusWater4PO($poNumber)
 {
     $dbConn = dbConnect();
 
-    $sqlcmd = "SELECT FORMAT(SUM((wg_net - (((97-wg_percent)*wg_net)/100))), 2) AS MINUSWATER FROM tbl_wg4buy WHERE wg_ponum='" . $poNumber . "' AND wg_product<>'0000'";
+    $sqlcmd = "SELECT FORMAT(SUM(CEILING((wg_net - ROUND((((97-wg_percent)*wg_net)/100))))),2) AS MINUSWATER FROM tbl_wg4buy WHERE wg_ponum='" . $poNumber . "' AND wg_product<>'0000'";
     $sqlres = mysqli_query($dbConn, $sqlcmd);
 
     if ($sqlres) {
@@ -280,7 +280,7 @@ function calcWgWithBuyPrice($poNumber)
 {
     $dbConn = dbConnect();
 
-    $sqlcmd = "SELECT FORMAT(SUM(wg_buyprc*((wg_net - (((97-wg_percent)*wg_net)/100)))), 2) AS BUYPRICE FROM tbl_wg4buy WHERE wg_ponum='" . $poNumber . "' AND wg_product<>'0000'";
+    $sqlcmd = "SELECT FORMAT(SUM(ROUND(wg_buyprc*(CEILING(wg_net - ROUND((((97-wg_percent)*wg_net)/100)))),2)),2) AS BUYPRICE FROM tbl_wg4buy WHERE wg_ponum='" . $poNumber . "' AND wg_product<>'0000'";
     $sqlres = mysqli_query($dbConn, $sqlcmd);
 
     if ($sqlres) {
@@ -294,5 +294,33 @@ function calcWgWithBuyPrice($poNumber)
     }
 }
 
+function sumWg4PO($poNumber)
+{
+    $dbConn = dbConnect();
+
+    $sqlcmd = "SELECT SUM(wg_scalerd) AS SUMALL FROM tbl_wg4buy WHERE wg_ponum='" . $poNumber . "'";
+    $sqlres = mysqli_query($dbConn, $sqlcmd);
+
+    if ($sqlres) {
+        $sqlfet = mysqli_fetch_assoc($sqlres);
+        return $sqlfet['SUMALL'];
+    } else {
+        echo "ERROR !!! [" . mysqli_errno($dbConn) . "]--[" . mysqli_error($dbConn) . "]";
+    }
+}
+
+function sumWgNoCar($poNumber){
+    $dbConn = dbConnect();
+
+    $sqlcmd = "SELECT SUM(wg_scalerd) AS SUMNOCAR FROM tbl_wg4buy WHERE wg_ponum='" . $poNumber . "' AND wg_product <> '0000'";
+    $sqlres = mysqli_query($dbConn, $sqlcmd);
+
+    if ($sqlres) {
+        $sqlfet = mysqli_fetch_assoc($sqlres);
+        return $sqlfet['SUMNOCAR'];
+    } else {
+        echo "ERROR !!! [" . mysqli_errno($dbConn) . "]--[" . mysqli_error($dbConn) . "]";
+    }
+}
 // Function only use for GoldRubber's project
 /* --------------------------------------- */
