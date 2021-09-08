@@ -1,13 +1,13 @@
 function list4PO(enFunc, txt2Query, inpTxtName, extQuery) {
-    if (enFunc == '1') {
-        console.log('enFunc : ' + enFunc);
+    if (enFunc === 1) {
+        // console.log('enFunc : ' + enFunc);
         return;
     }
-    if (enFunc == '2') {
-        // console.log('enFunc : ' + enFunc);
-        // console.log('text2query : ' + txt2Query);
-        // console.log('input text name : ' + inpTxtName);
-        // console.log('ext query : ' + extQuery);
+    if (enFunc === 2) {
+        console.log('enFunc : ' + enFunc);
+        console.log('text2query : ' + txt2Query);
+        console.log('input text name : ' + inpTxtName);
+        console.log('ext query : ' + extQuery);
         let suppName = '';
         if (extQuery === 'wg_suppcode') {
             suppName = txt2Query.split(" ");

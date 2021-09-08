@@ -36,7 +36,13 @@
                     <li id="id4SubMenuBuyPoList">
                         <a href="poList.php">
                             <!-- <span class="sidebar-mini-icon">I</span>-->
-                            <span class="sidebar-normal"> รายการซื้อ </span>
+                            <span class="sidebar-normal"> รายการซื้อทั้งหมด </span>
+                        </a>
+                    </li>
+                    <li id="id4SubMenuBuyPoListDate">
+                        <a href="poListDate.php">
+                            <!-- <span class="sidebar-mini-icon">I</span>-->
+                            <span class="sidebar-normal"> รายการซื้อรายวัน </span>
                         </a>
                     </li>
                 </ul>
@@ -44,7 +50,7 @@
         </li><!-- Buy work section -->
 
         <!-- Sell work section -->
-        <!--<li>
+        <li>
             <a data-toggle="collapse" href="#sub4Sell">
                 <i class="now-ui-icons business_money-coins"></i>
                 <p>
@@ -54,21 +60,24 @@
 
             <div class="collapse " id="sub4Sell">
                 <ul class="nav pl-5">
-                    <li>
-                        <a href="#">
-                            <span class="sidebar-mini-icon">P</span>
-                            <span class="sidebar-normal"> Pricing </span>
+                    <li id="id4SubMenuSellOrder">
+                        <a href="./sellOrder.php">
+                            <span class="sidebar-normal"> เปิดการขาย </span>
                         </a>
                     </li>
-                    <li>
-                        <a href="#">
-                            <span class="sidebar-mini-icon">I</span>
-                            <span class="sidebar-normal"> Invoice </span>
+                    <li id="id4SubMenuSellSO">
+                        <a href="./file4SO.php#id4Content">
+                            <span class="sidebar-normal"> ขาย </span>
+                        </a>
+                    </li>
+                    <li id="id4SubMenuSellSOList">
+                        <a href="./soList.php">
+                            <span class="sidebar-normal"> รายการขายทั้งหมด </span>
                         </a>
                     </li>
                 </ul>
             </div>
-        </li>--><!-- Sell work section -->
+        </li><!-- Sell work section -->
 
         <!-- Report section -->
         <li id="id4MenuReport">
@@ -81,14 +90,26 @@
 
             <div class="collapse " id="sub4Report">
                 <ul class="nav pl-5">
-                    <li id="id4SubMenuReportBuy">
+                    <!--<li id="id4SubMenuReportBuy">
                         <a href="./report4Buy.php">
+                            <span class="sidebar-mini-icon">P</span>
+                            <span class="sidebar-normal"> งานซื้อ 1</span>
+                        </a>
+                    </li>-->
+                    <li id="id4SubMenuReportBuyAll">
+                        <a href="./report4BuyAll.php">
                             <!--<span class="sidebar-mini-icon">P</span>-->
-                            <span class="sidebar-normal"> งานซื้อ </span>
+                            <span class="sidebar-normal"> รายงานซื้อ </span>
+                        </a>
+                    </li>
+                    <li id="id4SubMenuReportSellAll">
+                        <a href="./report4SellAll.php">
+                            <!--<span class="sidebar-mini-icon">P</span>-->
+                            <span class="sidebar-normal"> รายงานขาย </span>
                         </a>
                     </li>
                     <li id="id4SubMenuReportProduct">
-                        <a href="#">
+                        <a href="report4Product.php">
                             <!--<span class="sidebar-mini-icon">I</span>-->
                             <span class="sidebar-normal"> สินค้า </span>
                         </a>
@@ -120,6 +141,12 @@
                             <span class="sidebar-normal"> เพิ่มข้อมูลผู้ขาย </span>
                         </a>
                     </li>
+                    <li id="id4SubMenuBackendCustomerProfile">
+                        <a href="./customers.php">
+                            <!-- <span class="sidebar-mini-icon">P</span>-->
+                            <span class="sidebar-normal"> เพิ่มข้อมูลลูกค้า </span>
+                        </a>
+                    </li>
                     <li id="id4SubMenuBackendProducts">
                         <a href="./prodList.php">
                             <!-- <span class="sidebar-mini-icon">P</span>-->
@@ -138,16 +165,26 @@
                             <span class="sidebar-normal"> ประเภทการซื้อ </span>
                         </a>
                     </li>
-                    <li id="id4SubMenuBackendVehicle">
+                    <!--<li id="id4SubMenuBackendVehicle">
                         <a href="./vehicleType.php">
-                            <!-- <span class="sidebar-mini-icon">P</span>-->
-                            <span class="sidebar-normal"> ประเภทรถ </span>
+                        <span class="sidebar-mini-icon">P</span>
+                        <span class="sidebar-normal"> ประเภทรถ </span>
                         </a>
+                    </li>-->
+                    <li id="id4SubMenuBackendLogistics">
+                        <a href="suppLogis.php">
+                            <span class="sidebar-normal"> รถขนส่ง </span></a>
                     </li>
                     <li id="id4SubMenuBackendWgScale">
                         <a href="./wgScale.php">
                             <!-- <span class="sidebar-mini-icon">P</span>-->
                             <span class="sidebar-normal"> เครื่องชั่ง </span>
+                        </a>
+                    </li>
+                    <li id="id4SubMenuBackendStock">
+                        <a href="./stockChk.php">
+                            <!-- <span class="sidebar-mini-icon">P</span>-->
+                            <span class="sidebar-normal"> เช็คสินค้า </span>
                         </a>
                     </li>
                 </ul>

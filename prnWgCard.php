@@ -130,7 +130,11 @@ $poNumber = filter_input(INPUT_GET, 'poNumber');
                                      style="font-size:16px;"><?= substr($sqlfet_1stPOData['wg_createdat'], 11, 27); ?></div>
                                 <div class="col-md-2" style="font-size:16px;">น้ำหนักรวม</div>
                                 <div class="col-md-2 text-primary"
-                                     style="font-size:16px;"><?= number_format(sumWg4PO($poNumber), 0, '.', ',') . " กก."; ?></div>
+                                     style="font-size:16px;"><?php
+                                    if ($sqlfet_1stPOData['wg_product'] != '0000')
+                                        echo "-";
+                                    else
+                                        echo number_format($sqlfet_1stPOData['wg_net'], 0, '.', ',') . " กก."; ?></div>
                             </div>
                             <div class="row font-weight-bold">
                                 <div class="col-md-2" style="font-size:16px;">วันที่ออก</div>
@@ -145,7 +149,11 @@ $poNumber = filter_input(INPUT_GET, 'poNumber');
                                      style="font-size:16px;"><?= substr($sqlfet_lastPOData['wg_createdat'], 11, 27); ?></div>
                                 <div class="col-md-2" style="font-size:16px;">น้ำหนักรถ</div>
                                 <div class="col-md-2 text-primary"
-                                     style="font-size:16px;"><?= number_format((sumWg4PO($poNumber) - sumWgNoCar($poNumber)), 0, '.', ',') . " กก."; ?></div>
+                                     style="font-size:16px;"><?php
+                                    if ($sqlfet_1stPOData['wg_product'] != '0000')
+                                        echo "-";
+                                    else
+                                        echo number_format($sqlfet_lastPOData['wg_net'], 0, '.', ',') . " กก."; ?></div>
                             </div><!-- Row of weighting card details -->
 
                             <hr>
@@ -206,6 +214,7 @@ $poNumber = filter_input(INPUT_GET, 'poNumber');
                                                         }
                                                         ?></td>
                                                     <td class="text-right">
+                                                        <!-- WEIGHT -->
                                                         <input class="form-control form-inline text-right <?php if ($sqlfet_list4PO['wg_product'] == '0000') echo "text-danger" ?>"
                                                                type="text" disabled
                                                                style="font-size:14px;<?php if ($sqlfet_list4PO['wg_product'] == '0000') echo "text-decoration: line-through;" ?>"
@@ -213,15 +222,20 @@ $poNumber = filter_input(INPUT_GET, 'poNumber');
                                                                id="id4WgNet_<?= $sqlfet_list4PO['id']; ?>"
                                                                value="<?= number_format($sqlfet_list4PO['wg_net'], 2, '.', ','); ?>">
                                                     </td>
-                                                    <td>
+                                                    <td class="text-right">
+                                                        <!-- DRC -->
                                                         <input class="form-control form-inline text-primary text-right" <?php if ($sqlfet_list4PO['wg_product'] == '0000') echo "disabled"; ?>
-                                                               type="text"
+                                                               type="text" readonly
                                                                onkeyup="chkKeyEnter4DRC(this.value, <?= $sqlfet_list4PO['id']; ?>)"
                                                                onblur="updateDRC(this.value, <?= $sqlfet_list4PO['id']; ?>)"
                                                                name="DRC_<?= $sqlfet_list4PO['id']; ?>"
                                                                id="id4DRC_<?= $sqlfet_list4PO['id']; ?>"
                                                                style="font-size:14px;<?php if ($sqlfet_list4PO['wg_product'] == '0000') echo "text-decoration: line-through;" ?>"
-                                                               value="<?= number_format($sqlfet_list4PO['wg_percent'], 2, '.', ','); ?>">
+                                                               value="<?php
+                                                               if ($sqlfet_list4PO['wg_product'] == '0002')
+                                                                   echo "-";
+                                                               else
+                                                                   echo number_format($sqlfet_list4PO['wg_percent'], 2, '.', ','); ?>">
                                                     </td>
                                                     <!--<td>
                                                         <input class="form-control form-inline text-primary text-right"

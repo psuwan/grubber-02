@@ -1,0 +1,61 @@
+/* SELECT CAPSULE */
+.selectWrapper {
+    border-radius: 36px;
+    display: inline-block;
+    overflow: hidden;
+    /*background:#cccccc;*/
+    /*border:1px solid #f96332;*/
+}
+
+.selectWrapper:hover {
+    border-radius: 36px;
+    display: inline-block;
+    overflow: hidden;
+    border: 1px solid #f96332;
+}
+
+.selectBox {
+    /*width:140px;*/
+    height: 39px;
+    /*border:0px;*/
+    /*outline:none;*/
+}
+
+.selectWrapper1 {
+    border-radius: 15px;
+    display: inline-block;
+    overflow: hidden;
+    background: #dedede;
+    vertical-align: middle;
+    /*border:1px solid #f96332;*/
+}
+
+.selectWrapper1:hover {
+    border-radius: 30px;
+    display: inline-block;
+    overflow: hidden;
+    border: 1px solid #f96332;
+}
+
+.selectBox1 {
+    /*width:140px;*/
+    height: 40px;
+    /*border:0px;*/
+    /*outline:none;*/
+    border: none !important;
+}
+
+.selectBox2 {
+    /*width:140px;*/
+    height: 35px;
+    /*width: 150px;*/
+    /*border:0px;*/
+    /*outline:none;*/
+    border: none !important;
+}
+
+.form-control:hover {
+    border: 1px solid #f96332;
+}
+
+/* SELECT CAPSULE */

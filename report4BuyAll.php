@@ -101,7 +101,6 @@ if ($yChk > ($yearNow + 400))
                                         <h5 class="card-category"> ข้อมูลสรุป </h5>
                                         <h4 class="card-title"> รายงานซื้อวันที่
                                             : <?= monthThai(dateBE($varpost_date2Report)); ?> </h4>
-
                                     </div>
                                     <div class="col-md-3 text-right input-group" style="font-size:14px">
                                         <input type="text" class="form-control" name="date2Report"
@@ -142,11 +141,12 @@ if ($yChk > ($yearNow + 400))
                                         $sqlcmd_SetMode = "SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))";
                                         $sqlres_setMode = mysqli_query($dbConn, $sqlcmd_SetMode);
 
-                                        $sqlcmd_listWg = "SELECT * FROM tbl_wg4buy WHERE wg_product<>'0000' AND DATE(wg_createdat)='" . $varpost_date2Report . "' GROUP BY wg_ponum ORDER BY wg_ponum ASC, wg_product ASC, wg_createdat DESC";
+                                        $sqlcmd_listWg = "SELECT * FROM tbl_wg4buy WHERE wg_product<>'0000' AND DATE(wg_createdat)='" . $varpost_date2Report . "' GROUP BY wg_suppcode ORDER BY wg_ponum ASC, wg_product ASC, wg_createdat DESC";
                                         $sqlres_listWg = mysqli_query($dbConn, $sqlcmd_listWg);
                                         if ($sqlres_listWg) {
                                             // echo $cntRow;
                                             while ($sqlfet_listWg = mysqli_fetch_assoc($sqlres_listWg)) {
+                                                $supplier = getValue('tbl_suppliers', 'supp_code', $sqlfet_listWg['wg_suppcode'], 2, 'supp_name') . " " . getValue('tbl_suppliers', 'supp_code', $sqlfet_listWg['wg_suppcode'], 2, 'supp_surname');
                                                 ?>
                                                 <tr>
                                                     <td class="text-center"><?= ++$cntWg; ?></td>
@@ -154,8 +154,10 @@ if ($yChk > ($yearNow + 400))
                                                            data-toggle="modal"
                                                            data-target="#modal4PO"
                                                            data-ponumber="<?= $sqlfet_listWg['wg_ponum']; ?>"
-                                                           data-suppcode="<?= $sqlfet_listWg['wg_suppcode']; ?>">
-                                                            <?= getValue('tbl_suppliers', 'supp_code', $sqlfet_listWg['wg_suppcode'], 2, 'supp_name'); ?> <?= getValue('tbl_suppliers', 'supp_code', $sqlfet_listWg['wg_suppcode'], 2, 'supp_surname'); ?>
+                                                           data-suppcode="<?= $sqlfet_listWg['wg_suppcode']; ?>"
+                                                           data-supplier="<?= $supplier; ?>"
+                                                           data-date2rep="<?= $varpost_date2Report; ?>">
+                                                            <?= $supplier; ?>
                                                         </a>
                                                     </td>
                                                     <td><?= getValue('tbl_locations', 'loc_code', $sqlfet_listWg['wg_location'], 2, 'loc_name'); ?></td>
@@ -190,7 +192,8 @@ if ($yChk > ($yearNow + 400))
 
                         <div class="card-header">
                             <h5 class="card-category"> ข้อมูลสรุป </h5>
-                            <h4 class="card-title"> รายงานซื้อ <?= $varpost_date2Report; ?></h4>
+                            <h4 class="card-title">
+                                สรุปรายงานซื้อวันที่ <?= monthThai(dateBE($varpost_date2Report)); ?></h4>
                         </div>
 
                         <div class="card-body">
@@ -272,6 +275,13 @@ if ($yChk > ($yearNow + 400))
                                                             echo number_format($wg2Show, 2, '.', ',') . " กก.";
                                                         //echo "</td>";
                                                     }
+                                                    if (($iRow === ($sqlnum_buytype + 1)) && ($iCol === $sqlnum_products + 1)) {
+                                                        echo "<strong class=\"\" style=\"font-size:14pt;font-weight:bold;color:darkblue;text-decoration-line: underline;
+  text-decoration-style: double;\">";
+                                                        echo number_format(sumWgAllDate($varpost_date2Report), 2, '.', ',');
+                                                        echo "</strong>";
+                                                        echo " กก.";
+                                                    }
                                                     echo "</td>";
                                                 }
                                             }
@@ -352,7 +362,7 @@ if ($yChk > ($yearNow + 400))
         // $("#id4IconMenuBuy").addClass("text-primary");
         // Try to still open submenu
         $("#sub4Report").addClass("show");
-        $("#id4SubMenuReportBuy").addClass("active");
+        $("#id4SubMenuReportBuyAll").addClass("active");
     </script><!-- Hi-light active menu -->
 
     <!-- Bootstrap Tooltip -->
@@ -368,6 +378,7 @@ if ($yChk > ($yearNow + 400))
         /*{year_range:"-12:+10"} คือ กำหนดตัวเลือกปฎิทินให้ แสดงปี ย้อนหลัง 12 ปี และ ไปข้างหน้า 10 ปี*/
     </script>
 
+    <!-- DATETIME PICKER -->
     <script type="text/javascript">
         $(function () {
 
@@ -415,8 +426,7 @@ if ($yChk > ($yearNow + 400))
 
 
         });
-    </script>
-    <!-- DATETIME PICKER -->
+    </script><!-- DATETIME PICKER -->
 
     <!-- Datatable Setup -->
     <script>
@@ -459,13 +469,15 @@ if ($yChk > ($yearNow + 400))
         $('#modal4PO').on('show.bs.modal', function (event) {
             let refev = $(event.relatedTarget);
 
-            let poNumber = refev.data('ponumber');
+            // let poNumber = refev.data('ponumber');
+            let suppCode = refev.data('suppcode');
+            let supplier = refev.data('supplier');
+            let date2rep = refev.data('date2rep');
 
-            let
-                modal = $(this);
+            let modal = $(this);
 
-            modal.find(".modal-title").text("ข้อมูลของ PO: " + poNumber);
-            modal.find(".modal-body").html("<iframe src=\"poInfo.php?poNumber=" + poNumber + "\" frameborder=\"0\" width=\"100%\" height=\"500px\"></iframe>");
+            modal.find(".modal-title").text("ข้อมูลของ: " + supplier);
+            modal.find(".modal-body").html("<iframe src=\"poInfoAll.php?date2rep=" + date2rep + "&suppCode=" + suppCode + "\" frameborder=\"0\" width=\"100%\" height=\"500px\"></iframe>");
         })
 
         $('#modal4PO').on('hidden.bs.modal', function () {

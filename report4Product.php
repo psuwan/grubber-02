@@ -31,7 +31,7 @@ if ($yChk > ($yearNow + 400))
     <link rel="icon" type="image/png" href="./assets/img/faviconW.ico">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 
-    <title>Gold Rubber : Template</title>
+    <title>GOLD RUBBER : REPORT PRODUCT</title>
 
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no'
           name='viewport'/>
@@ -86,9 +86,11 @@ if ($yChk > ($yearNow + 400))
         <!-- End Navbar -->
 
         <div class="panel-header h-auto">
-            <h2 class="text-warning text-center font-weight-bold">รายงานซื้อ</h2>
+            <h2 class="text-warning text-center font-weight-bold">รายงานสินค้า</h2>
         </div>
         <div class="content">
+
+            <!-- DATA SUMMARY -->
             <div class="row">
                 <div class="col-md-12">
                     <div class="card px-3">
@@ -99,9 +101,8 @@ if ($yChk > ($yearNow + 400))
                                 <div class="row">
                                     <div class="col-md-9">
                                         <h5 class="card-category"> ข้อมูลสรุป </h5>
-                                        <h4 class="card-title"> รายงานซื้อวันที่
+                                        <h4 class="card-title"> รายงานยางเข้าวันที่
                                             : <?= monthThai(dateBE($varpost_date2Report)); ?> </h4>
-
                                     </div>
                                     <div class="col-md-3 text-right input-group" style="font-size:14px">
                                         <input type="text" class="form-control" name="date2Report"
@@ -121,77 +122,105 @@ if ($yChk > ($yearNow + 400))
 
                         <div class="card-body">
                             <div class="row">
-                                <div class="table-responsive">
-                                    <table class="table table-striped table-bordered" id="id4DailyReport">
-                                        <thead class="bg-primary">
-                                        <tr>
-                                            <th class="text-center" style="width: 25px;">#</th>
-                                            <th>ผู้ขาย</th>
-                                            <th class="text-center" style="width: 100px;">สถานที่ลง</th>
-                                            <th class="text-center" style="width: 125px;">สินค้า</th>
-                                            <th class="text-center" style="width: 100px;">น้ำหนัก</th>
-                                            <th class="text-center" style="width: 100px;">ราคาซื้อ</th>
-                                            <th class="text-center" style="width: 100px;">เป็นเงิน</th>
-                                            <th class="text-center" style="width: 100px;">ประเภทซื้อ</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
+                                <div class="col-md-12">
+                                    <div class="table-responsive">
+
+                                        <!-- CALCULATION FOR REPORT -->
                                         <?php
-                                        $cntWg = 0;
-
-                                        $sqlcmd_SetMode = "SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))";
-                                        $sqlres_setMode = mysqli_query($dbConn, $sqlcmd_SetMode);
-
-                                        $sqlcmd_listWg = "SELECT * FROM tbl_wg4buy WHERE wg_product<>'0000' AND DATE(wg_createdat)='" . $varpost_date2Report . "' GROUP BY wg_ponum ORDER BY wg_ponum ASC, wg_product ASC, wg_createdat DESC";
-                                        $sqlres_listWg = mysqli_query($dbConn, $sqlcmd_listWg);
-                                        if ($sqlres_listWg) {
-                                            // echo $cntRow;
-                                            while ($sqlfet_listWg = mysqli_fetch_assoc($sqlres_listWg)) {
-                                                ?>
-                                                <tr>
-                                                    <td class="text-center"><?= ++$cntWg; ?></td>
-                                                    <td><a href=""
-                                                           data-toggle="modal"
-                                                           data-target="#modal4PO"
-                                                           data-ponumber="<?= $sqlfet_listWg['wg_ponum']; ?>"
-                                                           data-suppcode="<?= $sqlfet_listWg['wg_suppcode']; ?>">
-                                                            <?= getValue('tbl_suppliers', 'supp_code', $sqlfet_listWg['wg_suppcode'], 2, 'supp_name'); ?> <?= getValue('tbl_suppliers', 'supp_code', $sqlfet_listWg['wg_suppcode'], 2, 'supp_surname'); ?>
-                                                        </a>
-                                                    </td>
-                                                    <td><?= getValue('tbl_locations', 'loc_code', $sqlfet_listWg['wg_location'], 2, 'loc_name'); ?></td>
-                                                    <td><?= getValue('tbl_products', 'product_code', $sqlfet_listWg['wg_product'], 2, 'product_name'); ?></td>
-                                                    <td class="text-right"><?= number_format($sqlfet_listWg['wg_net'] - round(($sqlfet_listWg['wg_net'] * round(97 - $sqlfet_listWg['wg_percent'])) / 100), 2, '.', ','); ?></td>
-                                                    <td class="text-right"><?= number_format($sqlfet_listWg['wg_buyprc'], 2, '.', ','); ?></td>
-                                                    <td class="text-right"><?= number_format(($sqlfet_listWg['wg_buyprc'] * ($sqlfet_listWg['wg_net'] - round(($sqlfet_listWg['wg_net'] * round(97 - $sqlfet_listWg['wg_percent'])) / 100))), 2, '.', ','); ?></td>
-                                                    <td class="text-left"><?= getValue('tbl_buytype', 'buytype_code', $sqlfet_listWg['wg_buytype'], 2, 'buytype_name'); ?></td>
-                                                </tr>
-                                                <?php
+                                        $prdArr = array();
+                                        $sqlcmd_products = "SELECT * FROM tbl_products WHERE 1 ORDER BY product_order ASC";
+                                        $sqlres_products = mysqli_query($dbConn, $sqlcmd_products);
+                                        if ($sqlres_products) {
+                                            $sqlnum_products = mysqli_num_rows($sqlres_products);
+                                            foreach ($sqlres_products as $col => $val) {
+                                                $prdArr[] = $val;
                                             }
                                         }
+
+                                        echo "<table class=\"table table-bordered\">";
+                                        echo "<thead class=\"bg-primary\">";
+                                        echo "<tr>";
+                                        for ($iCol = 0; $iCol < ($sqlnum_products + 1); ++$iCol) {
+                                            if ($iCol === $sqlnum_products) {
+                                                echo "<td class=\"text-center\" style=\"font-size: 16px;font-weight: bold;\">";
+                                                echo "รวม";
+                                                echo "</td>";
+                                            } else {
+                                                echo "<td class=\"text-center\" style=\"font-size: 16px;font-weight: bold;\">";
+                                                echo $prdArr[$iCol]['product_name'];
+                                                echo "</td>";
+                                            }
+                                        }
+                                        echo "</tr>";
+                                        echo "</thead>";
+                                        echo "<tbody>";
+                                        echo "<tr>";
+                                        for ($iCol = 0; $iCol < ($sqlnum_products + 1); ++$iCol) {
+                                            if ($iCol === $sqlnum_products) {
+                                                echo "<td class=\"text-right text-primary\" style=\"font-size: 16px;font-weight: bold;\">";
+                                                if (empty(sumWgAllDate($varpost_date2Report))) {
+                                                    echo "-";
+                                                } else {
+                                                    echo number_format(sumWgAllDate($varpost_date2Report), 2, '.', ',');
+                                                    echo " กก.";
+                                                }
+                                                echo "</td>";
+                                            } else {
+                                                echo "<td class=\"text-right text-primary\" style=\"font-size: 16px;font-weight: bold;\">";
+                                                if (empty(sumWgByProductDate($varpost_date2Report, $prdArr[$iCol]['product_code']))) {
+                                                    echo "-";
+                                                } else {
+                                                    echo number_format(sumWgByProductDate($varpost_date2Report, $prdArr[$iCol]['product_code']), 2, '.', ',');
+                                                    echo " กก.";
+                                                }
+                                                echo "</td>";
+                                            }
+                                        }
+                                        echo "</tr>";
+                                        echo "</tbody>";
+                                        echo "</table>";
                                         ?>
-                                        </tbody>
-                                    </table>
+                                        <!-- CALCULATION FOR REPORT -->
+
+                                    </div>
                                 </div>
                             </div>
-
                         </div>
-                        <!-- End of weighting card -->
 
                     </div>
 
                 </div>
-            </div>
+            </div><!-- DATA SUMMARY -->
 
             <!-- DATA SUMMARY -->
             <div class="row">
                 <div class="col-md-12">
-
                     <div class="card px-3">
 
+                        <!-- CARD HEADER -->
                         <div class="card-header">
-                            <h5 class="card-category"> ข้อมูลสรุป </h5>
-                            <h4 class="card-title"> รายงานซื้อ <?= $varpost_date2Report; ?></h4>
-                        </div>
+                            <!--<form action="" method="post">-->
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <h5 class="card-category"> ข้อมูลสรุป </h5>
+                                        <h4 class="card-title"> รายงานยางออกวันที่
+                                            : <?= monthThai(dateBE($varpost_date2Report)); ?> </h4>
+                                    </div>
+                                    <!--<div class="col-md-3 text-right input-group" style="font-size:14px">
+                                        <input type="text" class="form-control" name="date2Report"
+                                               id="id4Date2Report"
+                                               style="margin:10px 0px 10px 0px!important"
+                                               placeholder="คลิกเลือกวันที่">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary btn-round" type="submit" id="button-addon2">
+                                                แสดงรายงาน
+                                            </button>
+                                        </div>
+                                    </div>-->
+                                </div>
+                            <!--</form>-->
+
+                        </div><!-- CARD HEADER -->
 
                         <div class="card-body">
                             <div class="row">
@@ -210,73 +239,138 @@ if ($yChk > ($yearNow + 400))
                                             }
                                         }
 
-                                        $buyArr = array();
-                                        $sqlcmd_buytype = "SELECT * FROM tbl_buytype WHERE 1 ORDER BY buytype_code ASC";
-                                        $sqlres_buytype = mysqli_query($dbConn, $sqlcmd_buytype);
-                                        if ($sqlres_buytype) {
-                                            $sqlnum_buytype = mysqli_num_rows($sqlres_buytype);
-                                            foreach ($sqlres_buytype as $col => $val) {
-                                                $buyArr[] = $val;
+                                        echo "<table class=\"table table-bordered\">";
+                                        echo "<thead class=\"bg-primary\">";
+                                        echo "<tr>";
+                                        for ($iCol = 0; $iCol < ($sqlnum_products + 1); ++$iCol) {
+                                            if ($iCol === $sqlnum_products) {
+                                                echo "<td class=\"text-center\" style=\"font-size: 16px;font-weight: bold;\">";
+                                                echo "รวม";
+                                                echo "</td>";
+                                            } else {
+                                                echo "<td class=\"text-center\" style=\"font-size: 16px;font-weight: bold;\">";
+                                                echo $prdArr[$iCol]['product_name'];
+                                                echo "</td>";
                                             }
                                         }
-                                        echo "<table class=\"table\">";
-                                        for ($iRow = 0; $iRow <= ($sqlnum_buytype + 1); ++$iRow) {
-                                            echo "<tr>";
-                                            for ($iCol = 0; $iCol <= ($sqlnum_products + 1); ++$iCol) {
-                                                if (($iRow === 0) && ($iCol === 0)) {
-                                                    echo "<td>";
+                                        echo "</tr>";
+                                        echo "</thead>";
+                                        echo "<tbody>";
+                                        echo "<tr>";
+                                        for ($iCol = 0; $iCol < ($sqlnum_products + 1); ++$iCol) {
+                                            if ($iCol === $sqlnum_products) {
+                                                echo "<td class=\"text-right text-primary\" style=\"font-size: 16px;font-weight: bold;\">";
+                                                if (empty(sumWgAllDate($varpost_date2Report))) {
+                                                    echo "-";
                                                 } else {
-                                                    echo "<td class=\"text-right\">";
+                                                    echo number_format(sumWgAllDate($varpost_date2Report), 2, '.', ',');
+                                                    echo " กก.";
                                                 }
-                                                if ($iRow === 0 && $iCol === 0) {
-                                                    echo "&nbsp;";
-                                                } elseif ($iRow === 0) {
-                                                    if ($iCol === ($sqlnum_products + 1)) {
-                                                        echo "<strong>แยกตามการซื้อ</strong>";
-                                                    }
-                                                    echo "<strong>" . $prdArr[($iCol - 1)]['product_name'] . "</strong>";
-                                                } elseif ($iCol === 0) {
-                                                    if ($iRow === ($sqlnum_buytype + 1)) {
-                                                        echo "<strong>แยกตามชนิดยาง</strong>";
-                                                    }
-                                                    echo "<strong>" . $buyArr[($iRow - 1)]['buytype_name'] . "</strong>";
+                                                echo "</td>";
+                                            } else {
+                                                echo "<td class=\"text-right text-primary\" style=\"font-size: 16px;font-weight: bold;\">";
+                                                if (empty(sumWgByProductDate($varpost_date2Report, $prdArr[$iCol]['product_code']))) {
+                                                    echo "-";
                                                 } else {
-                                                    // echo "[" . $iRow . ", " . $iCol . "]";
-                                                    if ($iCol === ($sqlnum_products + 1)) {
-                                                        if ($iRow === ($sqlnum_buytype + 1))
-                                                            echo "&nbsp;";
-                                                        else
-                                                            if (empty(sumWgByBuyTypeDate($varpost_date2Report, $buyArr[($iRow - 1)]['buytype_code'])))
-                                                                echo "&nbsp;";
-                                                            else {
-                                                                echo "<strong class=\"text-danger\">";
-                                                                echo number_format(sumWgByBuyTypeDate($varpost_date2Report, $buyArr[($iRow - 1)]['buytype_code']), 2, '.', ',');
-                                                                echo " กก.</strong>";
-                                                            }
-                                                    } elseif ($iRow === ($sqlnum_buytype + 1)) {
-                                                        if ($iCol === ($sqlnum_products + 1))
-                                                            echo "&nbsp;";
-                                                        else
-                                                            if (empty(sumWgByProductDate($varpost_date2Report, $prdArr[($iCol - 1)]['product_code'])))
-                                                                echo "&nbsp;";
-                                                            else {
-                                                                echo "<strong class=\"text-danger\">";
-                                                                echo number_format(sumWgByProductDate($varpost_date2Report, $prdArr[($iCol - 1)]['product_code']), 2, '.', ',');
-                                                                echo " กก.</strong>";
-                                                            }
-                                                    } elseif ((($iRow > 0) && ($iRow <= $sqlnum_buytype)) && (($iCol > 0) && ($iCol <= $sqlnum_products))) {
-                                                        $wg2Show = sumWgBuyTypeProduct($varpost_date2Report, $buyArr[($iRow - 1)]['buytype_code'], $prdArr[($iCol - 1)]['product_code']);
-                                                        if (empty($wg2Show))
-                                                            echo "-";
-                                                        else
-                                                            echo number_format($wg2Show, 2, '.', ',') . " กก.";
-                                                        //echo "</td>";
-                                                    }
-                                                    echo "</td>";
+                                                    echo number_format(sumWgByProductDate($varpost_date2Report, $prdArr[$iCol]['product_code']), 2, '.', ',');
+                                                    echo " กก.";
                                                 }
+                                                echo "</td>";
                                             }
-                                            echo "</tr>";
                                         }
+                                        echo "</tr>";
+                                        echo "</tbody>";
+                                        echo "</table>";
+                                        ?>
+                                        <!-- CALCULATION FOR REPORT -->
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div><!-- DATA SUMMARY -->
+
+            <!-- DATA SUMMARY -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card px-3">
+
+                        <!-- CARD HEADER -->
+                        <div class="card-header">
+                            <form action="" method="post">
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <h5 class="card-category"> ข้อมูลทั้งหมด </h5>
+                                        <h4 class="card-title">รายงานยางในโกดัง (Live Stock)</h4>
+                                        <!--<h5 class="card-category">(ตรวจนับสินค้าในโกดังวันที่: )</h5>-->
+                                    </div>
+                                </div>
+                            </form>
+
+                        </div><!-- CARD HEADER -->
+
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="table-responsive">
+
+                                        <!-- CALCULATION FOR REPORT -->
+                                        <?php
+                                        $prdArr = array();
+                                        $sqlcmd_products = "SELECT * FROM tbl_products WHERE 1 ORDER BY product_order ASC";
+                                        $sqlres_products = mysqli_query($dbConn, $sqlcmd_products);
+                                        if ($sqlres_products) {
+                                            $sqlnum_products = mysqli_num_rows($sqlres_products);
+                                            foreach ($sqlres_products as $col => $val) {
+                                                $prdArr[] = $val;
+                                            }
+                                        }
+
+                                        echo "<table class=\"table table-bordered\">";
+                                        echo "<thead class=\"bg-primary\">";
+                                        echo "<tr>";
+                                        for ($iCol = 0; $iCol < ($sqlnum_products + 1); ++$iCol) {
+                                            if ($iCol === $sqlnum_products) {
+                                                echo "<td class=\"text-center\" style=\"font-size: 16px;font-weight: bold;\">";
+                                                echo "รวม";
+                                                echo "</td>";
+                                            } else {
+                                                echo "<td class=\"text-center\" style=\"font-size: 16px;font-weight: bold;\">";
+                                                echo $prdArr[$iCol]['product_name'];
+                                                echo "</td>";
+                                            }
+                                        }
+                                        echo "</tr>";
+                                        echo "</thead>";
+                                        echo "<tbody>";
+                                        echo "<tr>";
+                                        for ($iCol = 0; $iCol < ($sqlnum_products + 1); ++$iCol) {
+                                            if ($iCol === $sqlnum_products) {
+                                                echo "<td class=\"text-right text-primary\" style=\"font-size: 16px;font-weight: bold;\">";
+                                                if (empty(sumWgAllDate($varpost_date2Report))) {
+                                                    echo "-";
+                                                } else {
+                                                    echo number_format(sumWgAllDate($varpost_date2Report), 2, '.', ',');
+                                                    echo " กก.";
+                                                }
+                                                echo "</td>";
+                                            } else {
+                                                echo "<td class=\"text-right text-primary\" style=\"font-size: 16px;font-weight: bold;\">";
+                                                if (empty(sumWgByProductDate($varpost_date2Report, $prdArr[$iCol]['product_code']))) {
+                                                    echo "-";
+                                                } else {
+                                                    echo number_format(sumWgByProductDate($varpost_date2Report, $prdArr[$iCol]['product_code']), 2, '.', ',');
+                                                    echo " กก.";
+                                                }
+                                                echo "</td>";
+                                            }
+                                        }
+                                        echo "</tr>";
+                                        echo "</tbody>";
                                         echo "</table>";
                                         ?>
                                         <!-- CALCULATION FOR REPORT -->
@@ -352,7 +446,7 @@ if ($yChk > ($yearNow + 400))
         // $("#id4IconMenuBuy").addClass("text-primary");
         // Try to still open submenu
         $("#sub4Report").addClass("show");
-        $("#id4SubMenuReportBuy").addClass("active");
+        $("#id4SubMenuReportProduct").addClass("active");
     </script><!-- Hi-light active menu -->
 
     <!-- Bootstrap Tooltip -->
@@ -368,6 +462,7 @@ if ($yChk > ($yearNow + 400))
         /*{year_range:"-12:+10"} คือ กำหนดตัวเลือกปฎิทินให้ แสดงปี ย้อนหลัง 12 ปี และ ไปข้างหน้า 10 ปี*/
     </script>
 
+    <!-- DATETIME PICKER -->
     <script type="text/javascript">
         $(function () {
 
@@ -415,8 +510,7 @@ if ($yChk > ($yearNow + 400))
 
 
         });
-    </script>
-    <!-- DATETIME PICKER -->
+    </script><!-- DATETIME PICKER -->
 
     <!-- Datatable Setup -->
     <script>
@@ -459,13 +553,15 @@ if ($yChk > ($yearNow + 400))
         $('#modal4PO').on('show.bs.modal', function (event) {
             let refev = $(event.relatedTarget);
 
-            let poNumber = refev.data('ponumber');
+            // let poNumber = refev.data('ponumber');
+            let suppCode = refev.data('suppcode');
+            let supplier = refev.data('supplier');
+            let date2rep = refev.data('date2rep');
 
-            let
-                modal = $(this);
+            let modal = $(this);
 
-            modal.find(".modal-title").text("ข้อมูลของ PO: " + poNumber);
-            modal.find(".modal-body").html("<iframe src=\"poInfo.php?poNumber=" + poNumber + "\" frameborder=\"0\" width=\"100%\" height=\"500px\"></iframe>");
+            modal.find(".modal-title").text("ข้อมูลของ: " + supplier);
+            modal.find(".modal-body").html("<iframe src=\"poInfoAll.php?date2rep=" + date2rep + "&suppCode=" + suppCode + "\" frameborder=\"0\" width=\"100%\" height=\"500px\"></iframe>");
         })
 
         $('#modal4PO').on('hidden.bs.modal', function () {

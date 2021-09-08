@@ -1,10 +1,11 @@
 <?php
-
-include_once 'lib/apksFunctions.php';
-$dbConn = dbConnect();
+session_start();
 
 date_default_timezone_set('Asia/Bangkok');
 $dateNow = date("Y-m-d");
+
+include_once 'lib/apksFunctions.php';
+$dbConn = dbConnect();
 
 ?>
 <!DOCTYPE html>

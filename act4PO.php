@@ -46,10 +46,6 @@ $netWg = $WgData['WgNetValue'];
 if (!empty($varpost_processName)) {
     switch ($varpost_processName) {
         case 'AddWg':
-//            echo "<pre>";
-//            var_dump($WgData);
-//            echo "</pre>";
-
             $sqlcmd_addWg = "INSERT INTO tbl_wg4buy (wg_ponum, wg_vlpn, wg_suppcode, wg_buytype, wg_type, wg_scale, wg_product, wg_palletqty, wg_eachpallet, wg_scalerd, wg_net, wg_createdat) VALUES ('$wg4PONum', '$wg4LPN', '$wg4SuppCode', '$PO_BuyType', '$wgType', '$wgScale', '$wg4Product', $palletQty, $wg4Pallet, $wgValue, $netWg, '$dt')";
             $sqlres_addWg = mysqli_query($dbConn, $sqlcmd_addWg);
 
@@ -60,9 +56,6 @@ if (!empty($varpost_processName)) {
                 echo "ERROR!! [" . mysqli_errno($dbConn) . "]--[" . mysqli_error($dbConn) . "]";
             }
 
-            break;
-
-        default:
             break;
     }
 }

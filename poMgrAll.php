@@ -6,9 +6,10 @@ $dbConn = dbConnect();
 date_default_timezone_set('Asia/Bangkok');
 $dateNow = date("Y-m-d");
 
+// Initial parameter
 $poNumber = filter_input(INPUT_GET, 'poNumber');
-
 $thisFile = basename(__FILE__, '.php');
+$enableCalcWgButton = 0;
 
 ?>
 <!DOCTYPE html>
@@ -37,6 +38,7 @@ $thisFile = basename(__FILE__, '.php');
     <link href="./css/style4Paginator.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="./css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="./css/style4Project.css">
 </head>
 
 <body>
@@ -67,35 +69,66 @@ $thisFile = basename(__FILE__, '.php');
                     <div class="card">
                         <div class="card-header mx-3">
                             <div class="row mt-0">
-                                <div class="col-md-10">
+                                <div class="col-md-8">
                                     <h5 class="card-category"> ข้อมูลรายการ PO </h5>
                                     <h4 class="card-title">PO Number: <?= $poNumber; ?></h4>
                                 </div>
-                                <div class="col-md-2 text-right">
+                                <div class="col-md-4 text-right">
                                     <h5 class="card-category">&nbsp;</h5>
                                     <h4 class="card-title">
-                                        <a href="./prnWgCard.php?poNumber=<?php echo $poNumber; ?>"
-                                           class="btn btn-primary btn-sm">ดูบัตรชั่ง</a>
+
+                                        <!-- CALCULATION FOR WEIGHT -->
+                                        <?php
+                                        $sqlcmd_cntWg = "SELECT * FROM tbl_wg4buy WHERE wg_ponum='" . $poNumber . "'";
+                                        $sqlres_cntWg = mysqli_query($dbConn, $sqlcmd_cntWg);
+                                        if ($sqlres_cntWg) {
+                                            $wgArr = array();
+                                            $sqlnum_cntWg = mysqli_num_rows($sqlres_cntWg);
+                                            if ($sqlnum_cntWg === 2) {
+                                                foreach ($sqlres_cntWg as $key => $val) {
+                                                    $wgArr[] = $val;
+                                                }
+                                                if (($wgArr[0]['wg_product'] === '0000') && ($wgArr[1]['wg_product'] === '0000')) {
+                                                    $enableCalcWgButton = 1;
+                                                    $wgNetCalc = $wgArr[0]['wg_net'] - $wgArr[1]['wg_net'];
+                                                }
+                                            }
+                                        }
+                                        ?>
+                                        <?php
+                                        if ($enableCalcWgButton === 1) {
+                                            ?>
+                                            <a href="./calc4PO.php?command=calc4Wg2Time&poNumber=<?= $poNumber; ?>&poVLpn=<?= $wgArr[0]['wg_vlpn']; ?>&poSuppCode=<?= $wgArr[0]['wg_suppcode']; ?>&poWgNet=<?= $wgNetCalc; ?>&wgTimeCalc=<?= $wgArr[0]['wg_createdat']; ?>"
+                                               class="btn btn-primary btn-sm">คำนวณน้ำหนัก</a>
+                                            <?php
+                                        } else {
+                                            ?><!-- CALCULATION FOR WEIGHT -->
+
+                                            <a href="./prnWgCard.php?poNumber=<?php echo $poNumber; ?>"
+                                               class="btn btn-primary btn-sm btn-round pt-2" style="height:38px">ดูบัตรชั่ง</a>
+                                            <?php
+                                        }
+                                        ?>
                                     </h4>
                                 </div>
                             </div>
                             <?php
-                            $sqlcmd_poSummary = "SELECT DISTINCT(wg_ponum) AS PONUMBER, wg_suppcode, wg_vlpn, po_status FROM tbl_wg4buy WHERE wg_ponum='" . $poNumber . "'";
+                            $sqlcmd_poSummary = "SELECT DISTINCT(wg_ponum) AS PONUMBER, wg_suppcode, wg_vlpn, po_status, wg_labour FROM tbl_wg4buy WHERE wg_ponum='" . $poNumber . "'";
                             $sqlres_poSummary = mysqli_query($dbConn, $sqlcmd_poSummary);
                             if ($sqlres_poSummary)
                                 $sqlfet_poSummary = mysqli_fetch_assoc($sqlres_poSummary);
                             ?>
                             <div class="row mt-2">
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <h5 class="card-category"> ชื่อผู้ขาย </h5>
                                     <h5 class="card-title"><?= getValue('tbl_suppliers', 'supp_code', $sqlfet_poSummary['wg_suppcode'], 2, 'supp_name'); ?>
                                         &nbsp;<?= getValue('tbl_suppliers', 'supp_code', $sqlfet_poSummary['wg_suppcode'], 2, 'supp_surname'); ?></h5>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <h5 class="card-category"> ทะเบียนรถ </h5>
                                     <h5 class="card-title"><?= $sqlfet_poSummary['wg_vlpn']; ?></h5>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <h5 class="card-category"> สถานะการซื้อ </h5>
                                     <h5 class="card-title"><?php
                                         if ($sqlfet_poSummary['po_status'] === '1') {
@@ -110,6 +143,16 @@ $thisFile = basename(__FILE__, '.php');
                                             echo "<a href=\"./process4PO.php?command=toggleStatus&returnPage=" . $thisFile . ".php&poNumber=" . $poNumber . "\"><i class=\"now-ui-icons media-1_button-power text-danger\"></i></a>";
                                         }
                                         ?></h5>
+                                </div>
+                                <div class="col-md-2">
+                                    <h5 class="card-category"> ค่าแรงลงยาง (บาท)</h5>
+                                    <h5 class="card-title">
+                                        <input type="text" name="" id="id4WgLabour"
+                                               class="form-control form-control-sm text-center text-primary"
+                                               onblur="updateWgLabour(this.value, '<?= $poNumber; ?>')"
+                                               onkeyup="chkKeyEnter4WgLabour(this.value, '<?= $poNumber; ?>')"
+                                               placeholder="<?= $sqlfet_poSummary['wg_labour']; ?>">
+                                    </h5>
                                 </div>
                             </div>
                         </div>
@@ -168,39 +211,116 @@ $thisFile = basename(__FILE__, '.php');
                                                     ?>
                                                         </td>-->
                                                     <td class="text-center"><?= substr($sqlfet_list4PO['wg_createdat'], 11, 17); ?></td>
+
+                                                    <!-- PRODUCT -->
                                                     <td><?php
                                                         if ($sqlfet_list4PO['wg_product'] == '0000') {
                                                             echo "ชั่งรถ";
                                                         } else {
-                                                            echo getValue('tbl_products', 'product_code', $sqlfet_list4PO['wg_product'], 2, 'product_name');
+                                                            $prdTWg = $sqlfet_list4PO['wg_product'];
+                                                            $prdTWgName = getValue('tbl_products', 'product_code', $sqlfet_list4PO['wg_product'], 2, 'product_name');
+                                                            //echo $prdTWgName;
+                                                            ?>
+                                                            <div class="selectWrapper1">
+                                                                <select name="" id="id4PrdNameTWg"
+                                                                        style="font-size:14px;"
+                                                                        onchange="updateProduct(this.value, <?= $sqlfet_list4PO['id']; ?>)"
+                                                                        class="form-control form-inline selectBox2">
+                                                                    <?php
+                                                                    $sqlcmd_listProducts = "SELECT * FROM tbl_products WHERE 1 ORDER BY product_order ASC";
+                                                                    $sqlres_listProducts = mysqli_query($dbConn, $sqlcmd_listProducts);
+                                                                    if ($sqlres_listProducts) {
+                                                                        while ($sqlfet_listProducts = mysqli_fetch_assoc($sqlres_listProducts)) {
+                                                                            ?>
+                                                                            <option value="<?= $sqlfet_listProducts['product_code']; ?>" <?php if ($sqlfet_listProducts['product_code'] == $prdTWg) echo "selected"; ?>><?= $sqlfet_listProducts['product_name']; ?></option>
+                                                                            <?php
+                                                                        }
+                                                                    }
+                                                                    ?>
+                                                                </select>
+                                                            </div>
+                                                            <?php
                                                         }
-                                                        ?></td>
+                                                        ?></td><!-- PRODUCT -->
+
+                                                    <!-- WEIGHT OF PRODUCT -->
                                                     <td class="text-right px-0">
-                                                        <input class="form-control form-inline text-right <?php if ($sqlfet_list4PO['wg_product'] == '0000') echo "text-danger" ?>"
-                                                               type="text" disabled
-                                                               style="font-size:14px;<?php if ($sqlfet_list4PO['wg_product'] == '0000') echo "text-decoration: line-through;" ?>"
-                                                               name="wgNet_<?= $sqlfet_list4PO['id']; ?>"
-                                                               id="id4WgNet_<?= $sqlfet_list4PO['id']; ?>"
-                                                               value="<?= number_format($sqlfet_list4PO['wg_net'], 2, '.', ','); ?>">
-                                                    </td>
+                                                        <?php
+                                                        if ($sqlfet_list4PO['wg_product'] == '0000') {
+                                                            ?>
+                                                            <input class="form-control form-inline text-right"
+                                                                   type="text" disabled
+                                                                   style="font-size:14px;<?php if ($sqlfet_list4PO['wg_product'] == '0000') echo "text-decoration: line-through;" ?>"
+                                                                   placeholder="-"
+                                                                   name="wgNet_<?= $sqlfet_list4PO['id']; ?>"
+                                                                   id="id4WgNet_<?= $sqlfet_list4PO['id']; ?>"
+                                                                   value="">
+                                                            <?php
+                                                        } else {
+                                                            ?>
+                                                            <input class="form-control form-inline text-right <?php if ($sqlfet_list4PO['wg_product'] == '0000') echo "text-danger" ?>"
+                                                                   type="text" disabled
+                                                                   style="font-size:14px;<?php if ($sqlfet_list4PO['wg_product'] == '0000') echo "text-decoration: line-through;" ?>"
+                                                                   name="wgNet_<?= $sqlfet_list4PO['id']; ?>"
+                                                                   id="id4WgNet_<?= $sqlfet_list4PO['id']; ?>"
+                                                                   value="<?= number_format($sqlfet_list4PO['wg_net'], 2, '.', ','); ?>">
+                                                            <?php
+                                                        }
+                                                        ?>
+                                                    </td><!-- WEIGHT OF PRODUCT -->
+
+                                                    <!-- DRC -->
                                                     <td>
-                                                        <input class="form-control form-inline text-primary text-right" <?php if ($sqlfet_list4PO['wg_product'] == '0000') echo "disabled"; ?>
-                                                               type="text"
-                                                               onkeyup="chkKeyEnter4DRC(this.value, <?= $sqlfet_list4PO['id']; ?>)"
-                                                               onblur="updateDRC(this.value, <?= $sqlfet_list4PO['id']; ?>)"
-                                                               name="DRC_<?= $sqlfet_list4PO['id']; ?>"
-                                                               id="id4DRC_<?= $sqlfet_list4PO['id']; ?>"
-                                                               style="font-size:14px;<?php if ($sqlfet_list4PO['wg_product'] == '0000') echo "text-decoration: line-through;" ?>"
-                                                               value="<?= number_format($sqlfet_list4PO['wg_percent'], 2, '.', ','); ?>">
-                                                    </td>
+                                                        <!-- CHECK FOR PRODUCT 0000(VEHICLE) AND 0002(RUBBER-02) DISABLED -->
+                                                        <?php
+                                                        if (($sqlfet_list4PO['wg_product'] == '0002') || (($sqlfet_list4PO['wg_product'] == '0000'))) {
+                                                            ?>
+                                                            <input class="form-control form-inline text-primary text-right"
+                                                                   type="text"
+                                                                   style="font-size:14px;<?php if ($sqlfet_list4PO['wg_product'] == '0000') echo "text-decoration: line-through;" ?>"
+                                                                   disabled
+                                                                   value="-">
+                                                            <?php
+                                                        } else {
+                                                            ?>
+                                                            <input class="form-control form-inline text-primary text-right"
+                                                                   type="text"
+                                                                   onkeyup="chkKeyEnter4DRC(this.value, <?= $sqlfet_list4PO['id']; ?>)"
+                                                                   onblur="updateDRC(this.value, <?= $sqlfet_list4PO['id']; ?>)"
+                                                                   name="DRC_<?= $sqlfet_list4PO['id']; ?>"
+                                                                   id="id4DRC_<?= $sqlfet_list4PO['id']; ?>"
+                                                                   style="font-size:14px;<?php if ($sqlfet_list4PO['wg_product'] == '0000') echo "text-decoration: line-through;" ?>"
+                                                                   value="<?= number_format($sqlfet_list4PO['wg_percent'], 2, '.', ','); ?>">
+                                                            <?php
+                                                        }
+                                                        ?>
+                                                    </td><!-- DRC -->
+
+                                                    <!-- WEIGHT OF WATER -->
                                                     <td>
-                                                        <input class="form-control form-inline text-primary text-right"
-                                                               type="text" disabled
-                                                               name=""
-                                                               id=""
-                                                               style="font-size:14px;<?php if ($sqlfet_list4PO['wg_product'] == '0000') echo "text-decoration: line-through;" ?>"
-                                                               value="<?= round(($sqlfet_list4PO['wg_net'] * (round((97 - $sqlfet_list4PO['wg_percent']), 2))) / 100); ?>">
-                                                    </td>
+                                                        <?php
+                                                        if (($sqlfet_list4PO['wg_product'] == '0000') || ($sqlfet_list4PO['wg_product'] == '0002')) {
+                                                            ?>
+                                                            <input class="form-control form-inline text-primary text-right"
+                                                                   type="text" disabled
+                                                                   name=""
+                                                                   id=""
+                                                                   style="font-size:14px;<?php if ($sqlfet_list4PO['wg_product'] == '0000') echo "text-decoration: line-through;" ?>"
+                                                                   value="-">
+                                                            <?php
+                                                        } else {
+                                                            ?>
+                                                            <input class="form-control form-inline text-primary text-right"
+                                                                   type="text" disabled
+                                                                   name=""
+                                                                   id=""
+                                                                   style="font-size:14px;<?php if ($sqlfet_list4PO['wg_product'] == '0000') echo "text-decoration: line-through;" ?>"
+                                                                   value="<?= round(($sqlfet_list4PO['wg_net'] * (round((97 - $sqlfet_list4PO['wg_percent']), 2))) / 100); ?>">
+                                                            <?php
+                                                        }
+                                                        ?>
+                                                    </td><!-- WEIGHT OF WATER -->
+
                                                     <td>
                                                         <!-- wg_net-(wg_net*wg_percent) -->
                                                         <input class="form-control form-inline text-primary text-right"
@@ -230,50 +350,60 @@ $thisFile = basename(__FILE__, '.php');
                                                                value="<?php
                                                                $wgMinus = round(($sqlfet_list4PO['wg_net'] * (round((97 - $sqlfet_list4PO['wg_percent']), 2))) / 100);
                                                                $wg2Calc = $sqlfet_list4PO['wg_net'] - $wgMinus;
+                                                               $wgBefore = $sqlfet_list4PO['wg_net'];
+                                                               // echo $sqlfet_list4PO['wg_buyprc'] * $wg2Calc;
+                                                               // echo "-";
+                                                               // echo $wgBefore * $sqlfet_list4PO['wg_labour'];
+                                                               // echo "|";
                                                                echo number_format(($sqlfet_list4PO['wg_buyprc'] * $wg2Calc), 2, '.', ',');
                                                                ?>">
                                                     </td>
                                                     <td class="text-left pl-3" style="font-size:16px">
+                                                        <!-- ประเภทซื้อ -->
                                                         <?//= getValue('tbl_buytype', 'buytype_code', $sqlfet_list4PO['wg_buytype'], 2, 'buytype_name'); ?>
                                                         <?php if ($sqlfet_list4PO['wg_product'] != '0000') { ?>
-                                                            <select name=""
-                                                                    id="id4BuyType_<?= $sqlfet_list4PO['id']; ?>"
-                                                                    class="form-control form-inline"
-                                                                    onchange="updateBuyType(this.value, <?= $sqlfet_list4PO['id']; ?>)">
-                                                                <?php
-                                                                $sqlcmd_listBuyType = "SELECT * FROM tbl_buytype WHERE 1 ORDER BY buytype_code ASC";
-                                                                $sqlres_listBuyType = mysqli_query($dbConn, $sqlcmd_listBuyType);
-                                                                if ($sqlres_listBuyType) {
-                                                                    while ($sqlfet_listBuyType = mysqli_fetch_assoc($sqlres_listBuyType)) {
-                                                                        ?>
-                                                                        <option value="<?= $sqlfet_listBuyType['buytype_code']; ?>" <?php if ($sqlfet_list4PO['wg_buytype'] == $sqlfet_listBuyType['buytype_code']) echo "selected"; ?>><?= $sqlfet_listBuyType['buytype_name']; ?></option>
-                                                                        <?php
+                                                            <div class="selectWrapper1">
+                                                                <select name=""
+                                                                        id="id4BuyType_<?= $sqlfet_list4PO['id']; ?>"
+                                                                        class="form-control form-inline selectBox2"
+                                                                        onchange="updateBuyType(this.value, <?= $sqlfet_list4PO['id']; ?>)">
+                                                                    <?php
+                                                                    $sqlcmd_listBuyType = "SELECT * FROM tbl_buytype WHERE 1 ORDER BY buytype_code ASC";
+                                                                    $sqlres_listBuyType = mysqli_query($dbConn, $sqlcmd_listBuyType);
+                                                                    if ($sqlres_listBuyType) {
+                                                                        while ($sqlfet_listBuyType = mysqli_fetch_assoc($sqlres_listBuyType)) {
+                                                                            ?>
+                                                                            <option value="<?= $sqlfet_listBuyType['buytype_code']; ?>" <?php if ($sqlfet_list4PO['wg_buytype'] == $sqlfet_listBuyType['buytype_code']) echo "selected"; ?>><?= $sqlfet_listBuyType['buytype_name']; ?></option>
+                                                                            <?php
+                                                                        }
                                                                     }
-                                                                }
-                                                                ?>
-                                                            </select>
+                                                                    ?>
+                                                                </select>
+                                                            </div>
                                                             <?php
                                                         }
                                                         ?>
                                                     </td>
                                                     <td class="text-left pl-3" style="font-size:16px">
                                                         <?php if ($sqlfet_list4PO['wg_product'] != '0000') { ?>
-                                                            <select name=""
-                                                                    id="id4Location_<?= $sqlfet_list4PO['id']; ?>"
-                                                                    class="form-control form-inline"
-                                                                    onchange="updateLocation(this.value, <?= $sqlfet_list4PO['id']; ?>)">
-                                                                <?php
-                                                                $sqlcmd_listLocation = "SELECT * FROM tbl_locations WHERE 1 ORDER BY loc_code ASC";
-                                                                $sqlres_listLocation = mysqli_query($dbConn, $sqlcmd_listLocation);
-                                                                if ($sqlres_listLocation) {
-                                                                    while ($sqlfet_listLocation = mysqli_fetch_assoc($sqlres_listLocation)) {
-                                                                        ?>
-                                                                        <option value="<?= $sqlfet_listLocation['loc_code']; ?>" <?php if ($sqlfet_list4PO['wg_location'] == $sqlfet_listLocation['loc_code']) echo "selected"; ?>><?= $sqlfet_listLocation['loc_name']; ?></option>
-                                                                        <?php
+                                                            <div class="selectWrapper1">
+                                                                <select name=""
+                                                                        id="id4Location_<?= $sqlfet_list4PO['id']; ?>"
+                                                                        class="form-control form-inline selectBox2"
+                                                                        onchange="updateLocation(this.value, <?= $sqlfet_list4PO['id']; ?>)">
+                                                                    <?php
+                                                                    $sqlcmd_listLocation = "SELECT * FROM tbl_locations WHERE 1 ORDER BY loc_code ASC";
+                                                                    $sqlres_listLocation = mysqli_query($dbConn, $sqlcmd_listLocation);
+                                                                    if ($sqlres_listLocation) {
+                                                                        while ($sqlfet_listLocation = mysqli_fetch_assoc($sqlres_listLocation)) {
+                                                                            ?>
+                                                                            <option value="<?= $sqlfet_listLocation['loc_code']; ?>" <?php if ($sqlfet_list4PO['wg_location'] == $sqlfet_listLocation['loc_code']) echo "selected"; ?>><?= $sqlfet_listLocation['loc_name']; ?></option>
+                                                                            <?php
+                                                                        }
                                                                     }
-                                                                }
-                                                                ?>
-                                                            </select>
+                                                                    ?>
+                                                                </select>
+                                                            </div>
                                                             <?php
                                                         }
                                                         ?>
@@ -324,11 +454,35 @@ $thisFile = basename(__FILE__, '.php');
                                                         type="text" name="sumBuyPrice" id="id4SumBuyPrice"
                                                         style="font-size:14px;" disabled
                                                         class="form-control form-inline text-primary text-right font-weight-bold"
-                                                        value="<?= calcWgWithBuyPrice($poNumber); ?>">
+                                                        value="<?= number_format(calcWgWithBuyPrice($poNumber), 2, '.', ','); ?>">
                                             </td><!-- ราคารับซื้อ -->
                                             <!-- Empty column -->
                                             <td></td><!-- Empty column -->
                                             <td></td><!-- Empty column -->
+                                        </tr>
+                                        <tr>
+                                            <td colspan="8" class="text-right"
+                                                style="font-size:14px;">ค่าแรงลงยาง (บาท) =
+                                            </td>
+                                            <td><input type="text" name="" id="" disabled
+                                                       class="form-control text-right text-primary"
+                                                       style="font-size:14px;font-weight:bold;"
+                                                       value="<?= number_format(round($sqlfet_calcWg['SUMWG'] * $sqlfet_poSummary['wg_labour']), 2, '.', ',');//= number_format(floor(calcWgWithBuyPrice($poNumber) - round($sqlfet_calcWg['SUMWG'] * $sqlfet_poSummary['wg_labour'])), 2, '.', ',');;                       ?>">
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="8" class="text-right"
+                                                style="font-size:14px;">ยอดเงินโอน (บาท) =
+                                            </td>
+                                            <td><input type="text" name="" id="" disabled
+                                                       class="form-control text-right text-primary"
+                                                       style="font-size:14px;font-weight:bold;"
+                                                       value="<?= number_format(floor(calcWgWithBuyPrice($poNumber) - round($sqlfet_calcWg['SUMWG'] * $sqlfet_poSummary['wg_labour'])), 2, '.', ',');; ?>">
+                                            </td>
+                                            <td></td>
+                                            <td></td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -432,7 +586,6 @@ $thisFile = basename(__FILE__, '.php');
                 valueDRC: wgDRC
             },
             success: function (response) {
-                // console.log(response);
                 location.reload();
                 // You will get response from your PHP page (what you echo or print)
             }
@@ -502,6 +655,64 @@ $thisFile = basename(__FILE__, '.php');
             ,
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log(textStatus, errorThrown);
+            }
+        });
+    }
+
+    let updateProduct = function (PRD, PRD_ID) {
+        //console.log(PRD + "xxx" + PRD_ID);
+        $.ajax({
+            url: "calc4PO.php",
+            type: "POST",
+            data: {
+                // poNumber: poNumber2Upd,
+                processName: "updateProduct",
+                id: PRD_ID,
+                valueProduct: PRD
+            },
+            success: function (response) {
+                //console.log(response);
+                location.reload();
+                // You will get response from your PHP page (what you echo or print)
+            }
+            ,
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(textStatus, errorThrown);
+            }
+        });
+    }
+
+    let updateWgLabour = function (WGLABOUR, PONUMBER) {
+        $.ajax({
+            url: "calc4PO.php",
+            type: "POST",
+            data: {
+                poNumber: PONUMBER,
+                processName: "updateWgLabour",
+                // id: PRD_ID,
+                valueWgLabour: WGLABOUR
+            },
+            success: function (response) {
+                //console.log(response);
+                location.reload();
+                // You will get response from your PHP page (what you echo or print)
+            }
+            ,
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(textStatus, errorThrown);
+            }
+        });
+    }
+    let chkKeyEnter4WgLabour = function (WGLABOUR, PONUMBER) {
+// Execute a function when the user releases a key on the keyboard
+        $("#id4WgLabour").on("keyup", function (event) {
+            // Number 13 is the "Enter" key on the keyboard
+            if (event.keyCode === 13) {
+                console.log(event.keyCode);
+                // Cancel the default action, if needed
+                event.preventDefault();
+                // Trigger the button element with a click
+                updateWgLabour(WGLABOUR, PONUMBER);
             }
         });
     }

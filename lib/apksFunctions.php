@@ -221,7 +221,7 @@ function monthThai($dateBE)
         array('ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'),
         $mm
     );
-    return $dd . " " . $mm . " " . $yy;
+    return number_format($dd) . " " . $mm . " " . $yy;
 }
 
 function confParam($confFolder, $confFile, $retParam)
@@ -256,6 +256,25 @@ function getToken($length)
     return $token;
 }
 
+/* ABOUT USER */
+function cntUserLogin($nameTable, $loginUser)
+{
+    $dbConn = dbConnect();
+
+    $sqlcmd = "SELECT * FROM " . $nameTable . " WHERE login_user='" . $loginUser . "'";
+    $sqlres = mysqli_query($dbConn, $sqlcmd);
+
+    if ($sqlres) {
+        $sqlnum = mysqli_num_rows($sqlres);
+        return $sqlnum;
+    } else {
+        return "ERROR : " . mysqli_error($dbConn);
+        return "<br>[" . $sqlcmd . "]<br>";
+    }
+}
+
+/* ABOUT USER */
+
 /* --------------------------------------- */
 // Function only use for GoldRubber's project
 function calcWgMinusWater4PO($poNumber)
@@ -280,7 +299,7 @@ function calcWgWithBuyPrice($poNumber)
 {
     $dbConn = dbConnect();
 
-    $sqlcmd = "SELECT FORMAT(SUM(ROUND(wg_buyprc*(CEILING(wg_net - ROUND((((97-wg_percent)*wg_net)/100)))),2)),2) AS BUYPRICE FROM tbl_wg4buy WHERE wg_ponum='" . $poNumber . "' AND wg_product<>'0000'";
+    $sqlcmd = "SELECT SUM(ROUND(wg_buyprc*(CEILING(wg_net - ROUND((((97-wg_percent)*wg_net)/100)))),2)) AS BUYPRICE FROM tbl_wg4buy WHERE wg_ponum='" . $poNumber . "' AND wg_product<>'0000'";
     $sqlres = mysqli_query($dbConn, $sqlcmd);
 
     if ($sqlres) {
@@ -309,7 +328,8 @@ function sumWg4PO($poNumber)
     }
 }
 
-function sumWgNoCar($poNumber){
+function sumWgNoCar($poNumber)
+{
     $dbConn = dbConnect();
 
     $sqlcmd = "SELECT SUM(wg_scalerd) AS SUMNOCAR FROM tbl_wg4buy WHERE wg_ponum='" . $poNumber . "' AND wg_product <> '0000'";
@@ -322,5 +342,98 @@ function sumWgNoCar($poNumber){
         echo "ERROR !!! [" . mysqli_errno($dbConn) . "]--[" . mysqli_error($dbConn) . "]";
     }
 }
+
+function sumWgBuyTypeProduct($date2calc, $buytype, $product)
+{
+    $dbConn = dbConnect();
+
+    $sqlcmd = "SELECT SUM(wg_net) AS WGSUM FROM tbl_wg4buy WHERE DATE(wg_createdAt)='" . $date2calc . "' AND wg_buytype='" . $buytype . "' AND wg_product='" . $product . "'";
+    $sqlres = mysqli_query($dbConn, $sqlcmd);
+
+    if ($sqlres) {
+        $sqlfet = mysqli_fetch_assoc($sqlres);
+        return $sqlfet['WGSUM'];
+    } else {
+        echo "ERROR !!! [" . mysqli_errno($dbConn) . "]--[" . mysqli_error($dbConn) . "]";
+    }
+}
+
+function sumWgByProductDate($date2calc, $product)
+{
+    $dbConn = dbConnect();
+
+    $sqlcmd = "SELECT SUM(wg_net) AS WGSUM FROM tbl_wg4buy WHERE DATE(wg_createdAt)='" . $date2calc . "' AND wg_product='" . $product . "' AND wg_product<>'0000'";
+    $sqlres = mysqli_query($dbConn, $sqlcmd);
+
+    if ($sqlres) {
+        $sqlfet = mysqli_fetch_assoc($sqlres);
+        return $sqlfet['WGSUM'];
+    } else {
+        echo "ERROR !!! [" . mysqli_errno($dbConn) . "]--[" . mysqli_error($dbConn) . "]";
+    }
+}
+
+function sumWgByBuyTypeDate($date2calc, $buytype)
+{
+    $dbConn = dbConnect();
+
+    $sqlcmd = "SELECT SUM(wg_net) AS WGSUM FROM tbl_wg4buy WHERE DATE(wg_createdAt)='" . $date2calc . "' AND wg_buytype='" . $buytype . "' AND wg_product<>'0000'";
+    $sqlres = mysqli_query($dbConn, $sqlcmd);
+
+    if ($sqlres) {
+        $sqlfet = mysqli_fetch_assoc($sqlres);
+        return $sqlfet['WGSUM'];
+    } else {
+        echo "ERROR !!! [" . mysqli_errno($dbConn) . "]--[" . mysqli_error($dbConn) . "]";
+    }
+}
+
+function sumWgAllDate($date2calc)
+{
+    $dbConn = dbConnect();
+
+    $sqlcmd = "SELECT SUM(wg_net) AS SUMALL4DATE FROM tbl_wg4buy WHERE DATE(wg_createdat)='" . $date2calc . "' AND wg_product<>'0000'";
+    $sqlres = mysqli_query($dbConn, $sqlcmd);
+
+    if ($sqlres) {
+        $sqlfet = mysqli_fetch_assoc($sqlres);
+        return $sqlfet['SUMALL4DATE'];
+    } else {
+        echo "ERROR !!! [" . mysqli_errno($dbConn) . "]--[" . mysqli_error($dbConn) . "]";
+    }
+}
+
+function getLastRecord($tblName, $condCol, $condVal, $orderCol, $retCol)
+{
+    $dbConn = dbConnect();
+
+    $sqlcmd = "SELECT * FROM " . $tblName . " WHERE " . $condCol . "='" . $condVal . "' ORDER BY " . $orderCol . " DESC LIMIT 1";
+    $sqlres = mysqli_query($dbConn, $sqlcmd);
+
+    if ($sqlres) {
+        $sqlfet = mysqli_fetch_assoc($sqlres);
+        return $sqlfet[$retCol];
+    } else {
+        echo "ERROR !!! [" . mysqli_errno($dbConn) . "]--[" . mysqli_error($dbConn) . "]";
+    }
+}
+
 // Function only use for GoldRubber's project
 /* --------------------------------------- */
+
+
+function getMaxLogin()
+{
+    $baseDir = dirname(__FILE__) . DIRECTORY_SEPARATOR;
+    if (file_exists($baseDir . "globalVariables.json")) {
+        $gb_variable = file_get_contents($baseDir . "globalVariables.json");
+
+        $gb_variable = json_decode($gb_variable);
+
+        $gb_maxLogin = $gb_variable->gb_maxLogin;
+
+        return $gb_maxLogin;
+    } else {
+        echo "No existing files plese create...<br>";
+    }
+}

@@ -63,9 +63,15 @@
                         </p>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" href="#">Login</a>
-                        <a class="dropdown-item" href="#">Logout</a>
-                        <a class="dropdown-item" href="#">Change Password</a>
+                        <?php
+                        if (empty($_SESSION["USERLOGINNAME"])) {
+                            echo "<a class=\"dropdown-item\" href=\"./userRegister.php\">ลงทะเบียนผู้ใช้</a>";
+                            echo "<a class=\"dropdown-item\" href=\"./userLogin.php\">เข้าสู่ระบบ</a>";
+                        } else {
+                            echo "<a class=\"dropdown-item\" href=\"./userLogout.php\">Logout</a>";
+                            echo "<a class=\"dropdown-item\" href=\"#\">Change Password</a>";
+                        }
+                        ?>
                     </div>
                 </li>
             </ul>

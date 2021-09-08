@@ -9,8 +9,7 @@ include_once './lib/apksFunctions.php';
 $dbConn = dbConnect();
 
 /* AUTHORIZED CHECK FOR THIS PAGE */
-/*
-$pageLevel = 1;
+/*$pageLevel = 1;
 $chkToken = 0;
 if (empty($_SESSION["USERLOGINNAME"])) {
     echo "<script>alert(\"ยังไม่ได้เข้าระบบ\")</script>";
@@ -45,6 +44,15 @@ if (empty($_SESSION["USERLOGINNAME"])) {
         }
     }
 }*//* AUTHORIZED CHECK FOR THIS PAGE */
+
+$varget_id2edit = filter_input(INPUT_GET, 'id2edit');
+if (empty($varget_id2edit)) {
+    $txt2Display = "จัดสินค้าขึ้นรถ";
+    $processName = "newLogis";
+} else {
+    $txt2Display = "แก้ไขข้อมูลการจัดสินค้าขึ้นรถ";
+    $processName = "editLogis";
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -56,7 +64,7 @@ if (empty($_SESSION["USERLOGINNAME"])) {
     <link rel="icon" type="image/png" href="./assets/img/faviconW.ico">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 
-    <title>GOLD RUBBER : PURCHASE ORDER</title>
+    <title>GOLD RUBBER : SELL ORDER</title>
 
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no'
           name='viewport'/>
@@ -98,7 +106,7 @@ if (empty($_SESSION["USERLOGINNAME"])) {
             <div class="jumbotron display-4 text-center d-block d-sm-none text-warning bg-transparent font-weight-bold">
                 Gold Rubber
             </div>-->
-            <h2 class="text-warning text-center">รับซื้อ</h2>
+            <h2 class="text-warning text-center"> จัดสินค้าขึ้นรถ </h2>
         </div>
         <!-- Start of Content -->
         <div class="content" id="id4Content">
@@ -108,111 +116,135 @@ if (empty($_SESSION["USERLOGINNAME"])) {
                     <div class="card">
                         <div class="card-header">
                             <h5 class="card-category"> ข้อมูลปัจจุบัน </h5>
-                            <h4 class="card-title"> รับซื้อ </h4>
+                            <h4 class="card-title"> <?= $txt2Display; ?> </h4>
                         </div>
 
                         <!-- Card body -->
                         <div class="card-body">
                             <!-- Form -->
-                            <form action="./act4PO.php" method="post">
+                            <form action="./act4SO.php" method="post">
 
                                 <!-- Row #00 Select PO Type (new or existing) -->
                                 <div class="row">
                                     <div class="col-md-12 pr-md-1">
                                         <div class="form-check form-check-radio form-check-inline">
                                             <label class="form-check-label">
-                                                <input class="form-check-input" type="radio" name="chkNewPO"
-                                                       id="id4ChkNewPO1" value="1">รับซื้อใหม่
+                                                <input class="form-check-input" type="radio" name="chkNewSO"
+                                                       id="id4_chkNewSO1" value="1">ขายใหม่
                                                 <span class="form-check-sign"></span>
                                             </label>
                                         </div>
                                         <div class="form-check form-check-radio form-check-inline">
                                             <label class="form-check-label">
-                                                <input class="form-check-input" type="radio" name="chkNewPO"
-                                                       id="id4ChkNewPO2" value="2">เปิดการซื้อแล้ว
+                                                <input class="form-check-input" type="radio" name="chkNewSO"
+                                                       id="id4_chkNewSO2" value="2" checked>เปิดการขายแล้ว
                                                 <span class="form-check-sign"></span>
                                             </label>
                                         </div>
-
                                     </div>
                                 </div>
                                 <!-- End of Row #00 -->
 
                                 <!-- Row #01 -->
                                 <div class="row">
+                                    <!-- VEHICLE AND OWNER -->
                                     <div class="col-md-4 pr-md-1">
                                         <div class="form-group">
-                                            <label for="id4PONumber">เลขอ้างอิงการซื้อ</label>
-                                            <input type="text" class="form-control" placeholder="เลขอ้างอิงการซื้อ"
-                                                   name="poNumber" id="id4PONumber" readonly list="id4ListOpenPO"
+                                            <label for="id4_soNumber">เลขอ้างอิงการขาย</label>
+                                            <input type="text" class="form-control" placeholder="เลขอ้างอิงการขาย"
+                                                   name="soNumber" id="id4_soNumber" list="id4_listOpenSO"
                                                    required value="">
                                         </div>
-                                    </div>
-                                    <div class="col-md-4 px-md-1">
+                                    </div><!-- VEHICLE AND OWNER -->
+
+                                    <!-- SELL ORDER -->
+                                    <div class="col-md-4 pl-md-1">
                                         <div class="form-group">
-                                            <label for="id4VlpnNumber">เลขทะเบียนรถ</label>&nbsp;<span
-                                                    id="VLPNCheckResult"></span>&nbsp;
-                                            <input type="text" class="form-control" placeholder="เลขทะเบียนรถ"
-                                                   name="vlpnNumber" id="id4VlpnNumber" required
-                                                   onkeyup="chkAvailableVLPN(this.value);">
+                                            <label for="id4_soSuppLogis">รถขนส่ง/เจ้าของ</label>
+                                            <!--<div class="selectWrapper1" style="width: 100%">
+                                                <select class="form-control selectBox1" name="SOSuppLogis"
+                                                        id="id4_SOSuppLogis" required>
+                                                    <option value="">เลือกรถขนส่ง (ถ้ามาใหม่ให้ลงทะเบียนก่อน)</option>
+
+                                                </select>
+                                            </div>-->
+                                            <input class="form-control" type="text" name="soSuppLogis"
+                                                   list="id4_listFreeSuppLogis"
+                                                   id="id4_soSuppLogis" required>
+                                        </div>
+                                    </div><!-- SELL ORDER -->
+
+                                    <!-- CUSTOMERS -->
+                                    <!--
+                                    <div class="col-md-4 pl-md-1">
+                                        <label for="soCustomer">ลูกค้า</label>
+                                        <div class="form-group text-center">
+                                            <div class="selectWrapper1" style="width: 100%;">
+                                                <select class="form-control selectBox1" name="soCustomer"
+                                                        id="id4_soCustomer" required>
+                                                    <option value="">เลือกลูกค้า</option>
+                                                    <?php
+                                    $sqlcmd_listCusts = "SELECT * FROM tbl_customers WHERE 1";
+                                    $sqlres_listCusts = mysqli_query($dbConn, $sqlcmd_listCusts);
+                                    if ($sqlres_listCusts) {
+                                        while ($sqlfet_listCusts = mysqli_fetch_assoc($sqlres_listCusts)) {
+                                            ?>
+                                                            <option value="<?= $sqlfet_listCusts['customer_code']; ?>"><?= $sqlfet_listCusts['customer_name']; ?>
+                                                                &nbsp;<?= $sqlfet_listCusts['customer_surname']; ?></option>
+                                                            <?php
+                                        }
+                                    }
+                                    ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>--><!-- CUSTOMERS -->
+
+                                    <!--<div class="col-md-4 px-md-1">
+                                        <div class="form-group">
+                                            <label for="id4_SOSuppLogis">เจ้าของรถขนส่ง</label>
+                                            <input type="text" name="SOSuppLogis" id="id4_SOSuppLogis"
+                                                   class="form-control" placeholder="ถ้ามาใหม่ให้ไปลงทะเบียนก่อน"
+                                                   required value="">
                                         </div>
                                     </div>
                                     <div class="col-md-4 pl-md-1">
                                         <div class="form-group">
-                                            <label for="id4POSuppName">ผู้ขาย</label>
-                                            <input type="text" name="POSuppName" id="id4POSuppName" class="form-control"
-                                                   placeholder="ชื่อผู้ขาย (ถ้ามาใหม่ให้ไปลงทะเบียนผู้ขายก่อน)" required
-                                                   value="">
+                                            <label for="id4_vLpnNumber">เลขทะเบียนรถ</label>&nbsp;<span
+                                                    id="id4_vLpnCheckResult"></span>&nbsp;
+                                            <input type="text" class="form-control" placeholder="เลขทะเบียนรถ"
+                                                   name="vLpnNumber" id="id4_vLpnNumber" list="id4_dataList4SuppLogis"
+                                                   disabled required
+                                                   onkeyup="chkAvailableVLPN(this.value);">
                                         </div>
-                                    </div>
+                                    </div>-->
                                 </div> <!-- End of Row #01 -->
 
                                 <!-- Row #02 -->
                                 <div class="row">
-                                    <div class="col-md-3 pr-md-1">
-                                        <label for="id4POBuyType">ประเภทการซื้อ</label>
+                                    <!-- WEIGHT TYPE -->
+                                    <div class="col-md-3 pr-md-2">
+                                        <label for="id4_soWgType">ประเภทการชั่ง</label>
                                         <div class="form-group">
                                             <div class="selectWrapper1" style="width: 100%;">
-                                                <select class="form-control selectBox1" name="POBuyType"
-                                                        id="id4POBuyType" style="border: none!important;">
-                                                    <option value="">เลือกประเภทการซื้อ</option>
-                                                    <?php
-                                                    $sqlcmd_listBuyType = "SELECT * FROM tbl_buytype WHERE 1 ORDER BY buytype_code ASC";
-                                                    $sqlres_listBuyType = mysqli_query($dbConn, $sqlcmd_listBuyType);
-                                                    if ($sqlres_listBuyType) {
-                                                        while ($sqlfet_listBuyType = mysqli_fetch_assoc($sqlres_listBuyType)) {
-                                                            ?>
-                                                            <option value="<?= $sqlfet_listBuyType['buytype_code']; ?>"><?= $sqlfet_listBuyType['buytype_name']; ?></option>
-                                                            <?php
-                                                        }
-                                                    }
-                                                    ?>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-3 px-md-1">
-                                        <label for="id4POWgType">ประเภทการชั่ง</label>
-                                        <div class="form-group">
-                                            <div class="selectWrapper1" style="width: 100%;">
-                                                <select class="form-control selectBox1" name="POWgType" id="id4POWgType"
-                                                        style="border: none!important;" required>
+                                                <select class="form-control selectBox1" name="soWgType"
+                                                        id="id4_soWgType" required>
                                                     <option value="">เลือกประเภทการชั่ง</option>
-                                                    <option value="0001">ชั่งเข้า (รถพร้อมสินค้า)</option>
+                                                    <option value="0001">ชั่งเข้า (รถเปล่า)</option>
                                                     <option value="0002">ชั่งแยก (สินค้าและพาเลท)</option>
-                                                    <option value="0003">ชั่งออก (รถเปล่า)</option>
+                                                    <option value="0003">ชั่งออก (รถพร้อมสินค้า)</option>
                                                 </select>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div><!-- WEIGHT TYPE -->
 
-                                    <div class="col-md-3 px-md-1">
-                                        <label for="id4POWgScale">เครื่องชั่ง</label>
+                                    <!-- WEIGHT SCALE -->
+                                    <div class="col-md-3 px-md-2">
+                                        <label for="id4_soWgScale">เครื่องชั่ง</label>
                                         <div class="form-group">
                                             <div class="selectWrapper1" style="width: 100%;">
-                                                <select class="form-control selectBox1" name="POWgScale"
-                                                        id="id4POWgScale" required style="border: none!important;">
+                                                <select class="form-control selectBox1" name="soWgScale"
+                                                        id="id4_soWgScale" required>
                                                     <option value="">เลือกเครื่องชั่ง</option>
                                                     <?php
                                                     $sqlcmd_listWgScale = "SELECT * FROM tbl_wgscale WHERE 1 ORDER BY wgscale_code";
@@ -228,14 +260,15 @@ if (empty($_SESSION["USERLOGINNAME"])) {
                                                 </select>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div><!-- WEIGHT SCALE -->
 
-                                    <div class="col-md-3 pl-md-1">
+                                    <!-- IN THE FUTURE IF NEED TO SEPARATED PRODUCT TO SELL -->
+                                    <div class="col-md-3 px-md-1">
                                         <label for="id4POProduct">สินค้าที่ชั่ง</label>
                                         <div class="form-group">
                                             <div class="selectWrapper1" style="width: 100%;">
-                                                <select class="form-control selectBox1" name="POProduct"
-                                                        id="id4POProduct" style="border: none!important;">
+                                                <select class="form-control selectBox1" name="SOProduct"
+                                                        id="id4_SOProduct">
                                                     <option value="">เลือกสินค้า</option>
                                                     <option value="0000">ชั่งรถ</option>
                                                     <?php
@@ -253,8 +286,11 @@ if (empty($_SESSION["USERLOGINNAME"])) {
                                             </div>
                                         </div>
                                     </div>
+                                    <!-- IN THE FUTURE IF NEED TO SEPARATED PRODUCT TO SELL -->
+
                                 </div><!-- End of Row #02 -->
 
+                                <!-- IN THE FUTURE IF NEED TO SEPARATED PRODUCT TO SELL -->
                                 <!-- Row for pallet weight -->
                                 <div class="row mt-5 h4 font-weight-bold text-muted" id="div4WgPallet">
                                     <div class="col-md-5 pr-md-1 my-2" id="div4Txt">
@@ -264,7 +300,6 @@ if (empty($_SESSION["USERLOGINNAME"])) {
                                     </div>
                                     <div class="col-md-1 px-md-1" id="div4WgShow">
                                         <div class="form-group">
-                                            <!-- <label for="id4SuppAmphoe" style="text-decoration: none;">น้ำหนักที่ชั่งได้</label>-->
                                             <input type="number" class="form-control" placeholder="0"
                                                    name="cntPallet" id="id4CntPallet" required
                                                    value="" style="text-align: right;" onchange="calcWgNet();"
@@ -284,7 +319,6 @@ if (empty($_SESSION["USERLOGINNAME"])) {
                                     </div>
                                     <div class="col-md-2 px-md-1" id="div4WgShow">
                                         <div class="form-group">
-                                            <!-- <label for="id4SuppAmphoe" style="text-decoration: none;">น้ำหนักที่ชั่งได้</label>-->
                                             <input type="text" class="form-control" placeholder="0"
                                                    name="wg4Pallet" id="id4Wg4Pallet" pattern="^\d*(\.\d{0,2})?$"
                                                    value="" style="text-align: right;" onchange="calcWgNet();"
@@ -297,8 +331,9 @@ if (empty($_SESSION["USERLOGINNAME"])) {
                                         </div>
                                     </div>
                                 </div><!-- End of row for pallet weight -->
+                                <!-- IN THE FUTURE IF NEED TO SEPARATED PRODUCT TO SELL -->
 
-                                <!-- Row #03 -->
+                                <!-- Row #03 --><!-- WEIGHTING -->
                                 <div class="row h4 mt-5 font-weight-bold text-muted" style="vertical-align: center;"
                                      id="div4Wg">
                                     <div class="col-md-7 pr-md-1 my-4" id="div4Txt">
@@ -322,9 +357,9 @@ if (empty($_SESSION["USERLOGINNAME"])) {
                                             กก.
                                         </div>
                                     </div>
-                                </div><!-- End of Row #03 -->
+                                </div><!-- WEIGHTING --><!-- End of Row #03 -->
 
-                                <!-- Row for net weight -->
+                                <!-- Row for net weight --><!-- WEIGHTING -->
                                 <div class="row h4 mt-5 font-weight-bold text-muted" id="div4Wg">
                                     <div class="col-md-7 pr-md-1 my-4" id="div4Txt">
                                         <div class="form-group text-right">
@@ -345,9 +380,9 @@ if (empty($_SESSION["USERLOGINNAME"])) {
                                             กก.
                                         </div>
                                     </div>
-                                </div><!-- End of row for net weight -->
+                                </div><!-- WEIGHTING --><!-- End of row for net weight -->
 
-                                <hr>
+                                <br>
                                 <!-- Button "Reset" and "Submit" -->
                                 <div class="row d-flex justify-content-center">
                                     <div class="button-container">
@@ -357,8 +392,7 @@ if (empty($_SESSION["USERLOGINNAME"])) {
                                         </button>
                                         &nbsp;&nbsp;
                                         <button type="submit" class="btn btn-outline-success btn-round"
-                                                style="width: 120px" name="suppSubmitBtn"
-                                                onsubmit="return confirm('ข้อมูลถูกต้อง\nต้องการบันทึกข้อมูล')">
+                                                style="width: 120px">
                                             <i class="now-ui-icons arrows-1_cloud-upload-94"></i> บันทึก
                                         </button>
                                     </div>
@@ -382,78 +416,38 @@ if (empty($_SESSION["USERLOGINNAME"])) {
     </div>
 </div>
 
-<!-- Datalist -->
-<!-- datalist for PO -->
-<datalist id="id4ListOpenPO">
+<!-- DATALIST -->
+<!-- LIST FOR OPEN SO -->
+<datalist id="id4_listOpenSO">
     <?php
-    //    $sqlcmd_listOpenPO = "SELECT * FROM tbl_purchaseorder WHERE po_status=1";
-    $sqlcmd_SetMode = "SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))";
-    $sqlres_setMode = mysqli_query($dbConn, $sqlcmd_SetMode);
-    $sqlcmd_listOpenPO = "SELECT * FROM tbl_wg4buy WHERE po_status=1 GROUP BY wg_ponum";
-    $sqlres_listOpenPO = mysqli_query($dbConn, $sqlcmd_listOpenPO);
-    if ($sqlres_listOpenPO) {
-        while ($sqlfet_listOpenPO = mysqli_fetch_assoc($sqlres_listOpenPO)) {
+    $sqlcmd_listOpenSO = "SELECT * FROM tbl_sellorder WHERE so_status=1";
+    $sqlres_listOpenSO = mysqli_query($dbConn, $sqlcmd_listOpenSO);
+    if ($sqlres_listOpenSO) {
+        while ($sqlfet_listOpenSO = mysqli_fetch_assoc($sqlres_listOpenSO)) {
+            $custName = getValue("tbl_customers", "customer_code", $sqlfet_listOpenSO['so_customer'], 2, "customer_name");
+            $custSurname = getValue("tbl_customers", "customer_code", $sqlfet_listOpenSO['so_customer'], 2, "customer_surname");
             ?>
-            <option value="<?= $sqlfet_listOpenPO['wg_ponum']; ?>"></option>
+            <option value="<?= $sqlfet_listOpenSO['so_number'] . " / " . $custName . " " . $custSurname; ?>"></option>
             <?php
         }
     }
     ?>
-</datalist><!-- datalist for PO -->
+</datalist><!-- LIST FOR OPEN SO -->
 
-<!-- Datalist for LPN -->
-<datalist id="id4ListVLPN">
+<!-- LIST FOR VACANT SUPPLOGIS -->
+<datalist id="id4_listFreeSuppLogis">
     <?php
-    //    $sqlcmd_listOpenVLPN = "SELECT * FROM tbl_purchaseorder WHERE po_status=1";
-    $sqlcmd_SetMode = "SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))";
-    $sqlres_setMode = mysqli_query($dbConn, $sqlcmd_SetMode);
-    $sqlcmd_listOpenVLPN = "SELECT * FROM tbl_wg4buy WHERE po_status=1 GROUP BY wg_ponum";
-    $sqlres_listOpneVLPN = mysqli_query($dbConn, $sqlcmd_listOpenVLPN);
-    if ($sqlres_listOpneVLPN) {
-        while ($sqlfet_listOpenVLPN = mysqli_fetch_assoc($sqlres_listOpneVLPN)) {
+    $sqlcmd_listFreeSuppLogis = "SELECT * FROM tbl_supplogis WHERE supplogis_status=0";
+    $sqlres_listFreeSuppLogis = mysqli_query($dbConn, $sqlcmd_listFreeSuppLogis);
+    if ($sqlres_listFreeSuppLogis) {
+        while ($sqlfet_listFreeSuppLogis = mysqli_fetch_assoc($sqlres_listFreeSuppLogis)) {
             ?>
-            <option value="<?= $sqlfet_listOpenVLPN['wg_vlpn']; ?>"></option>
+            <option value="<?= $sqlfet_listFreeSuppLogis['supplogis_vlpn'] . "/" . $sqlfet_listFreeSuppLogis['supplogis_name']; ?>"></option>
             <?php
         }
     }
     ?>
-
-</datalist>
-<!-- Datalist for LPN -->
-
-<!-- Datalist for all supplier -->
-<datalist id="id4ListAllSupp">
-    <?php
-    $sqlcmd_listAllSupp = "SELECT * FROM tbl_suppliers WHERE 1 ORDER BY supp_code ASC";
-    $sqlres_listAllSupp = mysqli_query($dbConn, $sqlcmd_listAllSupp);
-    if ($sqlres_listAllSupp) {
-        while ($sqlfet_listAllSupp = mysqli_fetch_assoc($sqlres_listAllSupp)) {
-            ?>
-            <option value="<?= $sqlfet_listAllSupp['supp_name'] . " " . $sqlfet_listAllSupp['supp_surname']; ?>"></option>
-            <?php
-        }
-    }
-    ?>
-</datalist><!-- Datalist for all supplier -->
-
-<!-- Datalist for open supplier -->
-<datalist id="id4ListOpenSupp">
-    <?php
-    //    $sqlcmd_listOpenSupp = "SELECT * FROM tbl_purchaseorder WHERE po_status=1 ORDER BY po_suppcode ASC";
-    $sqlcmd_SetMode = "SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))";
-    $sqlres_setMode = mysqli_query($dbConn, $sqlcmd_SetMode);
-    $sqlcmd_listOpenSupp = "SELECT * FROM tbl_wg4buy WHERE po_status=1 GROUP BY wg_ponum ORDER BY wg_suppcode ASC";
-    $sqlres_listOpenSuup = mysqli_query($dbConn, $sqlcmd_listOpenSupp);
-    if ($sqlres_listOpenSuup) {
-        while ($sqlfet_listOpenSupp = mysqli_fetch_assoc($sqlres_listOpenSuup)) {
-            ?>
-            <option value="<?= getValue('tbl_suppliers', 'supp_code', $sqlfet_listOpenSupp['wg_suppcode'], 2, 'supp_name') . " " . getValue('tbl_suppliers', 'supp_code', $sqlfet_listOpenSupp['wg_suppcode'], 2, 'supp_surname'); ?>"></option>
-            <?php
-        }
-    }
-    ?>
-</datalist><!-- Datalist for open supplier -->
-
+</datalist><!-- LIST FOR VACANT SUPPLOGIS -->
 <!-- Datalist -->
 
 <!--   Core JS Files   -->
@@ -466,79 +460,83 @@ if (empty($_SESSION["USERLOGINNAME"])) {
 <script src="./js/plugins/bootstrap-notify.js"></script>
 <!-- Control Center for Now Ui Dashboard: parallax effects, scripts for the example pages etc -->
 <script src="./js/now-ui-dashboard.min.js?v=1.5.0" type="text/javascript"></script>
-<script src="./js/script4PO.js"></script>
+<script src="./js/script4SO.js"></script>
 
 <!-- Hi-light active menu -->
 <script>
     // Try to still open submenu
-    $("#sub4Buy").addClass("show");
-    $("#id4SubMenuBuyPO").addClass("active");
+    $("#sub4Sell").addClass("show");
+    $("#id4SubMenuSellSO").addClass("active");
 </script><!-- Hi-light active menu -->
 
 <!-- Check New PO or Existing PO -->
 <script>
-    let poNumber = document.getElementById("id4PONumber");
-    let poSuppName = document.getElementById("id4POSuppName");
-    let poVlpn = document.getElementById("id4VlpnNumber");
-    let vlpnRes = document.getElementById("VLPNCheckResult");
+    let radChk = document.getElementsByName("chkNewSO");
 
-    let radChk = document.getElementsByName("chkNewPO");
-
+    let soNumber = document.getElementById("id4_SONumber");
+    let soSuppLogis = document.getElementById("id4_SOSuppLogis");
+    // let soVlpn = document.getElementById("id4_vLpnNumber");
+    // let vlpnRes = document.getElementById("id4_vLpnCheckResult");
     let radVal = 0;
 
     $(document).ready(function () {
         // Check radio button #01 checked
-        $('#id4ChkNewPO1').change(function () {
-            vlpnRes.innerHTML = "";
-            $("#id4PONumber").attr("readonly", true);
-            $("#VLPNCheckResult").removeClass("d-none");
-            poSuppName.setAttribute("list", "id4ListAllSupp");
+        $('#id4_chkNewSO1').change(function () {
+            // vlpnRes.innerHTML = "";
+            // $("#id4_SONumber").attr("readonly", true);
+            // $("#id4_vLpnCheckResult").removeClass("d-none");
+            soSuppLogis.setAttribute("list", "id4_CloseSOSuppLogist");
             radVal = 1;
-            // Get new PO-Number
+            // Get new SO-Number
             $.ajax({
                 type: "POST",
-                url: "php4PO.php",
-                data: {processName: 'genPONumber'},
+                url: "php4SO.php",
+                data: {processName: 'genSONumber'},
                 success: function (response) {
-                    poNumber.value = response;
+                    soNumber.value = response;
                 }
             });
-            poSuppName.value = "";
-            poVlpn.value = "";
+            // soSuppLogis.value = "";
+            // soVlpn.value = "";
 
             // Enable and Disable Select Option
-            $("#id4POWgType option[value='0001']").prop("disabled", false);
-            $("#id4POWgType option[value='0002']").prop("disabled", false);
-            $("#id4POWgType option[value='0003']").prop("disabled", true);
+            $("#id4_SOWgType option[value='0001']").prop("disabled", false);
+            $("#id4_SOWgType option[value='0002']").prop("disabled", false);
+            $("#id4_SOWgType option[value='0003']").prop("disabled", true);
 
             // Enable keyboard input
-            $("#id4PONumber").keydown(function () {
+            /*$("#id4PONumber").keydown(function () {
                 return true;
             });
             $("#id4VlpnNumber").keydown(function () {
                 return true;
             });
-            $("#id4POSuppName").keydown(function () {
+            $("#id4_SOSuppLogis").keydown(function () {
                 return true;
-            });
+            });*/
         });
+
         // Check radio button #02 checked
-        $('#id4ChkNewPO2').change(function () {
-            $("#id4PONumber").attr("readonly", false);
-            $("#VLPNCheckResult").addClass("d-none");
-            poSuppName.setAttribute("list", "id4ListOpenSupp");
-            poVlpn.setAttribute("list", "id4ListVLPN");
+        $('#id4_chkNewSO2').change(function () {
+            $("#id4_SONumber").attr("readonly", false);
+            $("#id4_SOCustomer").attr("readonly", true);
+            // $("#id4_vLpnCheckResult").addClass("d-none");
+
+            soNumber.setAttribute("list", "id4_OpenSONumber");
+            // soSuppLogis.setAttribute("list", "id4ListOpenSupp");
+            // poVlpn.setAttribute("list", "id4ListVLPN");
             radVal = 2;
-            poNumber.value = "";
-            poSuppName.value = "";
-            poVlpn.value = "";
+            // poNumber.value = "";
+            // poSuppName.value = "";
+            // poVlpn.value = "";
 
             // Enable and Disable Select Option
-            $("#id4POWgType option[value='0001']").prop("disabled", true);
-            $("#id4POWgType option[value='0002']").prop("disabled", false);
-            $("#id4POWgType option[value='0003']").prop("disabled", false);
+            $("#id4_SOWgType option[value='0001']").prop("disabled", true);
+            $("#id4_SOWgType option[value='0002']").prop("disabled", false);
+            $("#id4_SOWgType option[value='0003']").prop("disabled", false);
 
             // Disable keyboard input
+            /*
             $("#id4PONumber").keydown(function () {
                 return false;
             });
@@ -548,32 +546,33 @@ if (empty($_SESSION["USERLOGINNAME"])) {
             $("#id4POSuppName").keydown(function () {
                 return false;
             });
+            */
         });
 
         // Check weight type selected
-        $('#id4POWgType').change(function () {
-            let wgType = $('#id4POWgType :selected').val();
+        $('#id4_SOWgType').change(function () {
+            let wgType = $('#id4_SOWgType :selected').val();
             let cntWgScale = "<?= countAllRow('tbl_wgscale');?>";
 
             // console.log(wgType);
             if (wgType === '0002') {
                 for (let i = 1; i <= cntWgScale; i++) {
                     if (i === 1)
-                        $("#id4POWgScale option[value=" + i.toString().padStart(4, '0') + "]").prop("disabled", true);
+                        $("#id4_SOWgScale option[value=" + i.toString().padStart(4, '0') + "]").prop("disabled", true);
                     else
-                        $("#id4POWgScale option[value=" + i.toString().padStart(4, '0') + "]").prop("disabled", false);
+                        $("#id4_SOWgScale option[value=" + i.toString().padStart(4, '0') + "]").prop("disabled", false);
                 }
             } else {
                 for (let i = 1; i <= cntWgScale; i++) {
                     if (i === 1)
-                        $("#id4POWgScale option[value=" + i.toString().padStart(4, '0') + "]").prop("disabled", false);
+                        $("#id4_SOWgScale option[value=" + i.toString().padStart(4, '0') + "]").prop("disabled", false);
                     else
-                        $("#id4POWgScale option[value=" + i.toString().padStart(4, '0') + "]").prop("disabled", true);
+                        $("#id4_SOWgScale option[value=" + i.toString().padStart(4, '0') + "]").prop("disabled", true);
                 }
             }
 
             // Enable keyboard input
-            $("#id4PONumber").keydown(function () {
+            /*$("#id4PONumber").keydown(function () {
                 return true;
             });
             $("#id4VlpnNumber").keydown(function () {
@@ -581,20 +580,20 @@ if (empty($_SESSION["USERLOGINNAME"])) {
             });
             $("#id4POSuppName").keydown(function () {
                 return true;
-            });
+            });*/
         });
 
         // Check weight scale if with pallet type show pallet weight input
-        $('#id4POWgScale').change(function () {
-            let wgScale = $('#id4POWgScale :selected').val();
-            let chkWgLevel = queryData("php4PO.php?command=checkWgScaleLevel&wgSCaleCode=" + wgScale);
+        $('#id4_SOWgScale').change(function () {
+            let wgScale = $('#id4_SOWgScale :selected').val();
+            let chkWgLevel = queryData("php4SO.php?command=checkWgScaleLevel&wgSCaleCode=" + wgScale);
             let cntPrdlist = '<?=countAllRow('tbl_products');?>';
 
             if (chkWgLevel === '1') {
                 // Disable wgscale level 0 and enable wgscale level 1
-                $("#id4POProduct option[value=0000]").prop("disabled", true);
+                $("#id4_SOProduct option[value=0000]").prop("disabled", true);
                 for (let i = 1; i <= cntPrdlist; i++) {
-                    $("#id4POProduct option[value=" + i.toString().padStart(4, '0') + "]").prop("disabled", false);
+                    $("#id4_SOProduct option[value=" + i.toString().padStart(4, '0') + "]").prop("disabled", false);
                 }   // Disable wgscale level 0 and enable wgscale level 1
 
                 // Enable pallet weight section
@@ -604,9 +603,9 @@ if (empty($_SESSION["USERLOGINNAME"])) {
             } else if (chkWgLevel === '0') {
                 // Check weight scale level to the big one for vehicle weighting
                 // Enable wgscale level 0 and disable wgscale level 1
-                $("#id4POProduct option[value=0000]").prop("disabled", false);
+                $("#id4_SOProduct option[value=0000]").prop("disabled", false);
                 for (let i = 1; i <= cntPrdlist; i++) {
-                    $("#id4POProduct option[value=" + i.toString().padStart(4, '0') + "]").prop("disabled", true);
+                    $("#id4_SOProduct option[value=" + i.toString().padStart(4, '0') + "]").prop("disabled", true);
                 }   // Enable wgscale level 0 and disable wgscale level 1
 
                 // Disable pallet weight section
@@ -622,18 +621,49 @@ if (empty($_SESSION["USERLOGINNAME"])) {
         });*/
     });
 
-    $("#id4POSuppName").on("change", function () {
-        // list4PO(radVal, poSuppName.value, 'POSuppName', 'po_suppcode');
-        list4PO(radVal, poSuppName.value, 'POSuppName', 'wg_suppcode');
+    $("#id4_SOSuppLogis").on("change", function () {
+        $("#id4_vLpnNumber").attr("disabled", false);
+        $.ajax({
+            type: "POST",
+            url: "php4SO.php",
+            data: {
+                processName: "listVlpn4SuppLogis",
+                vehicleOwner: this.value
+            },
+            success: function (response) {
+                const arrayVlpn = JSON.parse(response);
+                createDataList(arrayVlpn, "id4_vLpnNumber");
+            }
+        });
+
+        function createDataList(optionList, inputTextID) {
+            let container = document.getElementById(inputTextID);
+            let i = 0;
+            let len = optionList.length;
+            let datLst = document.createElement('datalist');
+
+            datLst.id = 'id4_dataList4SuppLogis';
+            for (; i < len; i += 1) {
+                let option = document.createElement('option');
+                option.value = optionList[i]["supplogis_vlpn"];
+                datLst.appendChild(option);
+            }
+            container.appendChild(datLst);
+        }
     });
-    $("#id4PONumber").on("change", function () {
+
+
+    $("#id4_SONumber").on("change", function () {
         // list4PO(radVal, poNumber.value, 'PONumber', 'po_number');
-        list4PO(radVal, poNumber.value, 'PONumber', 'wg_ponum');
+        // console.log(typeof radVal + "][" + radVal);
+        // console.log(soNumber.value);
+        list4SO(radVal, soNumber.value, 'SONumber', 'wg_sonum');
     });
+    /*
     $("#id4VlpnNumber").on("change", function () {
         // list4PO(radVal, poVlpn.value, 'VlpnNumber', 'po_vlpn');
         list4PO(radVal, poVlpn.value, 'VlpnNumber', 'wg_vlpn');
-    });
+    });*/
 </script>
 
 <script>
