@@ -23,7 +23,11 @@ if (!empty($varget_id2edit)) {
         $sqlfet_labourInEdit = mysqli_fetch_assoc($sqlres_labourInEdit);
 
         $lbCode = $sqlfet_labourInEdit['lb_code'];
+
         $lbDate = $sqlfet_labourInEdit['lb_date'];
+        list($yyy, $mmm, $ddd) = explode("-", $lbDate);
+        $lbDate = $ddd . "-" . $mmm . "-" . ($yyy + 543);
+
         $lbSupp = $sqlfet_labourInEdit['lb_supplier'];
         $lbVLpn = $sqlfet_labourInEdit['lb_vlpn'];
         $lbWeight = $sqlfet_labourInEdit['lb_weight'];
@@ -69,6 +73,7 @@ if (!empty($varget_id2edit)) {
 
     <!-- DATATABLES -->
     <link rel="stylesheet" href="./css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css">
     <style>
         #labourIn_filter input {
             border-radius: 30px;
@@ -78,6 +83,10 @@ if (!empty($varget_id2edit)) {
         }
 
         .dataTables_length select {
+            border-radius: 30px !important;
+        }
+
+        .dt-button {
             border-radius: 30px !important;
         }
 
@@ -313,6 +322,13 @@ if (!empty($varget_id2edit)) {
 
 <!-- DATATABLES -->
 <script src="./js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.0.0/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.print.min.js"></script>
 
 <!-- Hi-light active menu -->
 <script>
@@ -406,34 +422,68 @@ if (!empty($varget_id2edit)) {
 <script>
     $(document).ready(function () {
         $('#labourIn').DataTable({
-            "order": [[0, "desc"]],
-            language:
-                {
-                    "decimal": "",
-                    "emptyTable": "ไม่มีข้อมูล",
-                    "info": "แสดงผล _START_ ถึง _END_ จากทั้งหมด _TOTAL_ ข้อมูล",
-                    "infoEmpty": "แสดงผล 0 ถึง 0 จากทั้งหมด 0 ข้อมูล",
-                    "infoFiltered": "(กรองจากทั้งหมด _MAX_ ข้อมูล)",
-                    "infoPostFix": "",
-                    "thousands": ",",
-                    "lengthMenu": "แสดง _MENU_ ข้อมูลต่อหน้า",
-                    "loadingRecords": "กำลังโหลดข้อมูล...",
-                    "processing": "กำลังประมวลผล...",
-                    "search": "",
-                    "searchPlaceholder": "   ค้นหาในตาราง",
-                    "zeroRecords": "ไม่มีข้อมูลตรงกับที่ค้นหา",
-                    "paginate": {
-                        "first": "หน้าแรก",
-                        "last": "หน้าสุดท้าย",
-                        "next": "ถัดไป",
-                        "previous": "ก่อนหน้า"
-                    },
-                    "aria": {
-                        "sortAscending": ": activate to sort column ascending",
-                        "sortDescending": ": activate to sort column descending"
+            dom: 'Blfrtip',
+            buttons: ['copy', 'excel', {
+                extend: "print",
+                title: function () {
+                    var printTitle = 'ค่าแรงลงยาง';
+                    return printTitle
+                },
+                text: "พิมพ์",
+                customize: function (win) {
+                    var last = null;
+                    var current = null;
+                    var bod = [];
+
+                    var css = '@page { size: landscape; }',
+                        head = win.document.head || win.document.getElementsByTagName('head')[0],
+                        style = win.document.createElement('style');
+
+                    style.type = 'text/css';
+                    style.media = 'print';
+
+                    if (style.styleSheet) {
+                        style.styleSheet.cssText = css;
+                    } else {
+                        style.appendChild(win.document.createTextNode(css));
                     }
+
+                    head.appendChild(style);
                 }
+            }/*, {
+                extend: 'pdfHtml5',
+                orientation: 'landscape',
+                pageSize: 'A4'
+            }*/],
+            "order": [
+                [0, "desc"]
+            ],
+            language: {
+                "decimal": "",
+                "emptyTable": "ไม่มีข้อมูล",
+                "info": "แสดง _START_ ถึง _END_ จากทั้งหมด _TOTAL_ ข้อมูล",
+                "infoEmpty": "แสดง 0 ถึง 0 จาก 0 ข้อมูล",
+                "infoFiltered": "(กรองจากทั้งหมด _MAX_ ข้อมูล)",
+                "infoPostFix": "",
+                "thousands": ",",
+                "lengthMenu": "แสดง _MENU_ ข้อมูลต่อหน้า",
+                "loadingRecords": "กำลังโหลด...",
+                "processing": "กำลังประมวลผล...",
+                "search": "ค้นหาในตาราง:  ",
+                "zeroRecords": "ไม่พบข้อมูลที่ค้นหา",
+                "paginate": {
+                    "first": "หน้าแรก",
+                    "last": "หน้าสุดท้าย",
+                    "next": "ถัดไป",
+                    "previous": "ก่อนหน้า"
+                },
+                "aria": {
+                    "sortAscending": ": activate to sort column ascending",
+                    "sortDescending": ": activate to sort column descending"
+                }
+            }
         });
+
     });
 </script><!-- Datatable Setup -->
 
