@@ -26,7 +26,7 @@ if (!empty($varpost_processName)) {
             updateDB("tbl_customers", "customer_code", $varpost_custCode, 2, "customer_created", $dateNow . " " . $timeNow, 2);
 
             echo "<script>alert(\"เพิ่มข้อมูลลูกค้าแล้ว\")</script>";
-            echo "<script>window.logcation.href=\"./customerห.php\"</script>";
+            echo "<script>window.logcation.href=\"./customers.php\"</script>";
             break;
 
         case "editCustomer":
@@ -38,7 +38,7 @@ if (!empty($varpost_processName)) {
             updateDB("tbl_customers", "customer_code", $varpost_custCode, 2, "customer_created", $dateNow . " " . $timeNow, 2);
 
             echo "<script>alert(\"แก้ไขข้อมูลลูกค้าแล้ว\")</script>";
-            echo "<script>window.logcation.href=\"./customerห.php\"</script>";
+            echo "<script>window.logcation.href=\"./customers.php\"</script>";
             break;
     }
 }

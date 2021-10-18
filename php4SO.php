@@ -120,7 +120,7 @@ if (!empty($varget_command)) {
 
         // 20210908083300 GET WEIGHT FROM SELL ORDER DETAILS
         case "getWeight4SO":
-            echo getValue("tbl_sellorder", "so_number", $varget_soNumber, 2, "so_weight");
+            echo getValue("tbl_sellorder", "so_number", $varget_soNumber, 2, "so_wgordered");
             break;
 
         // 20210908163500 GET SO-NUMBER FOR SUPPLIER LOGISTIC

@@ -7,6 +7,9 @@ date_default_timezone_set('Asia/Bangkok');
 $dateNow = date("Y-m-d");
 $timeNow = date("H:i:s");
 
+list($ddd, $mmm, $yyy) = explode("-", date("d-m-Y"));
+$dateNowPicker = $ddd . "-" . $mmm . "-" . ($yyy + 543);
+
 /* GET VARIABLE SECTION */
 $varget_stockNumber = filter_input(INPUT_GET, "stockNumber");
 
@@ -27,7 +30,7 @@ if (!empty($varget_stockNumber)) {
     <!--    <link rel="icon" type="image/png" href="../assets/img/favicon.png">-->
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 
-    <title>GOLD RUBBER : UPDATE STOCK</title>
+    <title>GOLD RUBBER : LABOUR IN</title>
 
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no'
           name='viewport'/>
@@ -42,6 +45,7 @@ if (!empty($varget_stockNumber)) {
     <link href="./css/now-ui-dashboard.css?v=1.5.0" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="./css/style4Project.css">
+    <link rel="stylesheet" href="./css/thDateTimePicker.css">
 </head>
 
 <body>
@@ -65,7 +69,7 @@ if (!empty($varget_stockNumber)) {
 
         <!-- Header section -->
         <div class="panel-header h-auto d-flex justify-content-center">
-            <h2 class="text-warning font-weight-bold">ตรวจสอบคลังสินค้า</h2>
+            <h2 class="text-warning font-weight-bold">ค่าแรงลงยาง</h2>
         </div><!-- Header section -->
 
         <!-- Main content -->
@@ -73,17 +77,29 @@ if (!empty($varget_stockNumber)) {
             <div class="row">
 
                 <!-- Left side data -->
-                <div class="col-md-8 order-1 order-md-0">
+                <div class="col-md-12 order-1 order-md-0">
                     <div class="card">
                         <div class="card-header">
-                            <h5 class="title"> ตรวจสอบปริมาณสินค้า </h5>
+                            <h5 class="title"> บันทึกค่าแรงลงยาง </h5>
                         </div>
                         <div class="card-body">
                             <form action="./act4Stock.php" method="post">
                                 <div class="row">
 
                                     <!-- PRODUCT -->
-                                    <div class="col-md-6 pr-md-1">
+                                    <div class="col-md-2 pr-md-1">
+                                        <div class="form-group">
+                                            <label for="id4_dateLabourIn">วันที่</label>
+                                            <input type="text"
+                                                   class="form-control form-control-sm text-primary font-weight-bold"
+                                                   placeholder=""
+                                                   name="dateLabourIn" id="id4_dateLabourIn" style="font-size:14px;"
+                                                   value="<?= $dateNowPicker; ?>">
+                                        </div>
+                                    </div><!-- PRODUCT -->
+
+                                    <!-- PRODUCT QUANTITY -->
+                                    <div class="col-md-2 px-md-1">
                                         <label for="">สินค้า</label>
                                         <div class="form-group selectWrapper" style="width: 100%;">
                                             <select name="productCode" id="id4ProductCode"
@@ -101,36 +117,18 @@ if (!empty($varget_stockNumber)) {
                                                 ?>
                                             </select>
                                         </div>
-                                    </div><!-- PRODUCT -->
+                                    </div><!-- PRODUCT QUANTITY -->
 
-                                    <!-- PRODUCT QUANTITY -->
-                                    <div class="col-md-6 pl-md-1">
+                                    <!-- PRODUCT -->
+                                    <div class="col-md-2 pl-md-1">
                                         <div class="form-group">
-                                            <label for="id4SuppEmail">ปริมาณที่ตรวจสอบได้</label>
+                                            <label for="id4SuppEmail">น้ำหนักยางที่ลง</label>
                                             <input type="text" class="form-control" placeholder=""
                                                    name="productWeight" id="" value="">
                                         </div>
-                                    </div><!-- PRODUCT QUANTITY -->
+                                    </div><!-- PRODUCT -->
 
                                 </div>
-
-                                <!-- LAST STOCK UPDATE -->
-                                <!--<div class="row mt-2">
-                                    <div class="col-md-6 pr-md-1">
-                                        <div class="form-group">
-                                            <label for="id4SuppEmail">วันที่ทำการตรวจสอบครั้งสุดท้าย</label>
-                                            <input type="text" class="form-control" placeholder=""
-                                                   name="" id="lastDateUpdated" value="" disabled>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 pl-md-1">
-                                        <div class="form-group">
-                                            <label for="id4SuppEmail">ปริมาณยางในโกดัง</label>
-                                            <input type="text" class="form-control" placeholder=""
-                                                   name="" id="lastQtysUpdated" value="" disabled>
-                                        </div>
-                                    </div>
-                                </div>--><!-- LAST STOCK UPDATE -->
 
                                 <!-- Button "Reset" and "Submit" -->
                                 <div class="row d-flex justify-content-center">
@@ -153,34 +151,6 @@ if (!empty($varget_stockNumber)) {
                         </div>
                     </div>
                 </div><!-- Left side data -->
-
-                <!-- Right side data -->
-                <div class="col-md-4 order-0 order-md-1">
-                    <div class="card card-user">
-                        <div class="image">
-                            <img src="assets/img/bg.jpg" alt="..." id="id4ImgBg">
-                        </div>
-                        <div class="card-body">
-                            <div class="author">
-                                <a href="#" style="text-decoration: none;">
-                                    <!--<img class="avatar border-gray" src="assets/img/<? /*= $vehicleTypeCode; */ ?>avatarveh.png"
-                                         alt="..."
-                                         id="id4ImgAvatar">-->
-                                    <img class="avatar border-gray" src="assets/img/avatar.png"
-                                         alt="..."
-                                         id="id4ImgAvatar">
-                                    <h5 class="title"><span
-                                                id="id4VehicleName2Show"><?php if (empty($vehicleTypeName)) echo "ประเภทสินค้า"; else echo $vehicleTypeName; ?></span>
-                                    </h5>
-                                </a>
-                                <hr>
-                                <p class="text-muted">
-                                    ข้อมูลประเภทสินค้า
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div><!-- Right side data -->
 
             </div>
 
@@ -228,12 +198,12 @@ if (!empty($varget_stockNumber)) {
                                                     <?= getLastRecord("tbl_stocks", "stock_product", $sqlfet_chkStock['stock_product'], "stock_updated", "stock_updated"); ?>
                                                 </td>
                                                 <td>
-                                                    <!--<a href="?id2edit=<?/*= $sqlfet_chkStock['stock_number']; */?>"
+                                                    <!--<a href="?id2edit=<?/*= $sqlfet_chkStock['stock_number']; */ ?>"
                                                        class="btn btn-round btn-info btn-icon btn-sm"
                                                        data-toggle="tooltip" data-placement="right" title="แก้ไข"><i
                                                                 class="bi bi-pencil-fill"></i></i></a>-->
 
-                                                    <!--<a href="./act4VehicleType.php?id2delete=<?/*= $sqlfet_chkStock['stock_number']; */?>"
+                                                    <!--<a href="./act4VehicleType.php?id2delete=<?/*= $sqlfet_chkStock['stock_number']; */ ?>"
                                                        class="btn btn-round btn-outline-danger btn-icon btn-sm"
                                                        onclick="return confirm('ต้องการลบข้อมูลนี้');"
                                                        data-toggle="tooltip" data-placement="right" title=" ลบ "><i
@@ -277,14 +247,18 @@ if (!empty($varget_stockNumber)) {
 <!-- Control Center for Now Ui Dashboard: parallax effects, scripts for the example pages etc -->
 <script src="./js/now-ui-dashboard.min.js?v=1.5.0" type="text/javascript"></script>
 
+<!-- PICKER DATE -->
+<script src="./js/picker_date.js"></script>
+<script src="./js/thDateTimePicker.js"></script>
+
 <!-- Hi-light active menu -->
 <script>
     //$("#id4MenuAdmin").addClass("active");
     //$("#id4AlinkMenuAdmin").addClass("text-primary");
     //$("#id4IconMenuAdmin").addClass("text-primary");
     // Try to still open submenu
-    $("#sub4Stock").addClass("show");
-    $("#id4SubMenuStockChk").addClass("active");
+    $("#sub4Backend").addClass("show");
+    $("#id4SubMenuBackendLabourPriceIn").addClass("active");
 </script><!-- Hi-light active menu -->
 
 <script>
@@ -345,6 +319,56 @@ if (!empty($varget_stockNumber)) {
 <!--        });-->
 <!--    }-->
 <!--</script>-->
+
+<!-- DATETIME PICKER -->
+<script type="text/javascript">
+    $(function () {
+
+        $.datetimepicker.setLocale('th'); // ต้องกำหนดเสมอถ้าใช้ภาษาไทย และ เป็นปี พ.ศ.
+
+        // กรณีใช้แบบ inline
+        /*  $("#testdate4").datetimepicker({
+              timepicker:false,
+              format:'d-m-Y',  // กำหนดรูปแบบวันที่ ที่ใช้ เป็น 00-00-0000
+              lang:'th',  // ต้องกำหนดเสมอถ้าใช้ภาษาไทย และ เป็นปี พ.ศ.
+              inline:true
+          });    */
+
+
+        // กรณีใช้แบบ input
+        $("#id4_dateLabourIn").datetimepicker({
+            timepicker: false,
+            format: 'd-m-Y',  // กำหนดรูปแบบวันที่ ที่ใช้ เป็น 00-00-0000
+            lang: 'th',  // ต้องกำหนดเสมอถ้าใช้ภาษาไทย และ เป็นปี พ.ศ.
+            onSelectDate: function (dp, $input) {
+                var yearT = new Date(dp).getFullYear();
+                var yearTH = yearT + 543;
+                var fulldate = $input.val();
+                var fulldateTH = fulldate.replace(yearT, yearTH);
+                $input.val(fulldateTH);
+            },
+        });
+        // กรณีใช้กับ input ต้องกำหนดส่วนนี้ด้วยเสมอ เพื่อปรับปีให้เป็น ค.ศ. ก่อนแสดงปฏิทิน
+        $("#id4_dateLabourIn").on("mouseenter mouseleave", function (e) {
+            var dateValue = $(this).val();
+            if (dateValue != "") {
+                var arr_date = dateValue.split("-"); // ถ้าใช้ตัวแบ่งรูปแบบอื่น ให้เปลี่ยนเป็นตามรูปแบบนั้น
+                // ในที่นี้อยู่ในรูปแบบ 00-00-0000 เป็น d-m-Y  แบ่งด่วย - ดังนั้น ตัวแปรที่เป็นปี จะอยู่ใน array
+                //  ตัวที่สอง arr_date[2] โดยเริ่มนับจาก 0
+                if (e.type == "mouseenter") {
+                    var yearT = arr_date[2] - 543;
+                }
+                if (e.type == "mouseleave") {
+                    var yearT = parseInt(arr_date[2]) + 543;
+                }
+                dateValue = dateValue.replace(arr_date[2], yearT);
+                $(this).val(dateValue);
+            }
+        });
+
+
+    });
+</script><!-- DATETIME PICKER -->
 
 </body>
 

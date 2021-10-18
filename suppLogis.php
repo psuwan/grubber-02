@@ -272,15 +272,25 @@ if (empty($varget_id2edit)) {
                                                 <td><?= $sqlfet_listSuppLogis['supplogis_vlpn']; ?></td>
                                                 <td><?= $sqlfet_listSuppLogis['supplogis_name']; ?></td>
                                                 <td>
+                                                    <!-- STATUS FOR SUPPLIER LOGISTICS -->
+                                                    <a href="./act4VehicleType.php?command=toggleStatus&id2edit=<?= $sqlfet_listSuppLogis['id']; ?>"
+                                                       class="btn btn-round btn-icon btn-sm <?php if ($sqlfet_listSuppLogis['supplogis_status'] == 0) echo "btn-info"; ?>"
+                                                       onclick="return confirm('ต้องการเปลี่ยนสถานะข้อมูลนี้');"
+                                                       data-toggle="tooltip" data-placement="right"
+                                                       title=" เปลี่ยนสถานะ "><i
+                                                                class="bi bi-lightbulb-fill"></i><?= $sqlfet_listSuppLogis['supplogis_status']; ?>
+                                                    </a>
+
                                                     <a href="?id2edit=<?= $sqlfet_listSuppLogis['id']; ?>"
-                                                       class="btn btn-round btn-outline-info btn-icon btn-sm"
+                                                       class="btn btn-round btn-warning btn-icon btn-sm"
                                                        data-toggle="tooltip" data-placement="right" title="แก้ไข"><i
-                                                                class="bi bi-pencil"></i></a>
+                                                                class="bi bi-pencil-fill"></i></a>
+
                                                     <a href="./act4VehicleType.php?id2delete=<?= $sqlfet_listSuppLogis['id']; ?>"
-                                                       class="btn btn-round btn-outline-danger btn-icon btn-sm"
+                                                       class="btn btn-round btn-danger btn-icon btn-sm"
                                                        onclick="return confirm('ต้องการลบข้อมูลนี้');"
                                                        data-toggle="tooltip" data-placement="right" title=" ลบ "><i
-                                                                class="bi bi-trash2"></i></a>
+                                                                class="bi bi-trash2-fill"></i></a>
                                                 </td>
                                             </tr>
                                             <?php

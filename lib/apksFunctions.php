@@ -1,4 +1,8 @@
 <?php
+date_default_timezone_set('Asia/Bangkok');
+$dateNow = date('Y-m-d');
+$timeNow = date('H:i:s');
+
 $baseDir = dirname(__FILE__) . DIRECTORY_SEPARATOR;
 
 if (file_exists($baseDir . "apksDBConf.json")) {
@@ -75,7 +79,7 @@ function updateDB($tblName, $refColumn, $refValue, $refType, $colName, $colValue
     if ($sqlres) {
         // Do nothing...
         // echo "<br><br><br><br><br><br>" . $sqlcmd . "<br>";
-        //echo $sqlcmd;
+        // echo "[QQQQQ]" . $sqlcmd . "[PPPPP]";
     } else {
         echo "ERROR : " . $colName . " | " . mysqli_error($dbConnect);
         echo "<br>" . $sqlcmd . "<br>";
@@ -167,15 +171,48 @@ function getValue($tblName, $refColumn, $refValue, $refType, $colName)
 
 function writeLog($logType, $logText)
 {
-    date_default_timezone_set('Asia/Bangkok');
-    $dateNow = date('Y-m-d');
-    $timeNow = date('H:i:s');
 
     $logFolder = dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . "log" . DIRECTORY_SEPARATOR;
 
-    $log2Write = $dateNow . " " . $timeNow . ", " . $logType . ", " . $logText;
+    $log2Write = $GLOBALS['dateNow'] . " " . $GLOBALS['timeNow'] . ", " . $logType . ", " . $logText;
 
-    file_put_contents($logFolder . $dateNow . ".log", $log2Write . "\n", FILE_APPEND);
+    file_put_contents($logFolder . $GLOBALS['dateNow'] . ".log", $log2Write . "\n", FILE_APPEND);
+}
+
+function writeLogStock($logType, $logText)
+{
+
+    $logFolder = dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . "log" . DIRECTORY_SEPARATOR;
+
+    $log2Write = $GLOBALS['dateNow'] . " " . $GLOBALS['timeNow'] . ", " . $logType . ", " . $logText;
+
+    file_put_contents($logFolder . $GLOBALS['dateNow'] . "_STOCK.log", $log2Write . "\n", FILE_APPEND);
+}
+
+function logEvent($eventValue)
+{
+    date_default_timezone_set('Asia/Bangkok');
+    $dbConn = dbConnect();
+
+    $sqlcmd = "SELECT * FROM tbl_events WHERE DATE(event_timestamp)='" . date("Y-m-d") . "'";
+    $sqlres = mysqli_query($dbConn, $sqlcmd);
+
+    if ($sqlres) {
+        $sqlnum = mysqli_num_rows($sqlres);
+
+        $eventCode = str_replace("-", "", date("Y-m-d")) . str_replace(":", "", date("H:i:s"));
+
+        $sqlcmd_update = "INSERT INTO tbl_events (event_code, event_value, event_timestamp) VALUES ('$eventCode', '$eventValue', NOW())";
+        $sqlres_update = mysqli_query($dbConn, $sqlcmd_update);
+
+        if (!$sqlres_update) {
+            return "ERROR : " . mysqli_error($dbConn);
+        }
+
+        return 0;
+    } else {
+        return "ERROR : " . mysqli_error($dbConn);
+    }
 }
 
 //////////////////////////////////////////////////////////////////////

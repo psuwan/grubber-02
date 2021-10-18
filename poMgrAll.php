@@ -39,6 +39,12 @@ $enableCalcWgButton = 0;
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="./css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="./css/style4Project.css">
+
+    <style>
+        .numberOnly {
+            font-size: 14px;
+        }
+    </style>
 </head>
 
 <body>
@@ -128,24 +134,26 @@ $enableCalcWgButton = 0;
                                     <h5 class="card-category"> ทะเบียนรถ </h5>
                                     <h5 class="card-title"><?= $sqlfet_poSummary['wg_vlpn']; ?></h5>
                                 </div>
+                                <!--
                                 <div class="col-md-3">
                                     <h5 class="card-category"> สถานะการซื้อ </h5>
                                     <h5 class="card-title"><?php
-                                        if ($sqlfet_poSummary['po_status'] === '1') {
-                                            echo "เปิดอยู่";
-                                            echo "&nbsp;";
-                                            echo "&nbsp;";
-                                            echo "<a href=\"./process4PO.php?command=toggleStatus&returnPage=" . $thisFile . ".php&poNumber=" . $poNumber . "\"><i class=\"now-ui-icons media-1_button-power text-success\"></i></a>";
-                                        } else {
-                                            echo "ปิดแล้ว";
-                                            echo "&nbsp;";
-                                            echo "&nbsp;";
-                                            echo "<a href=\"./process4PO.php?command=toggleStatus&returnPage=" . $thisFile . ".php&poNumber=" . $poNumber . "\"><i class=\"now-ui-icons media-1_button-power text-danger\"></i></a>";
-                                        }
-                                        ?></h5>
+                                /*                                        if ($sqlfet_poSummary['po_status'] === '1') {
+                                                                            echo "เปิดอยู่";
+                                                                            echo "&nbsp;";
+                                                                            echo "&nbsp;";
+                                                                            echo "<a href=\"./process4PO.php?command=toggleStatus&returnPage=" . $thisFile . ".php&poNumber=" . $poNumber . "\"><i class=\"now-ui-icons media-1_button-power text-success\"></i></a>";
+                                                                        } else {
+                                                                            echo "ปิดแล้ว";
+                                                                            echo "&nbsp;";
+                                                                            echo "&nbsp;";
+                                                                            echo "<a href=\"./process4PO.php?command=toggleStatus&returnPage=" . $thisFile . ".php&poNumber=" . $poNumber . "\"><i class=\"now-ui-icons media-1_button-power text-danger\"></i></a>";
+                                                                        }
+                                                                        */ ?></h5>
                                 </div>
+-->
                                 <div class="col-md-2">
-                                    <h5 class="card-category"> ค่าแรงลงยาง (บาท)</h5>
+                                    <h5 class="card-category"> ค่าแรงลงยาง (บาท/กก.)</h5>
                                     <h5 class="card-title">
                                         <input type="text" name="" id="id4WgLabour"
                                                class="form-control form-control-sm text-center text-primary"
@@ -331,17 +339,21 @@ $enableCalcWgButton = 0;
                                                                value="<?= number_format($sqlfet_list4PO['wg_net'] - (round(($sqlfet_list4PO['wg_net'] * (round((97 - $sqlfet_list4PO['wg_percent']), 2))) / 100)), 2, '.', ','); ?>">
 
                                                     </td>
+
+                                                    <!-- BUY PRICE -->
                                                     <td>
                                                         <input class="form-control form-inline text-primary text-right" <?php if ($sqlfet_list4PO['wg_product'] == '0000') echo "disabled"; ?>
-                                                               type="text"
+                                                               type="text" onkeydown="floatValidate(this.value)"
                                                                onkeyup="chkKeyEnter4BuyPrice(this.value, <?= $sqlfet_list4PO['id']; ?>)"
                                                                onblur="updateBuyPrice(this.value, <?= $sqlfet_list4PO['id']; ?>)"
                                                                name="buyPrice_<?= $sqlfet_list4PO['id']; ?>"
                                                                id="id4BuyPrice_<?= $sqlfet_list4PO['id']; ?>"
-                                                               style="font-size:14px;<?php if ($sqlfet_list4PO['wg_product'] == '0000') echo "text-decoration: line-through;" ?>"
+                                                               style="<?php if ($sqlfet_list4PO['wg_product'] == '0000') echo "text-decoration: line-through;" ?>"
                                                                value="<?= number_format($sqlfet_list4PO['wg_buyprc'], 2, '.', ','); ?>">
-                                                    </td>
-                                                    <td><!-- รวมเป็นเงิน -->
+                                                    </td><!-- BUY PRICE -->
+
+                                                    <!-- รวมเป็นเงิน -->
+                                                    <td>
                                                         <input class="form-control form-inline text-primary text-right"
                                                                type="text" disabled
                                                                name="sumBuyPrice_<?= $sqlfet_list4PO['id']; ?>"
@@ -357,7 +369,8 @@ $enableCalcWgButton = 0;
                                                                // echo "|";
                                                                echo number_format(($sqlfet_list4PO['wg_buyprc'] * $wg2Calc), 2, '.', ',');
                                                                ?>">
-                                                    </td>
+                                                    </td><!-- รวมเป็นเงิน -->
+
                                                     <td class="text-left pl-3" style="font-size:16px">
                                                         <!-- ประเภทซื้อ -->
                                                         <?//= getValue('tbl_buytype', 'buytype_code', $sqlfet_list4PO['wg_buytype'], 2, 'buytype_name'); ?>
@@ -467,7 +480,7 @@ $enableCalcWgButton = 0;
                                             <td><input type="text" name="" id="" disabled
                                                        class="form-control text-right text-primary"
                                                        style="font-size:14px;font-weight:bold;"
-                                                       value="<?= number_format(round($sqlfet_calcWg['SUMWG'] * $sqlfet_poSummary['wg_labour']), 2, '.', ',');//= number_format(floor(calcWgWithBuyPrice($poNumber) - round($sqlfet_calcWg['SUMWG'] * $sqlfet_poSummary['wg_labour'])), 2, '.', ',');;                       ?>">
+                                                       value="<?= number_format(round($sqlfet_calcWg['SUMWG'] * $sqlfet_poSummary['wg_labour']), 2, '.', ',');//= number_format(floor(calcWgWithBuyPrice($poNumber) - round($sqlfet_calcWg['SUMWG'] * $sqlfet_poSummary['wg_labour'])), 2, '.', ',');;                             ?>">
                                             </td>
                                             <td></td>
                                             <td></td>
@@ -717,6 +730,42 @@ $enableCalcWgButton = 0;
         });
     }
 </script><!-- Calculation for PO -->
+
+<!-- INPUT FILTER -->
+<script>
+    (function ($) {
+        $.fn.inputFilter = function (inputFilter) {
+            return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function () {
+                if (inputFilter(this.value)) {
+                    this.oldValue = this.value;
+                    this.oldSelectionStart = this.selectionStart;
+                    this.oldSelectionEnd = this.selectionEnd;
+                } else if (this.hasOwnProperty("oldValue")) {
+                    this.value = this.oldValue;
+                    this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+                } else {
+                    this.value = "";
+                }
+            });
+        };
+    }(jQuery));
+
+    $("#id4WgLabour").inputFilter(function (value) {
+        return /^-?\d*[.,]?\d*$/.test(value);
+    });
+</script><!-- INPUT FILTER -->
+
+<script>
+    let floatValidate = function (value2Validate) {
+        alert("xxx");
+        let validatePattern = /^[-+]?[0-9]+\.[0-9]+$/;
+        if (value2Validate.match(validatePattern)) {
+            return value2Validate;
+        } else {
+            return "";
+        }
+    }
+</script>
 
 </body>
 

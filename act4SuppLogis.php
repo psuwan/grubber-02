@@ -16,19 +16,19 @@ $suppLogisData = array(
 if (!empty($varpost_processName)) {
     switch ($varpost_processName) {
         case 'addSuppLogis':
-            insertDB("tbl_suppLogis", "supplogis_code", $suppLogisData["suppLogisCode"], 2);
-            updateDB("tbl_suppLogis", "supplogis_code", $suppLogisData["suppLogisCode"], 2, "supplogis_name", $suppLogisData["suppLogisName"], 2);
-            updateDB("tbl_suppLogis", "supplogis_code", $suppLogisData["suppLogisCode"], 2, "supplogis_vlpn", $suppLogisData["suppLogisVlpn"], 2);
-            updateDB("tbl_suppLogis", "supplogis_code", $suppLogisData["suppLogisCode"], 2, "supplogis_details", $suppLogisData["suppLogisDetails"], 2);
+            insertDB("tbl_supplogis", "supplogis_code", $suppLogisData["suppLogisCode"], 2);
+            updateDB("tbl_supplogis", "supplogis_code", $suppLogisData["suppLogisCode"], 2, "supplogis_name", $suppLogisData["suppLogisName"], 2);
+            updateDB("tbl_supplogis", "supplogis_code", $suppLogisData["suppLogisCode"], 2, "supplogis_vlpn", $suppLogisData["suppLogisVlpn"], 2);
+            updateDB("tbl_supplogis", "supplogis_code", $suppLogisData["suppLogisCode"], 2, "supplogis_details", $suppLogisData["suppLogisDetails"], 2);
 
             echo "<script>alert(\"เพิ่มข้อมูลรถขนส่งแล้ว\")</script>";
             echo "<script>window.location.href=\"suppLogis.php\"</script>";
             break;
 
         case 'editSuppLogis':
-            updateDB("tbl_suppLogis", "supplogis_code", $suppLogisData["suppLogisCode"], 2, "supplogis_name", $suppLogisData["suppLogisName"], 2);
-            updateDB("tbl_suppLogis", "supplogis_code", $suppLogisData["suppLogisCode"], 2, "supplogis_vlpn", $suppLogisData["suppLogisVlpn"], 2);
-            updateDB("tbl_suppLogis", "supplogis_code", $suppLogisData["suppLogisCode"], 2, "supplogis_details", $suppLogisData["suppLogisDetails"], 2);
+            updateDB("tbl_supplogis", "supplogis_code", $suppLogisData["suppLogisCode"], 2, "supplogis_name", $suppLogisData["suppLogisName"], 2);
+            updateDB("tbl_supplogis", "supplogis_code", $suppLogisData["suppLogisCode"], 2, "supplogis_vlpn", $suppLogisData["suppLogisVlpn"], 2);
+            updateDB("tbl_supplogis", "supplogis_code", $suppLogisData["suppLogisCode"], 2, "supplogis_details", $suppLogisData["suppLogisDetails"], 2);
 
             echo "<script>alert(\"แก้ไขข้อมูลรถขนส่งแล้ว\")</script>";
             echo "<script>window.location.href=\"suppLogis.php\"</script>";

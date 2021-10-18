@@ -26,10 +26,34 @@ if (!empty($varget_command)) {
             $sqlcmd = "UPDATE tbl_wg4sell SET so_status=" . $stt . " WHERE wg_sonum='" . $varget_soNumber . "'";
             $sqlres = mysqli_query($dbConn, $sqlcmd);
 
-            if ($varget_returnpg == 'soList.php')
+            if ($varget_returnpg == 'soList4Mgr.php')
                 header('location:' . $varget_returnpg);
             else
                 header('location:' . $varget_returnpg . '?soNumber=' . $varget_soNumber);
+            break;
+
+        case 'toggleStatusSO':
+            $sqlcmd = "SELECT DISTINCT(so_number), so_status FROM tbl_sellorder WHERE so_number='" . $varget_soNumber . "'";
+            echo $sqlcmd;
+            $sqlres = mysqli_query($dbConn, $sqlcmd);
+            if ($sqlres) {
+                $sqlfet = mysqli_fetch_assoc($sqlres);
+                $status2toggle = $sqlfet['so_status'];
+            }
+
+            if ($status2toggle == 0)
+                $stt = 1;
+            else
+                $stt = 0;
+
+            $sqlcmd = "UPDATE tbl_sellorder SET so_status=" . $stt . " WHERE so_number='" . $varget_soNumber . "'";
+            $sqlres = mysqli_query($dbConn, $sqlcmd);
+
+            /*if ($varget_returnpg == 'soList4Mgr.php')
+                header('location:' . $varget_returnpg);
+            else
+                header('location:' . $varget_returnpg . '?soNumber=' . $varget_soNumber);
+            */
             break;
 
         case 'deletePO':

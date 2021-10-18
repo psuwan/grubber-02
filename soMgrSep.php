@@ -8,6 +8,7 @@ $dateNow = date("Y-m-d");
 
 // Initial parameter
 $soNumber = filter_input(INPUT_GET, 'soNumber');
+$customer = filter_input(INPUT_GET, 'code4Customer');
 $thisFile = basename(__FILE__, '.php');
 $enableCalcWgButton = 0;
 
@@ -22,7 +23,7 @@ $enableCalcWgButton = 0;
     <link rel="icon" type="image/png" href="./assets/img/faviconW.ico">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 
-    <title>Gold Rubber : Template</title>
+    <title>GOLD RUBBER : MGR FOR SO</title>
 
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no'
           name='viewport'/>
@@ -91,14 +92,27 @@ $enableCalcWgButton = 0;
                                                 if (($wgArr[0]['wg_code4product'] === '0000') && ($wgArr[1]['wg_code4product'] === '0000')) {
                                                     $enableCalcWgButton = 1;
                                                     $wgNetCalc = $wgArr[1]['wg_net'] - $wgArr[0]['wg_net'];
+
                                                 }
                                             }
                                         }
 
                                         if ($enableCalcWgButton === 1) {
+                                            $soVlpn = $wgArr[0]['wg_vlpn'];
+                                            $soSuppLogisCode = $wgArr[0]['wg_code4supplogis'];
+                                            $soWgNet = $wgNetCalc;
+                                            $soCustomer = $wgArr[0]['wg_code4customer'];
+
+                                            $sqlcmd_insertCalcWg2T = "INSERT INTO tbl_wg4sell (wg_sonum, wg_vlpn, wg_code4supplogis, wg_net, wg_code4customer, wg_created) VALUES ('$soNumber', '$soVlpn', '$soSuppLogisCode',$soWgNet, '$soCustomer', NOW())";
+                                            $sqlres_insertCalcWg2T = mysqli_query($dbConn, $sqlcmd_insertCalcWg2T);
+
+                                            if (!$sqlres_insertCalcWg2T) {
+                                                echo $sqlcmd_insertCalcWg2T;
+                                                echo "<br>ERROR !!! [" . mysqli_errno($dbConn) . "] [" . mysqli_error($dbConn) . "]";
+                                            }
                                             ?>
-                                            <a href="./calc4SO.php?command=calc4Wg2Time&soNumber=<?= $soNumber; ?>&soVLpn=<?= $wgArr[0]['wg_vlpn']; ?>&soSuppLogisCode=<?= $wgArr[0]['wg_code4supplogis']; ?>&soWgNet=<?= $wgNetCalc; ?>&soCustomer=<?= $wgArr[0]['wg_code4customer']; ?>"
-                                               class="btn btn-primary btn-sm">คำนวณน้ำหนัก</a>
+                                            <!--<a href="./calc4SO.php?command=calc4Wg2Time&soNumber=<? /*= $soNumber; */ ?>&soVLpn=<? /*= $wgArr[0]['wg_vlpn']; */ ?>&soSuppLogisCode=<? /*= $wgArr[0]['wg_code4supplogis']; */ ?>&soWgNet=<? /*= $wgNetCalc; */ ?>&soCustomer=<? /*= $wgArr[0]['wg_code4customer']; */ ?>"
+                                               class="btn btn-primary btn-sm">คำนวณน้ำหนัก</a>-->
                                             <?php
                                         } else {
                                             ?><!-- CALCULATION FOR WEIGHT -->
@@ -133,7 +147,7 @@ $enableCalcWgButton = 0;
                                 </div>
                                 <div class="col-md-3">
                                     <h5 class="card-category"> รถขนส่ง </h5>
-                                    <h5 class="card-title"><?= $sqlfet_soSummary['wg_vlpn']; ?></h5>
+                                    <h5 class="card-title"><?= getValue('tbl_supplogis', 'supplogis_code', $sqlfet_soSummary['wg_code4supplogis'], 2, 'supplogis_vlpn'); ?></h5>
                                 </div>
                                 <div class="col-md-3">
                                     <h5 class="card-category"> สถานะการซื้อ </h5>
@@ -141,11 +155,13 @@ $enableCalcWgButton = 0;
                                         if ($sqlfet_soSummary['so_status'] === '1') {
                                             echo "เปิดอยู่";
                                             echo "&nbsp;";
+                                            echo $sqlfet_soSummary['so_status'];
                                             echo "&nbsp;";
                                             echo "<a href=\"./process4SO.php?command=toggleStatus&returnPage=" . $thisFile . ".php&soNumber=" . $soNumber . "\"><i class=\"now-ui-icons media-1_button-power text-success\"></i></a>";
                                         } else {
                                             echo "ปิดแล้ว";
                                             echo "&nbsp;";
+                                            echo $sqlfet_soSummary['so_status'];
                                             echo "&nbsp;";
                                             echo "<a href=\"./process4SO.php?command=toggleStatus&returnPage=" . $thisFile . ".php&soNumber=" . $soNumber . "\"><i class=\"now-ui-icons media-1_button-power text-danger\"></i></a>";
                                         }
@@ -177,10 +193,10 @@ $enableCalcWgButton = 0;
                                             <th class="text-center" style="width: 100px;">เวลา</th>
                                             <th>สินค้า</th>
                                             <th class="text-center" style="width: 200px;">ลูกค้า</th>
-                                            <th class="text-right" style="width: 150px;">นน.ต้นทาง</th>
+                                            <th class="text-right" style="width: 175px;">นน.ต้นทาง</th>
                                             <th class="text-right" style="width: 150px;">นน.ปลายทาง</th>
                                             <th class="text-center" style="width: 120px;">คัดคืน</th>
-                                            <th class="text-center" style="width: 120px;">DRC (%)</th>
+                                            <th class="text-center" style="width: 125px;">DRC (%)</th>
                                             <!--<th class="text-center" style="width: 75px;">หักน้ำ</th>-->
                                             <th class="text-center" style="width: 175px;">น้ำหนักขายสุทธิ</th>
                                             </thead>
@@ -275,7 +291,7 @@ $enableCalcWgButton = 0;
                                                                         while ($sqlfet_listCustomers = mysqli_fetch_assoc($sqlres_listCustomers)) {
                                                                             ?>
                                                                             <!--<option value="<?/*= $sqlfet_listCustomers['customer_code']; */ ?>" <?php /*if ($sqlfet_list4SO['wg_location'] == $sqlfet_listCustomers['loc_code']) echo "selected"; */ ?>><?/*= $sqlfet_listCustomers['loc_name']; */ ?></option>-->
-                                                                            <option value="<?= $sqlfet_listCustomers['customer_code']; ?>"><?= $sqlfet_listCustomers['customer_name']; ?>
+                                                                            <option value="<?= $sqlfet_listCustomers['customer_code']; ?>" <?php if ($sqlfet_listCustomers['customer_code'] == $customer) echo "selected"; ?>><?= $sqlfet_listCustomers['customer_name']; ?>
                                                                                 &nbsp;<?= $sqlfet_listCustomers['customer_surname']; ?></option>
                                                                             <?php
                                                                         }
@@ -310,6 +326,17 @@ $enableCalcWgButton = 0;
                                                                    id="id4WgNet_<?= $sqlfet_list4SO['id']; ?>"
                                                                    value="<?= number_format($sqlfet_list4SO['wg_net'], 2, '.', ','); ?>">
                                                             <?php
+                                                            $wgDifference = $sqlfet_list4SO['wg_net'] - ($sqlfet_list4SO['wg_destination'] + $sqlfet_list4SO['wg_return']);
+                                                            if ($wgDifference == $sqlfet_list4SO['wg_net'])
+                                                                echo "<span class=\"text-info\">รอน้ำหนักปลายทาง</span>";
+                                                            else {
+                                                                if ($wgDifference < 0)
+                                                                    echo "<span class=\"text-success\">เกิน : " . number_format(($wgDifference * (-1)), 2, '.', ',') . " กก.</span>";
+                                                                elseif ($wgDifference > 0)
+                                                                    echo "<span class=\"text-danger\">ขาด : " . number_format(($wgDifference * (1)), 2, '.', ',') . " กก.</span>";
+                                                            }
+                                                            ?>
+                                                            <?php
                                                         }
                                                         ?>
                                                     </td><!-- WEIGHT OF PRODUCT GOLD RUBBER -->
@@ -328,17 +355,6 @@ $enableCalcWgButton = 0;
                                                                    onkeyup="chkKeyEnter4WgDestination(this.value, <?= $sqlfet_list4SO['id']; ?>)"
                                                                    onblur="updateWeightDestination(this.value, <?= $sqlfet_list4SO['id']; ?>)"
                                                                    value="<?= number_format($sqlfet_list4SO['wg_destination'], 2, '.', ','); ?>">
-                                                            <?php
-                                                            $wgDifference = $sqlfet_list4SO['wg_net'] - $sqlfet_list4SO['wg_destination'];
-                                                            if ($wgDifference == $sqlfet_list4SO['wg_net'])
-                                                                echo "<span class=\"text-info\">รอน้ำหนักปลายทาง</span>";
-                                                            else {
-                                                                if ($wgDifference < 0)
-                                                                    echo "<span class=\"text-danger\">ขาด : " . number_format(($wgDifference * (-1)), 2, '.', ',') . " กก.</span>";
-                                                                elseif ($wgDifference > 0)
-                                                                    echo "<span class=\"text-success\">เกิน : " . number_format(($wgDifference * (1)), 2, '.', ',') . " กก.</span>";
-                                                            }
-                                                            ?>
                                                         <?php } ?>
                                                     </td><!-- WEIGHT OF PRODUCT CUSTOMERS -->
 
@@ -363,7 +379,8 @@ $enableCalcWgButton = 0;
                                                     <td class="text-right">
                                                         <!-- CHECK FOR PRODUCT 0000(VEHICLE) AND 0002(RUBBER-02) DISABLED -->
                                                         <?php
-                                                        if (($sqlfet_list4SO['wg_code4product'] == '0002') || (($sqlfet_list4SO['wg_code4product'] == '0000'))) {
+                                                        //if (($sqlfet_list4SO['wg_code4product'] == '0002') || (($sqlfet_list4SO['wg_code4product'] == '0000'))) {
+                                                        if ($sqlfet_list4SO['wg_code4product'] == '0000') {
                                                             ?>
                                                             <input class="form-control form-inline text-primary text-right"
                                                                    type="text"
@@ -381,11 +398,12 @@ $enableCalcWgButton = 0;
                                                                    id="id4DRC_<?= $sqlfet_list4SO['id']; ?>"
                                                                    style="font-size:14px;<?php if ($sqlfet_list4SO['wg_code4product'] == '0000') echo "text-decoration: line-through;" ?>"
                                                                    value="<?= number_format($sqlfet_list4SO['wg_percent'], 2, '.', ','); ?>">
-                                                            <span class="text-info">หักน้ำ : <?php
-                                                                $wgWater = round((($sqlfet_list4SO['wg_destination'] - $sqlfet_list4SO['wg_return']) * (round((97 - $sqlfet_list4SO['wg_percent']), 2))) / 100);
-                                                                echo number_format($wgWater, 2, '.', ',');
-                                                                echo " กก.";
-                                                                ?></span>
+                                                            <!--<span class="text-info">หักน้ำ : <?php
+                                                            /*                                                                // $wgWater = round((($sqlfet_list4SO['wg_destination']) * (round((97 - $sqlfet_list4SO['wg_percent']), 2))) / 100);
+                                                                                                                            //$wgWater = round(($sqlfet_list4SO['wg_destination']) * ($sqlfet_list4SO['wg_percent'] / 100));
+                                                                                                                            //echo number_format($wgWater, 2, '.', ',');
+                                                                                                                            //echo " กก.";
+                                                                                                                            */ ?></span>-->
                                                             <?php
                                                         }
                                                         ?>
@@ -422,12 +440,12 @@ $enableCalcWgButton = 0;
                                                         <?php
                                                         // number_format($sqlfet_list4SO['wg_net'] - (round(($sqlfet_list4SO['wg_net'] * (round((97 - $sqlfet_list4SO['wg_percent']), 2))) / 100)), 2, '.', ',')
                                                         //$wgWater = round((($sqlfet_list4SO['wg_destination'] - $sqlfet_list4SO['wg_return']) * (round((97 - $sqlfet_list4SO['wg_percent']), 2))) / 100);
-                                                        $wgNet4Sell = $sqlfet_list4SO['wg_destination'] - ($sqlfet_list4SO['wg_return'] + $wgWater);
+                                                        $wgNet4Sell = round(($sqlfet_list4SO['wg_destination']) * ($sqlfet_list4SO['wg_percent'] / 100));//$sqlfet_list4SO['wg_destination'] - ($wgWater);
                                                         if ($sqlfet_list4SO['wg_code4product'] == '0000') {// text-decoration: line-through;
                                                             ?><input
-                                                                class="form-control form-inline text-primary text-right"
-                                                                type="text" disabled name="" id=""
-                                                                style="font-size:14px;" value="-">
+                                                                    class="form-control form-inline text-primary text-right"
+                                                                    type="text" disabled name="" id=""
+                                                                    style="font-size:14px;" value="-">
                                                             <?php
                                                         } else {
                                                             ?>
@@ -542,6 +560,7 @@ $enableCalcWgButton = 0;
                 valueDRC: DRC
             },
             success: function (response) {
+                // console.log(response);
                 location.reload();
                 // You will get response from your PHP page (what you echo or print)
             }
@@ -673,6 +692,7 @@ $enableCalcWgButton = 0;
     }
 
     let updateWeightDestination = function (WEIGHT, ID) {
+        let suppLogisCode = "<?=$sqlfet_soSummary['wg_code4supplogis'];?>"
         $.ajax({
             url: "calc4SO.php",
             type: "POST",
@@ -680,11 +700,12 @@ $enableCalcWgButton = 0;
                 // soNumber: SONUMBER,
                 processName: "updateWeightDestination",
                 id: ID,
-                valueWgDestination: WEIGHT
+                valueWgDestination: WEIGHT,
+                code4SuppLogis: suppLogisCode
             },
             success: function (response) {
-                console.log(response);
-                //location.reload();
+                //console.log(response);
+                location.reload();
                 // You will get response from your PHP page (what you echo or print)
             }
             ,
@@ -717,11 +738,10 @@ $enableCalcWgButton = 0;
                 valueWgReturn: WEIGHT
             },
             success: function (response) {
-                //console.log(response);
+                // console.log(response);
                 location.reload();
                 // You will get response from your PHP page (what you echo or print)
-            }
-            ,
+            },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log(textStatus, errorThrown);
             }

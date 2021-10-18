@@ -12,7 +12,6 @@ $thisFile = basename(__FILE__, '.php');
 <!DOCTYPE html>
 <html lang="en">
 
-<!-- HTML HEADER SECTION -->
 <head>
     <meta charset="utf-8">
     <!--    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />-->
@@ -20,7 +19,7 @@ $thisFile = basename(__FILE__, '.php');
     <link rel="icon" type="image/png" href="./assets/img/faviconW.ico">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 
-    <title>GOLD RUBBER : SELL ORDER</title>
+    <title>Gold Rubber : Template</title>
 
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no'
           name='viewport'/>
@@ -51,7 +50,7 @@ $thisFile = basename(__FILE__, '.php');
             outline: none !important;
         }
     </style>
-</head><!-- HTML HEADER SECTION -->
+</head>
 
 <body>
 <div class="wrapper ">
@@ -79,89 +78,77 @@ $thisFile = basename(__FILE__, '.php');
             <div class="jumbotron display-4 text-center d-block d-sm-none text-warning bg-transparent font-weight-bold">
                 Gold Rubber
             </div>-->
-            <h2 class="text-warning text-center font-weight-bold">รายการขายยางทั้งหมด</h2>
+            <h2 class="text-warning text-center font-weight-bold">รายการขายที่ยังไม่ตัดคลัง</h2>
         </div>
         <div class="content">
-            <!-- Start of Row -->
             <div class="row">
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header">
                             <h5 class="card-category"> ข้อมูลทั้งหมด </h5>
-                            <h4 class="card-title"> รายการขาย </h4>
+                            <h4 class="card-title"> รายการขายที่ยังไม่ตัดคลัง </h4>
                         </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="example" class="table table-hover">
+                                    <thead>
+                                    <tr class="bg-secondary">
+                                        <!--<th>#</th>-->
+                                        <th>วัน-เวลา</th>
+                                        <th>เลขอ้างอิงซื้อ</th>
+                                        <th class="text-center">สินค้า</th>
+                                        <th class="text-right">น้ำหนัก</th>
+                                        <th class="text-center">ตัดคลัง</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <?php
+                                    $cntPO = 0;
+                                    $sqlcmd_listSO = "SELECT * FROM tbl_wg4sell WHERE wg_code4product<>'0000' AND wg_outstock='0' ORDER BY wg_created DESC";
+                                    $sqlres_listSO = mysqli_query($dbConn, $sqlcmd_listSO);
 
-                        <!-- Card body -->
-                        <div class="card-body table-responsive">
-                            <table class="table table-striped" id="id4_soTable">
-                                <thead class="bg-primary" style="font-size:14px">
-                                <tr>
-                                    <th>#</th>
-                                    <th>วันที่เปิดการขาย</th>
-                                    <th>หมายเลขอ้างอิง</th>
-                                    <th style="width: 150px;">ลูกค้า</th>
-                                    <th style="width: 75px;">สินค้า</th>
-                                    <th style="width: 95px;">ปริมาณ</th>
-                                    <th>ราคาขาย</th>
-                                    <th>ชั่งแล้ว</th>
-                                    <th>สถานะ</th>
-                                    <th></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <?php
-                                $cntSO = 0;
-                                $sqlcmd_listSO = "SELECT * FROM tbl_sellorder WHERE 1 ORDER BY so_created";
-                                $sqlres_listSO = mysqli_query($dbConn, $sqlcmd_listSO);
-
-                                if ($sqlres_listSO) {
-                                    while ($sqlfet_listSO = mysqli_fetch_assoc($sqlres_listSO)) {
-                                        ?>
-                                        <tr>
-                                            <td><?= ++$cntSO; ?></td>
-                                            <td><?= $sqlfet_listSO['so_created']; ?></td>
-                                            <td><?= $sqlfet_listSO['so_number']; ?></td>
-                                            <td><?= getValue("tbl_customers", "customer_code", $sqlfet_listSO['so_customer'], 2, "customer_name"); ?> <?= getValue("tbl_customers", "customer_code", $sqlfet_listSO['so_customer'], 2, "customer_surname"); ?></td>
-                                            <td><?= "ยางแผ่น";/*$sqlfet_listSO['so_product']*/ ?></td>
-                                            <td><?= number_format($sqlfet_listSO['so_wgordered'], 2, '.', ','); ?></td>
-                                            <td class="text-right"><?= number_format($sqlfet_listSO['so_price'], 2, '.', ','); ?></td>
-                                            <td><?php
-                                                $sqlcmd_getSumWg4SONow = "SELECT SUM(wg_net) AS WGNOW FROM tbl_wg4sell WHERE wg_sonum='" . $sqlfet_listSO['so_number'] . "' AND wg_code4product <> '0000'";
-                                                $sqlres_getSumWg4SONow = mysqli_query($dbConn, $sqlcmd_getSumWg4SONow);
-                                                if ($sqlres_getSumWg4SONow) {
-                                                    $sqlfet_getSumWg4SONow = mysqli_fetch_assoc($sqlres_getSumWg4SONow);
-                                                    echo number_format($sqlfet_getSumWg4SONow['WGNOW'], 2, '.', ',');
-                                                }
-                                                ?></td>
-                                            <td>
-                                                <?php
-                                                //echo $sqlfet_listSO['so_status'];
-                                                echo "&nbsp;";
-                                                if ($sqlfet_listSO['so_status'] == 1)
-                                                    echo "[Y]";
-                                                else
-                                                    echo "[X]";
-                                                ?>
-                                            </td>
-
-                                            <!-- update stock by weighting -->
-                                            <td>
-                                                <a href="#" class="btn btn-sm btn-round btn-icon btn-warning"
-                                                   data-toggle="tooltip" data-placement="top" title="ตัดคลัง"><i
-                                                            class="now-ui-icons shopping_delivery-fast"></i></a>
-                                            </td><!-- update stock by weighting -->
-                                        </tr>
-                                        <?php
+                                    if ($sqlres_listSO) {
+                                        while ($sqlfet_listSO = mysqli_fetch_assoc($sqlres_listSO)) {
+                                            ?>
+                                            <tr>
+                                                <!--<td><?/*= ++$cntPO; */ ?></td>-->
+                                                <td><?= monthThai(dateBE(substr($sqlfet_listSO['wg_created'], 0, 10))) . " " . substr($sqlfet_listSO['wg_created'], 11, 26); ?></td>
+                                                <td><?= $sqlfet_listSO['wg_sonum']; ?></td>
+                                                <td class="text-center"><?= getValue("tbl_products", "product_code", $sqlfet_listSO['wg_code4product'], 2, "product_name"); ?></td>
+                                                <td class="text-right"><?= number_format($sqlfet_listSO['wg_net'], 2, '.', ','); ?></td>
+                                                <td class="text-center">
+                                                    <?php
+                                                    if ($sqlfet_listSO['wg_outstock'] === '0') {
+                                                        ?>
+                                                        <a class="btn btn-sm btn-round btn-icon btn-warning pt-1"
+                                                           href="#"
+                                                           data-toggle="tooltip" data-placement="top"
+                                                           title="ตัดคลัง"
+                                                           onclick="stockFromSell('<?= $sqlfet_listSO['wg_sonum']; ?>', '<?= $sqlfet_listSO['wg_code4product']; ?>', <?= $sqlfet_listSO['wg_net']; ?>);"><i
+                                                                    class="bi bi-box-arrow-left"></i></a>
+                                                        <?php
+                                                    } else {
+                                                        ?>
+                                                        <a class="btn btn-sm btn-round btn-icon btn-info pt-1"
+                                                           href="#" data-toggle="tooltip" data-placement="top"
+                                                           title="อยู่ในคลังแล้ว"><i class="bi bi-square"
+                                                                                     style="font-size:12px"></i></a>
+                                                        <?php
+                                                    }
+                                                    ?>
+                                                </td>
+                                            </tr>
+                                            <?php
+                                        }
                                     }
-                                }
-                                ?>
-                                </tbody>
-                            </table>
-
-                        </div><!-- Card body -->
+                                    ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div><!-- End of Row -->
+            </div>
         </div>
 
         <!-- Footer -->
@@ -212,15 +199,15 @@ $thisFile = basename(__FILE__, '.php');
     // $("#id4AlinkMenuBuy").addClass("text-primary");
     // $("#id4IconMenuBuy").addClass("text-primary");
     // Try to still open submenu
-    $("#sub4Sell").addClass("show");
-    $("#id4SubMenuSellSOList").addClass("active");
+    $("#sub4Stock").addClass("show");
+    $("#id4SubMenuStockSell").addClass("active");
 </script><!-- Hi-light active menu -->
 
 <!-- Datatable Setup -->
 <script>
     $(document).ready(function () {
-        $('#id4_soTable').DataTable({
-            "order": [[3, "desc"]],
+        $('#example').DataTable({
+            "order": [[0, "desc"]],
             language:
                 {
                     "decimal": "",
@@ -250,6 +237,7 @@ $thisFile = basename(__FILE__, '.php');
         });
     });
 </script><!-- Datatable Setup -->
+
 
 <!-- Pass parameter to modal -->
 <script>
@@ -284,11 +272,36 @@ $thisFile = basename(__FILE__, '.php');
     })
 </script>
 
+<!-- TOOLTIP -->
 <script>
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()
     })
-</script>
+</script><!-- TOOLTIP -->
+
+<!-- STOCK BUY -->
+<script>
+    let stockFromSell = function (soNumber, soProduct, soWeight) {
+        $.ajax({
+            url: "act4Stock.php",
+            type: "POST",
+            data: {
+                processName: "stockSell",
+                soNumberSell: soNumber,
+                soProductSell: soProduct,
+                soWeightSell: soWeight
+            },
+            success: function (response) {
+                // console.log(response);
+                location.reload();
+                // You will get response from your PHP page (what you echo or print)
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(textStatus, errorThrown);
+            }
+        });
+    }
+</script><!-- STOCK BUY -->
 
 </body>
 

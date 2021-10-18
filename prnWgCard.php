@@ -78,10 +78,10 @@ $poNumber = filter_input(INPUT_GET, 'poNumber');
                                 </div>
                                 <div class="col-md-8">
                                     <h5><strong>บริษัท โกลด์ รับเบอร์ จำกัด</strong></h5>
-                                    <h6>1/14 หมู่ 10 ตำบลดอนยาง อำเภอปะทิว จังหวัดชุมพร 86210 โทร. 081-894-4548,
+                                    <h6>1/14 หมู่ 10 ตำบลดอนยาง อำเภอปะทิว จังหวัดชุมพร 86210 โทร. 093-779-8364,
                                         080-697-8799</h6>
                                     <h5><strong>Gold Rubber Co., Ltd.</strong></h5>
-                                    <h6>1/14 Moo 10 Donyang, Pathiu, Chumphon 86210 Tel. 081-894-4548,
+                                    <h6>1/14 Moo 10 Donyang, Pathiu, Chumphon 86210 Tel. 093-779-8364,
                                         080-697-8799</h6>
                                 </div>
                             </div><!-- Row of weighting card header -->
@@ -101,7 +101,9 @@ $poNumber = filter_input(INPUT_GET, 'poNumber');
                                 $sqlfet_1stPOData = mysqli_fetch_assoc($sqlres_1stPOData);
 
 
-                            $sqlcmd_lastPOData = "SELECT * FROM tbl_wg4buy WHERE wg_ponum='" . $poNumber . "' ORDER BY wg_createdat DESC LIMIT 1";
+                            //$sqlcmd_lastPOData = "SELECT * FROM tbl_wg4buy WHERE wg_ponum='" . $poNumber . "' ORDER BY wg_createdat DESC LIMIT 1";
+                            $sqlcmd_lastPOData = "SELECT * FROM tbl_wg4buy WHERE wg_ponum='" . $poNumber . "' AND wg_type='0003' ORDER BY wg_createdat DESC LIMIT 1";
+                            //echo $sqlcmd_lastPOData;
                             $sqlres_lastPOData = mysqli_query($dbConn, $sqlcmd_lastPOData);
                             if ($sqlres_lastPOData)
                                 $sqlfet_lastPOData = mysqli_fetch_assoc($sqlres_lastPOData);
@@ -134,7 +136,7 @@ $poNumber = filter_input(INPUT_GET, 'poNumber');
                                     if ($sqlfet_1stPOData['wg_product'] != '0000')
                                         echo "-";
                                     else
-                                        echo number_format($sqlfet_1stPOData['wg_net'], 0, '.', ',') . " กก."; ?></div>
+                                        echo str_pad(number_format($sqlfet_1stPOData['wg_net'], 0, '.', ','), 8, " ", STR_PAD_LEFT) . " กก."; ?></div>
                             </div>
                             <div class="row font-weight-bold">
                                 <div class="col-md-2" style="font-size:16px;">วันที่ออก</div>
@@ -148,12 +150,14 @@ $poNumber = filter_input(INPUT_GET, 'poNumber');
                                 <div class="col-md-2 text-primary"
                                      style="font-size:16px;"><?= substr($sqlfet_lastPOData['wg_createdat'], 11, 27); ?></div>
                                 <div class="col-md-2" style="font-size:16px;">น้ำหนักรถ</div>
-                                <div class="col-md-2 text-primary"
-                                     style="font-size:16px;"><?php
-                                    if ($sqlfet_1stPOData['wg_product'] != '0000')
+                                <div class="col-md-2 text-primary" style="font-size:16px;"><?php
+                                    if ($sqlfet_1stPOData['wg_product'] != '0000') {
                                         echo "-";
-                                    else
-                                        echo number_format($sqlfet_lastPOData['wg_net'], 0, '.', ',') . " กก."; ?></div>
+                                    } else {
+                                        echo str_pad(number_format($sqlfet_lastPOData['wg_net'], 0, '.', ','), 8, " ", STR_PAD_LEFT) . " กก.";
+                                    }
+                                    ?>
+                                </div>
                             </div><!-- Row of weighting card details -->
 
                             <hr>

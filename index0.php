@@ -62,12 +62,12 @@ $dbConn = dbConnect();
         </div>
         <div class="content">
             <div class="row">
+                <!-- graph 1 -->
                 <div class="col-md-6">
                     <div class="card card-chart">
                         <div class="card-header">
                             <h5 class="card-category">ข้อมูลรายสัปดาห์</h5>
-                            <h4 class="card-title">ข้อมูลการซื้อวันที่ <?= (date("d") - 7); ?>
-                                - <?= monthThai(dateBE($dateNow)); ?></h4>
+                            <h4 class="card-title">ราคารับซื้อยาง</h4>
                             <!--<div class="dropdown">
                                 <button type="button"
                                         class="btn btn-round btn-outline-default dropdown-toggle btn-simple btn-icon no-caret"
@@ -94,7 +94,9 @@ $dbConn = dbConnect();
                             </div>
                         </div>
                     </div>
-                </div>
+                </div><!-- graph 1 -->
+
+                <!-- graph 2 -->
                 <div class="col-md-6">
                     <div class="card card-chart">
                         <div class="card-header">
@@ -127,70 +129,7 @@ $dbConn = dbConnect();
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="card-category">ข้อมูลรายวัน</h5>
-                            <h4 class="card-title"> รายการซื้อ </h4>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead class=" text-primary">
-                                    <tr>
-                                        <th>เลขอ้างอิง</th>
-                                        <th>วัน-เวลา</th>
-                                        <th>ผู้ขาย</th>
-                                        <th>ทะเบียนรถ</th>
-                                        <th>หมายเลขติดต่อ</th>
-                                        <th>สถานะ</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <?php
-                                    $sqlcmd_listPO = "SELECT * FROM tbl_purchaseorder WHERE 1 ORDER BY po_createdat DESC LIMIT 5";
-                                    $sqlres_listPO = mysqli_query($dbConn, $sqlcmd_listPO);
-
-                                    if ($sqlres_listPO) {
-                                        while ($sqlfet_listPO = mysqli_fetch_assoc($sqlres_listPO)) {
-                                            ?>
-                                            <tr>
-                                                <td>
-                                                    <a href="#" data-toggle="modal" data-target="#exampleModal">
-                                                        <?= $sqlfet_listPO['po_number']; ?>
-                                                    </a>
-                                                </td>
-                                                <td><?= $sqlfet_listPO['po_createdat']; ?></td>
-                                                <td><?= $sqlfet_listPO['po_suppcode']; ?></td>
-                                                <td><?= $sqlfet_listPO['po_vlpn']; ?></td>
-                                                <td><?= getValue('tbl_suppliers', 'supp_code', $sqlfet_listPO['po_suppcode'], 2, 'supp_phone'); ?></td>
-                                                <td>
-                                                    <?php
-                                                    if ($sqlfet_listPO['po_status'] == 1) {
-                                                        echo "ยังไม่สรุปบิล";
-                                                    } else {
-                                                        echo "สรุปบิลแล้ว";
-                                                    }
-                                                    ?>
-                                                </td>
-                                            </tr>
-                                            <?php
-                                        }
-                                    }
-                                    ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="text-right">
-                                <a href="./poList.php">ดูทั้งหมด</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            </div><!-- graph 2 -->
         </div>
 
         <!-- Footer -->
@@ -276,7 +215,7 @@ $dbConn = dbConnect();
 <script>
     let ctxA = document.getElementById("myChartLine");
     let myChartLine = new Chart(ctxA, {
-        type: 'pie',
+        type: 'line',
         data: {
             labels: ["แผ่นสวย", "แผ่นคละ", "แผ่นหนา", "บล๊อก_1", "บล๊อก_2", "ยางฟอง", "เศษยาง"],
             datasets: [{

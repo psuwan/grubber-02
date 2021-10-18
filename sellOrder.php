@@ -256,11 +256,14 @@ if (empty($varget_id2edit)) {
                                 <thead class="bg-primary" style="font-size:14px">
                                 <tr>
                                     <th>#</th>
-                                    <th>soNumber</th>
-                                    <th>soCutomer</th>
-                                    <th>soProduct</th>
-                                    <th>soQuantites</th>
-                                    <th>soPrice</th>
+                                    <th>วันที่เปิดการขาย</th>
+                                    <th>หมายเลขอ้างอิง</th>
+                                    <th style="width: 150px;">ลูกค้า</th>
+                                    <th style="width: 75px;">สินค้า</th>
+                                    <th style="width: 95px;">ปริมาณ</th>
+                                    <th>ราคาขาย</th>
+                                    <th>ชั่งแล้ว</th>
+                                    <th>สถานะ</th>
                                     <th></th>
                                 </tr>
                                 </thead>
@@ -272,15 +275,35 @@ if (empty($varget_id2edit)) {
 
                                 if ($sqlres_listSO) {
                                     while ($sqlfet_listSO = mysqli_fetch_assoc($sqlres_listSO)) {
-
                                         ?>
                                         <tr>
                                             <td><?= ++$cntSO; ?></td>
+                                            <td><?= $sqlfet_listSO['so_created']; ?></td>
                                             <td><?= $sqlfet_listSO['so_number']; ?></td>
                                             <td><?= getValue("tbl_customers", "customer_code", $sqlfet_listSO['so_customer'], 2, "customer_name"); ?> <?= getValue("tbl_customers", "customer_code", $sqlfet_listSO['so_customer'], 2, "customer_surname"); ?></td>
-                                            <td><?= "ยางแผ่น"/*$sqlfet_listSO['so_product']*/; ?></td>
-                                            <td><?= number_format($sqlfet_listSO['so_weight'], 2, '.', ','); ?></td>
-                                            <td><?= number_format($sqlfet_listSO['so_price'], 2, '.', ','); ?></td>
+                                            <td><?= "ยางแผ่น";/*$sqlfet_listSO['so_product']*/ ?></td>
+                                            <td><?= number_format($sqlfet_listSO['so_wgordered'], 2, '.', ','); ?></td>
+                                            <td class="text-right"><?= number_format($sqlfet_listSO['so_price'], 2, '.', ','); ?></td>
+                                            <td><?php
+                                                $sqlcmd_getSumWg4SONow = "SELECT SUM(wg_net) AS WGNOW FROM tbl_wg4sell WHERE wg_sonum='" . $sqlfet_listSO['so_number'] . "' AND wg_code4product <> '0000'";
+                                                $sqlres_getSumWg4SONow = mysqli_query($dbConn, $sqlcmd_getSumWg4SONow);
+                                                if ($sqlres_getSumWg4SONow) {
+                                                    $sqlfet_getSumWg4SONow = mysqli_fetch_assoc($sqlres_getSumWg4SONow);
+                                                    echo $sqlfet_getSumWg4SONow['WGNOW'];
+                                                }
+                                                ?>
+                                                กก.
+                                            </td>
+                                            <td>
+                                                <?php
+                                                //echo $sqlfet_listSO['so_status'];
+                                                echo "&nbsp;";
+                                                if ($sqlfet_listSO['so_status'] == 1)
+                                                    echo "[Y]";
+                                                else
+                                                    echo "[X]";
+                                                ?>
+                                            </td>
                                             <td></td>
                                         </tr>
                                         <?php
@@ -331,7 +354,7 @@ if (empty($varget_id2edit)) {
 <script>
     $(document).ready(function () {
         $('#id4_soTable').DataTable({
-            "order": [[0, "asc"]],
+            "order": [[0, "desc"]],
             language:
                 {
                     "decimal": "",

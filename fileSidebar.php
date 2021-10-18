@@ -39,12 +39,12 @@
                             <span class="sidebar-normal"> รายการซื้อทั้งหมด </span>
                         </a>
                     </li>
-                    <li id="id4SubMenuBuyPoListDate">
+                    <!--<li id="id4SubMenuBuyPoListDate">
                         <a href="poListDate.php">
-                            <!-- <span class="sidebar-mini-icon">I</span>-->
+                             <span class="sidebar-mini-icon">I</span>
                             <span class="sidebar-normal"> รายการซื้อรายวัน </span>
                         </a>
-                    </li>
+                    </li>-->
                 </ul>
             </div>
         </li><!-- Buy work section -->
@@ -65,19 +65,102 @@
                             <span class="sidebar-normal"> เปิดการขาย </span>
                         </a>
                     </li>
-                    <li id="id4SubMenuSellSO">
-                        <a href="./file4SO.php#id4Content">
-                            <span class="sidebar-normal"> ขาย </span>
-                        </a>
-                    </li>
                     <li id="id4SubMenuSellSOList">
                         <a href="./soList.php">
-                            <span class="sidebar-normal"> รายการขายทั้งหมด </span>
+                            <span class="sidebar-normal"> รายการขาย </span>
+                        </a>
+                    </li>
+                    <!--<li id="id4SubMenuSellPlan">
+                        <a href="./sellPlan.php">
+                            <span class="sidebar-normal"> สร้างแผนขนส่ง </span>
+                        </a>
+                    </li>
+                    <li id="id4SubMenuSellPlanList">
+                        <a href="sellPlanList.php">
+                            <span class="sidebar-normal"> ดูแผนขนส่ง </span>
+                        </a>
+                    </li>-->
+                    <!--<li id="id4SubMenuSellSO">
+                        <a href="./file4SO.php#id4Content">
+                        <a href="./soLogis.php#id4Content">
+                            <span class="sidebar-normal"> ขาย </span>
+                        </a>
+                    </li>-->
+                    <li id="id4SubMenuSellSOList4Mgr">
+                        <a href="soList4Mgr.php">
+                            <span class="sidebar-normal"> จัดการการขาย </span>
                         </a>
                     </li>
                 </ul>
             </div>
         </li><!-- Sell work section -->
+
+
+        <!-- Logistics work section -->
+        <li>
+            <a data-toggle="collapse" href="#sub4LogisSell">
+                <!--<i class="now-ui-icons business_money-coins"></i>-->
+                <i class="bi bi-truck"></i>
+                <p>
+                    งานขนส่ง <b class="caret"></b>
+                </p>
+            </a>
+
+            <div class="collapse " id="sub4LogisSell">
+                <ul class="nav pl-5">
+                    <li id="id4SubMenuLogisSellPlan">
+                        <a href="logisSellPlan.php">
+                            <span class="sidebar-normal"> สร้างแผนขนส่ง </span>
+                        </a>
+                    </li>
+                    <li id="id4SubMenuLogisSellPlanList">
+                        <a href="logisSellPlanList.php">
+                            <span class="sidebar-normal"> แผนขนส่ง </span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </li><!-- Logistics work section -->
+
+        <!-- Stock work section -->
+        <li>
+            <a data-toggle="collapse" href="#sub4Stock">
+                <i class="now-ui-icons business_chart-bar-32"></i>
+                <p>
+                    งานคลัง <b class="caret"></b>
+                </p>
+            </a>
+
+            <div class="collapse " id="sub4Stock">
+                <ul class="nav pl-5">
+                    <li id="id4SubMenuStockChk">
+                        <a href="./stockChk.php">
+                            <span class="sidebar-normal"> เช็คคลัง </span>
+                        </a>
+                    </li>
+                    <li id="id4SubMenuStockReceived">
+                        <a href="./stockReceived.php" class="disabled">
+                            <span class="sidebar-normal"> รับเข้า </span>
+                        </a>
+                    </li>
+                    <li id="id4SubMenuStockBuy">
+                        <a href="./stockBuy.php" class="disabled">
+                            <span class="sidebar-normal"> รับเข้า (จากซื้อ) </span>
+                        </a>
+                    </li>
+                    <li id="id4SubMenuStockLoaded">
+                        <a href="./stockLoaded.php" class="disabled">
+                            <span class="sidebar-normal"> จ่ายออก </span>
+                        </a>
+                    </li>
+                    <li id="id4SubMenuStockSell">
+                        <a href="./stockSell.php" class="disabled">
+                            <span class="sidebar-normal"> จ่ายออก (จากขาย) </span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </li><!-- Stock work section -->
 
         <!-- Report section -->
         <li id="id4MenuReport">
@@ -181,12 +264,26 @@
                             <span class="sidebar-normal"> เครื่องชั่ง </span>
                         </a>
                     </li>
-                    <li id="id4SubMenuBackendStock">
-                        <a href="./stockChk.php">
-                            <!-- <span class="sidebar-mini-icon">P</span>-->
-                            <span class="sidebar-normal"> เช็คสินค้า </span>
+                    <li id="id4SubMenuBackendLogisticsPrice">
+                        <a href="#">
+                            <span class="sidebar-normal"> ค่าขนส่ง </span></a>
+                    </li>
+                    <li id="id4SubMenuBackendLabourPriceIn">
+                        <a href="adminLabourIn.php">
+                            <span class="sidebar-normal"> ค่าลงยาง (ซื้อยาง) </span>
                         </a>
                     </li>
+                    <li id="id4SubMenuBackendLabourPriceOut">
+                        <a href="adminLabourOut.php">
+                            <span class="sidebar-normal"> ค่าขึ้นยาง (ขายยาง) </span>
+                        </a>
+                    </li>
+                    <!--<li id="id4SubMenuBackendStock">
+                        <a href="./stockChk.php">
+                            <span class="sidebar-mini-icon">P</span>
+                            <span class="sidebar-normal"> เช็คสินค้า </span>
+                        </a>
+                    </li>-->
                 </ul>
             </div>
         </li><!-- End of Backend or Administrator section -->

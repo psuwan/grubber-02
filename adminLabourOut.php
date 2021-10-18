@@ -27,7 +27,7 @@ if (!empty($varget_stockNumber)) {
     <!--    <link rel="icon" type="image/png" href="../assets/img/favicon.png">-->
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 
-    <title>GOLD RUBBER : UPDATE STOCK</title>
+    <title>GOLD RUBBER : LABOUR OUT</title>
 
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no'
           name='viewport'/>
@@ -65,7 +65,7 @@ if (!empty($varget_stockNumber)) {
 
         <!-- Header section -->
         <div class="panel-header h-auto d-flex justify-content-center">
-            <h2 class="text-warning font-weight-bold">ตรวจสอบคลังสินค้า</h2>
+            <h2 class="text-warning font-weight-bold">ค่าแรงขึ้นยาง</h2>
         </div><!-- Header section -->
 
         <!-- Main content -->
@@ -76,7 +76,7 @@ if (!empty($varget_stockNumber)) {
                 <div class="col-md-8 order-1 order-md-0">
                     <div class="card">
                         <div class="card-header">
-                            <h5 class="title"> ตรวจสอบปริมาณสินค้า </h5>
+                            <h5 class="title"> บันทึกค่าแรงขึ้นยาง </h5>
                         </div>
                         <div class="card-body">
                             <form action="./act4Stock.php" method="post">
@@ -114,24 +114,6 @@ if (!empty($varget_stockNumber)) {
 
                                 </div>
 
-                                <!-- LAST STOCK UPDATE -->
-                                <!--<div class="row mt-2">
-                                    <div class="col-md-6 pr-md-1">
-                                        <div class="form-group">
-                                            <label for="id4SuppEmail">วันที่ทำการตรวจสอบครั้งสุดท้าย</label>
-                                            <input type="text" class="form-control" placeholder=""
-                                                   name="" id="lastDateUpdated" value="" disabled>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 pl-md-1">
-                                        <div class="form-group">
-                                            <label for="id4SuppEmail">ปริมาณยางในโกดัง</label>
-                                            <input type="text" class="form-control" placeholder=""
-                                                   name="" id="lastQtysUpdated" value="" disabled>
-                                        </div>
-                                    </div>
-                                </div>--><!-- LAST STOCK UPDATE -->
-
                                 <!-- Button "Reset" and "Submit" -->
                                 <div class="row d-flex justify-content-center">
                                     <div class="button-container">
@@ -153,34 +135,6 @@ if (!empty($varget_stockNumber)) {
                         </div>
                     </div>
                 </div><!-- Left side data -->
-
-                <!-- Right side data -->
-                <div class="col-md-4 order-0 order-md-1">
-                    <div class="card card-user">
-                        <div class="image">
-                            <img src="assets/img/bg.jpg" alt="..." id="id4ImgBg">
-                        </div>
-                        <div class="card-body">
-                            <div class="author">
-                                <a href="#" style="text-decoration: none;">
-                                    <!--<img class="avatar border-gray" src="assets/img/<? /*= $vehicleTypeCode; */ ?>avatarveh.png"
-                                         alt="..."
-                                         id="id4ImgAvatar">-->
-                                    <img class="avatar border-gray" src="assets/img/avatar.png"
-                                         alt="..."
-                                         id="id4ImgAvatar">
-                                    <h5 class="title"><span
-                                                id="id4VehicleName2Show"><?php if (empty($vehicleTypeName)) echo "ประเภทสินค้า"; else echo $vehicleTypeName; ?></span>
-                                    </h5>
-                                </a>
-                                <hr>
-                                <p class="text-muted">
-                                    ข้อมูลประเภทสินค้า
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div><!-- Right side data -->
 
             </div>
 
@@ -283,8 +237,8 @@ if (!empty($varget_stockNumber)) {
     //$("#id4AlinkMenuAdmin").addClass("text-primary");
     //$("#id4IconMenuAdmin").addClass("text-primary");
     // Try to still open submenu
-    $("#sub4Stock").addClass("show");
-    $("#id4SubMenuStockChk").addClass("active");
+    $("#sub4Backend").addClass("show");
+    $("#id4SubMenuBackendLabourPriceOut").addClass("active");
 </script><!-- Hi-light active menu -->
 
 <script>

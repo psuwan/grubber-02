@@ -50,12 +50,16 @@ if (!empty($varpost_processName)) {
             $sqlres_addWg = mysqli_query($dbConn, $sqlcmd_addWg);
 
             if ($sqlres_addWg) {
+                writeLog("BUY", "PRODUCT:".$wg4Product." WIGHT:".$netWg);
+
                 echo "<script>alert('บันทึกการชั่งแล้ว');</script>";
                 echo "<script>window.location.href='./poList.php';</script>";
             } else {
                 echo "ERROR!! [" . mysqli_errno($dbConn) . "]--[" . mysqli_error($dbConn) . "]";
             }
+            break;
 
+        default:
             break;
     }
 }
