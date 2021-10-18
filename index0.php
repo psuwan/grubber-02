@@ -31,6 +31,7 @@ $dbConn = dbConnect();
     <!-- CSS Files -->
     <link href="./css/bootstrap.min.css" rel="stylesheet"/>
     <link href="./css/now-ui-dashboard.css?v=1.5.0" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
 </head>
 
 <body>

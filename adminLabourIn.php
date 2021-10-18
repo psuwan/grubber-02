@@ -11,12 +11,32 @@ list($ddd, $mmm, $yyy) = explode("-", date("d-m-Y"));
 $dateNowPicker = $ddd . "-" . $mmm . "-" . ($yyy + 543);
 
 /* GET VARIABLE SECTION */
-$varget_stockNumber = filter_input(INPUT_GET, "stockNumber");
+$varget_id2edit = filter_input(INPUT_GET, "id2edit");
 
-if (!empty($varget_stockNumber)) {
-    $processName = "editStock";
+if (!empty($varget_id2edit)) {
+    $processName = "editLabourPriceIn";
+
+    $sqlcmd_labourInEdit = "SELECT * FROM tbl_labourin WHERE id=" . $varget_id2edit;
+    $sqlres_labourInEdit = mysqli_query($dbConn, $sqlcmd_labourInEdit);
+
+    if ($sqlres_labourInEdit) {
+        $sqlfet_labourInEdit = mysqli_fetch_assoc($sqlres_labourInEdit);
+
+        $lbCode = $sqlfet_labourInEdit['lb_code'];
+        $lbDate = $sqlfet_labourInEdit['lb_date'];
+        $lbSupp = $sqlfet_labourInEdit['lb_supplier'];
+        $lbVLpn = $sqlfet_labourInEdit['lb_vlpn'];
+        $lbWeight = $sqlfet_labourInEdit['lb_weight'];
+        $lbPrice = $sqlfet_labourInEdit['lb_price'];
+    }
 } else {
-    $processName = "updateStock";
+    $processName = "addLabourPriceIn";
+
+    $lbDate = $dateNowPicker;
+    $lbSupp = '';
+    $lbVLpn = '';
+    $lbWeight = '';
+    $lbPrice = '';
 }
 
 ?>
@@ -46,6 +66,27 @@ if (!empty($varget_stockNumber)) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="./css/style4Project.css">
     <link rel="stylesheet" href="./css/thDateTimePicker.css">
+
+    <!-- DATATABLES -->
+    <link rel="stylesheet" href="./css/jquery.dataTables.min.css">
+    <style>
+        #labourIn_filter input {
+            border-radius: 30px;
+            width: 300px;
+            height: 35px;
+            margin-right: 18px;
+        }
+
+        .dataTables_length select {
+            border-radius: 30px !important;
+        }
+
+        /* Selects any <input> when focused */
+        #labourIn_filter input:focus {
+            border: solid 1px orange;
+            outline: none !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -83,7 +124,7 @@ if (!empty($varget_stockNumber)) {
                             <h5 class="title"> บันทึกค่าแรงลงยาง </h5>
                         </div>
                         <div class="card-body">
-                            <form action="./act4Stock.php" method="post">
+                            <form action="./act4LabourPrice.php" method="post">
                                 <div class="row">
 
                                     <!-- PRODUCT -->
@@ -94,39 +135,47 @@ if (!empty($varget_stockNumber)) {
                                                    class="form-control form-control-sm text-primary font-weight-bold"
                                                    placeholder=""
                                                    name="dateLabourIn" id="id4_dateLabourIn" style="font-size:14px;"
-                                                   value="<?= $dateNowPicker; ?>">
+                                                   value="<?= $lbDate; ?>">
                                         </div>
                                     </div><!-- PRODUCT -->
 
-                                    <!-- PRODUCT QUANTITY -->
+                                    <!-- CUSTOMER -->
                                     <div class="col-md-2 px-md-1">
-                                        <label for="">สินค้า</label>
-                                        <div class="form-group selectWrapper" style="width: 100%;">
-                                            <select name="productCode" id="id4ProductCode"
-                                                    class="form-control selectBox">
-                                                <?php
-                                                $sqlcmd_listProducts = "SELECT * FROM tbl_products WHERE product_code<>'0000' ORDER BY product_order ASC";
-                                                $sqlres_listProducts = mysqli_query($dbConn, $sqlcmd_listProducts);
-                                                if ($sqlres_listProducts) {
-                                                    while ($sqlfet_listProducts = mysqli_fetch_assoc($sqlres_listProducts)) {
-                                                        ?>
-                                                        <option value="<?= $sqlfet_listProducts['product_code']; ?>"><?= $sqlfet_listProducts['product_name']; ?></option>
-                                                        <?php
-                                                    }
-                                                }
-                                                ?>
-                                            </select>
+                                        <div class="form-group">
+                                            <label for="id4_supplier">ชื่อผู้ขาย</label>
+                                            <input type="text" class="form-control" placeholder="ชื่อผู้ขาย"
+                                                   style="font-size:14px;"
+                                                   name="supplier" id="id4_supplier" value="<?= $lbSupp; ?>" required
+                                                   list="supplierList">
                                         </div>
-                                    </div><!-- PRODUCT QUANTITY -->
+                                    </div><!-- CUSTOMER -->
+
+                                    <!-- VLPN -->
+                                    <div class="col-md-2 px-md-1">
+                                        <div class="form-group">
+                                            <label for="id4_vLpn">ทะเบียนรถ</label>
+                                            <input type="text" class="form-control" placeholder="ทะเบียนรถ"
+                                                   name="vLpn" id="id4_vLpn" value="<?= $lbVLpn; ?>" required>
+                                        </div>
+                                    </div><!-- VLPN -->
 
                                     <!-- PRODUCT -->
-                                    <div class="col-md-2 pl-md-1">
+                                    <div class="col-md-2 px-md-1">
                                         <div class="form-group">
-                                            <label for="id4SuppEmail">น้ำหนักยางที่ลง</label>
-                                            <input type="text" class="form-control" placeholder=""
-                                                   name="productWeight" id="" value="">
+                                            <label for="id4_weight">น้ำหนักยางที่ลง</label>
+                                            <input type="text" class="form-control float" placeholder="น้ำหนักยาง (กก.)"
+                                                   name="weight" id="id4_weight" value="<?= $lbWeight; ?>" required>
                                         </div>
                                     </div><!-- PRODUCT -->
+
+                                    <!-- PRICE -->
+                                    <div class="col-md-2 pl-md-1">
+                                        <div class="form-group">
+                                            <label for="id4_price">ค่าลงยาง</label>
+                                            <input type="text" class="form-control float" placeholder="ค่าลงยาง (บาท)"
+                                                   name="price" id="id4_price" value="<?= $lbPrice; ?>" required>
+                                        </div>
+                                    </div><!-- PRICE -->
 
                                 </div>
 
@@ -145,7 +194,7 @@ if (!empty($varget_stockNumber)) {
                                 </div><!-- Button "Reset" and "Submit" -->
 
                                 <input type="hidden" name="processName" value="<?= $processName; ?>">
-                                <input type="hidden" name="stock2edit" value="<?= $varget_stockNumber; ?>">
+                                <input type="hidden" name="labourCode2Edit" value="<?= $lbCode; ?>">
 
                             </form>
                         </div>
@@ -164,50 +213,44 @@ if (!empty($varget_stockNumber)) {
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table">
+                                <table class="table table-hover" id="labourIn">
                                     <thead class=" text-primary">
                                     <tr>
-                                        <th>#</th>
-                                        <th>สินค้า</th>
+                                        <th>วันที่</th>
+                                        <th>ผู้ขาย</th>
+                                        <th>ทะเบียนรถ</th>
                                         <th class="text-right">ปริมาณ</th>
-                                        <th class="text-center">วันที่ตรวจสอบ</th>
+                                        <th class="text-right">ค่าลง</th>
+                                        <th class="text-right">รวมเป็นเงิน</th>
                                         <th></th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <?php
-                                    $cntChk = 0;
-                                    $sqlcmd_SetMode = "SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))";
-                                    $sqlres_setMode = mysqli_query($dbConn, $sqlcmd_SetMode);
+                                    $sqlcmd_listLabourPirceIn = "SELECT * FROM tbl_labourin WHERE 1";
+                                    $sqlres_listLabourPirceIn = mysqli_query($dbConn, $sqlcmd_listLabourPirceIn);
 
-                                    $sqlcmd_chkStock = "SELECT * FROM tbl_stocks WHERE 1 GROUP BY stock_product";
-                                    $sqlres_chkStock = mysqli_query($dbConn, $sqlcmd_chkStock);
-
-                                    if ($sqlres_chkStock) {
-                                        while ($sqlfet_chkStock = mysqli_fetch_assoc($sqlres_chkStock)) {
+                                    if ($sqlres_listLabourPirceIn) {
+                                        while ($sqlfet_listLabourPirceIn = mysqli_fetch_assoc($sqlres_listLabourPirceIn)) {
                                             ?>
                                             <tr>
-                                                <td><?= ++$cntChk; ?></td>
-                                                <td><?= getValue("tbl_products", "product_code", $sqlfet_chkStock['stock_product'], 2, "product_name"); ?></td>
-                                                <td class="text-right font-weight-bold"><?php
-                                                    $prdStock = getLastRecord("tbl_stocks", "stock_product", $sqlfet_chkStock['stock_product'], "stock_updated", "stock_weight");
-                                                    echo number_format($prdStock, 2, '.', ',');
-                                                    ?>
+                                                <td><?= monthThai(dateBE($sqlfet_listLabourPirceIn['lb_date'])); ?></td>
+                                                <td><?= $sqlfet_listLabourPirceIn['lb_supplier']; ?></td>
+                                                <td><?= $sqlfet_listLabourPirceIn['lb_vlpn']; ?></td>
+                                                <td class="text-right"><?= number_format($sqlfet_listLabourPirceIn['lb_weight'], 2, '.', ','); ?>
+                                                    กก.
                                                 </td>
-                                                <td class="text-center">
-                                                    <?= getLastRecord("tbl_stocks", "stock_product", $sqlfet_chkStock['stock_product'], "stock_updated", "stock_updated"); ?>
+                                                <td class="text-right"><?= $sqlfet_listLabourPirceIn['lb_price']; ?>
+                                                    บาท/กก.
+                                                </td>
+                                                <td class="text-right"><?= number_format(($sqlfet_listLabourPirceIn['lb_weight'] * $sqlfet_listLabourPirceIn['lb_price']), 2, '.', ',') ?>
+                                                    บาท
                                                 </td>
                                                 <td>
-                                                    <!--<a href="?id2edit=<?/*= $sqlfet_chkStock['stock_number']; */ ?>"
-                                                       class="btn btn-round btn-info btn-icon btn-sm"
-                                                       data-toggle="tooltip" data-placement="right" title="แก้ไข"><i
-                                                                class="bi bi-pencil-fill"></i></i></a>-->
-
-                                                    <!--<a href="./act4VehicleType.php?id2delete=<?/*= $sqlfet_chkStock['stock_number']; */ ?>"
-                                                       class="btn btn-round btn-outline-danger btn-icon btn-sm"
-                                                       onclick="return confirm('ต้องการลบข้อมูลนี้');"
-                                                       data-toggle="tooltip" data-placement="right" title=" ลบ "><i
-                                                                class="now-ui-icons ui-1_simple-remove"></i></a>-->
+                                                    <a href="adminLabourIn.php?id2edit=<?= $sqlfet_listLabourPirceIn['id']; ?>"
+                                                       class="btn btn-round btn-warning btn-icon btn-sm"
+                                                       data-toggle="tooltip" data-placement="right" title=" แก้ไข "><i
+                                                                class="bi bi-pencil-fill"></i></a>
                                                 </td>
                                             </tr>
                                             <?php
@@ -236,6 +279,23 @@ if (!empty($varget_stockNumber)) {
     </div>
 </div>
 
+<!-- SUPPLIER LIST -->
+<datalist id="supplierList">
+    <?php
+    $sqlcmd_listSuppliers = "SELECT * FROM tbl_suppliers WHERE 1";
+    $sqlres_listSuppliers = mysqli_query($dbConn, $sqlcmd_listSuppliers);
+
+    if ($sqlres_listSuppliers) {
+        while ($sqlfet_listSuppliers = mysqli_fetch_assoc($sqlres_listSuppliers)) {
+            ?>
+            <option value="<?= $sqlfet_listSuppliers['supp_name']; ?>&nbsp;<?= $sqlfet_listSuppliers['supp_surname']; ?>"></option>
+            <?php
+        }
+    }
+    ?>
+</datalist>
+<!-- SUPPLIER LIST -->
+
 <!--   Core JS Files   -->
 <script src="./js/core/jquery.min.js"></script>
 <script src="./js/core/popper.min.js"></script>
@@ -250,6 +310,9 @@ if (!empty($varget_stockNumber)) {
 <!-- PICKER DATE -->
 <script src="./js/picker_date.js"></script>
 <script src="./js/thDateTimePicker.js"></script>
+
+<!-- DATATABLES -->
+<script src="./js/jquery.dataTables.min.js"></script>
 
 <!-- Hi-light active menu -->
 <script>
@@ -281,44 +344,6 @@ if (!empty($varget_stockNumber)) {
         // imgAvatar.src = './assets/img/' + typeCode + 'avatar.png';
     }
 </script>
-
-<!--<script>-->
-<!--    let returnText = '';-->
-<!--    let lastChecked = function (productCode) {-->
-<!--        $.ajax({-->
-<!--            url: "act4Stock.php",-->
-<!--            type: "POST",-->
-<!--            data: {-->
-<!--                processName: "lastCheckedProductInStock",-->
-<!--                productCode: productCode-->
-<!--            },-->
-<!--            success: function (response) {-->
-<!--                console.log(response);-->
-<!--                // location.reload();-->
-<!--                // You will get response from your PHP page (what you echo or print)-->
-<!--                returnText = response.split("_");-->
-<!--                let dateLastUpdated = returnText[0];-->
-<!--                let weightLastUpdated = returnText[1];-->
-<!--                console.log(dateLastUpdated);-->
-<!--                console.log(weightLastUpdated);-->
-<!--                if (dateLastUpdated === '') {-->
-<!--                    document.getElementById("lastDateUpdated").value = "ไม่มีข้อมูล";-->
-<!--                } else {-->
-<!--                    document.getElementById("lastDateUpdated").value = dateLastUpdated;-->
-<!--                }-->
-<!--                if (weightLastUpdated === '') {-->
-<!--                    document.getElementById("lastQtysUpdated").value = "ไม่มีข้อมูล";-->
-<!--                } else {-->
-<!--                    document.getElementById("lastQtysUpdated").value = weightLastUpdated;-->
-<!--                }-->
-<!--            }-->
-<!--            ,-->
-<!--            error: function (jqXHR, textStatus, errorThrown) {-->
-<!--                console.log(textStatus, errorThrown);-->
-<!--            }-->
-<!--        });-->
-<!--    }-->
-<!--</script>-->
 
 <!-- DATETIME PICKER -->
 <script type="text/javascript">
@@ -369,6 +394,48 @@ if (!empty($varget_stockNumber)) {
 
     });
 </script><!-- DATETIME PICKER -->
+
+<!-- INPUT FLOAT -->
+<script>
+    $('input.float').on('input', function () {
+        this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');
+    });
+</script><!-- INPUT FLOAT -->
+
+<!-- Datatable Setup -->
+<script>
+    $(document).ready(function () {
+        $('#labourIn').DataTable({
+            "order": [[0, "desc"]],
+            language:
+                {
+                    "decimal": "",
+                    "emptyTable": "ไม่มีข้อมูล",
+                    "info": "แสดงผล _START_ ถึง _END_ จากทั้งหมด _TOTAL_ ข้อมูล",
+                    "infoEmpty": "แสดงผล 0 ถึง 0 จากทั้งหมด 0 ข้อมูล",
+                    "infoFiltered": "(กรองจากทั้งหมด _MAX_ ข้อมูล)",
+                    "infoPostFix": "",
+                    "thousands": ",",
+                    "lengthMenu": "แสดง _MENU_ ข้อมูลต่อหน้า",
+                    "loadingRecords": "กำลังโหลดข้อมูล...",
+                    "processing": "กำลังประมวลผล...",
+                    "search": "",
+                    "searchPlaceholder": "   ค้นหาในตาราง",
+                    "zeroRecords": "ไม่มีข้อมูลตรงกับที่ค้นหา",
+                    "paginate": {
+                        "first": "หน้าแรก",
+                        "last": "หน้าสุดท้าย",
+                        "next": "ถัดไป",
+                        "previous": "ก่อนหน้า"
+                    },
+                    "aria": {
+                        "sortAscending": ": activate to sort column ascending",
+                        "sortDescending": ": activate to sort column descending"
+                    }
+                }
+        });
+    });
+</script><!-- Datatable Setup -->
 
 </body>
 

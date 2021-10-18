@@ -209,6 +209,8 @@ $thisFile = basename(__FILE__, '.php');
 <script src="./js/plugins/bootstrap-notify.js"></script>
 <!-- Control Center for Now Ui Dashboard: parallax effects, scripts for the example pages etc -->
 <script src="./js/now-ui-dashboard.min.js?v=1.5.0" type="text/javascript"></script>
+
+<!-- DATATABLES -->
 <script src="./js/jquery.dataTables.min.js"></script>
 
 <!-- Hi-light active menu -->
