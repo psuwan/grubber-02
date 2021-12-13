@@ -92,6 +92,7 @@ if (!empty($varget_id2edit)) {
         }
 
         .dataTables_length select {
+            border-radius: 30px;
             -webkit-border-radius: 30px !important;
         }
 
@@ -260,9 +261,9 @@ if (!empty($varget_id2edit)) {
                                         <th>วันที่</th>
                                         <th>ผู้ขาย</th>
                                         <th>ทะเบียนรถ</th>
-                                        <th class="text-right">ปริมาณ</th>
-                                        <th class="text-right">ค่าลง</th>
-                                        <th class="text-right">รวมเป็นเงิน</th>
+                                        <th class="text-right">ปริมาณ (กก.)</th>
+                                        <th class="text-right">ค่าลง (บาท/กก.)</th>
+                                        <th class="text-right">รวมเป็นเงิน (บาท)</th>
                                         <th></th>
                                     </tr>
                                     </thead>
@@ -278,17 +279,12 @@ if (!empty($varget_id2edit)) {
                                                 <td><?= monthThai(dateBE($sqlfet_listLabourPirceIn['lb_date'])); ?></td>
                                                 <td><?= $sqlfet_listLabourPirceIn['lb_supplier']; ?></td>
                                                 <td><?= $sqlfet_listLabourPirceIn['lb_vlpn']; ?></td>
-                                                <td class="text-right"><?= number_format($sqlfet_listLabourPirceIn['lb_weight'], 2, '.', ','); ?>
-                                                    กก.
-                                                </td>
-                                                <td class="text-right"><?= $sqlfet_listLabourPirceIn['lb_price']; ?>
-                                                    บาท/กก.
-                                                </td>
+                                                <td class="text-right"><?= number_format($sqlfet_listLabourPirceIn['lb_weight'], 2, '.', ','); ?></td>
+                                                <td class="text-right"><?= $sqlfet_listLabourPirceIn['lb_price']; ?></td>
                                                 <td class="text-right"><?= number_format(($sqlfet_listLabourPirceIn['lb_weight'] * $sqlfet_listLabourPirceIn['lb_price']), 2, '.', ',') ?>
-                                                    บาท
                                                 </td>
                                                 <td>
-                                                    <a href="adminLabourIn.php?id2edit=<?= $sqlfet_listLabourPirceIn['id']; ?>"
+                                                    <a href="adminLabourPrice.php?id2edit=<?= $sqlfet_listLabourPirceIn['id']; ?>"
                                                        class="btn btn-round btn-warning btn-icon btn-sm"
                                                        data-toggle="tooltip" data-placement="right" title=" แก้ไข "><i
                                                                 class="bi bi-pencil-fill"></i></a>
@@ -299,6 +295,17 @@ if (!empty($varget_id2edit)) {
                                     }
                                     ?>
                                     </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-right font-weight-bold">รวม</td>
+                                        <td class="text-right"></td>
+                                        <td></td>
+                                    </tr>
+                                    </tfoot>
                                 </table>
                             </div>
                             <!--<div class="text-right">
@@ -369,7 +376,7 @@ if (!empty($varget_id2edit)) {
     //$("#id4IconMenuAdmin").addClass("text-primary");
     // Try to still open submenu
     $("#sub4Backend").addClass("show");
-    $("#id4SubMenuBackendLabourPriceIn").addClass("active");
+    $("#id4SubMenuBackendLabourPrice").addClass("active");
 </script><!-- Hi-light active menu -->
 
 <script>
@@ -490,16 +497,16 @@ if (!empty($varget_id2edit)) {
             buttons: ['copy', 'excel', {
                 extend: "print",
                 title: function () {
-                    var printTitle = 'ค่าแรงลงยาง';
+                    let printTitle = 'ค่าแรงลงยาง';
                     return printTitle
                 },
                 text: "พิมพ์",
                 customize: function (win) {
-                    var last = null;
-                    var current = null;
-                    var bod = [];
+                    let last = null;
+                    let current = null;
+                    let bod = [];
 
-                    var css = '@page { size: landscape; }',
+                    let css = '@page { size: landscape; }',
                         head = win.document.head || win.document.getElementsByTagName('head')[0],
                         style = win.document.createElement('style');
 
@@ -522,6 +529,15 @@ if (!empty($varget_id2edit)) {
             "order": [
                 [0, "desc"]
             ],
+            "paging": true,
+            "footerCallback": function (tfoot, data, start, end, display) {
+                let api = this.api();
+                $(api.column(5).footer()).html(
+                    api.column(5).data().reduce(function (a, b) {
+                        return Number(a) + Number(b);
+                    })
+                );
+            },
             language: {
                 "decimal": "",
                 "emptyTable": "ไม่มีข้อมูล",
@@ -547,7 +563,6 @@ if (!empty($varget_id2edit)) {
                 }
             }
         });
-
     });
 </script><!-- Datatable Setup -->
 

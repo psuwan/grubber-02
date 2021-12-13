@@ -264,18 +264,18 @@
                             <span class="sidebar-normal"> เครื่องชั่ง </span>
                         </a>
                     </li>
-                    <li id="id4SubMenuBackendLogisticsPrice">
+                    <!--<li id="id4SubMenuBackendLogisticsPrice">
                         <a href="#">
                             <span class="sidebar-normal"> ค่าขนส่ง </span></a>
-                    </li>
-                    <li id="id4SubMenuBackendLabourPriceIn">
-                        <a href="adminLabourIn.php">
+                    </li>-->
+                    <li id="id4SubMenuBackendLabourPrice">
+                        <a href="adminLabourPrice.php">
                             <span class="sidebar-normal"> ค่าลงยาง (ซื้อยาง) </span>
                         </a>
                     </li>
-                    <li id="id4SubMenuBackendLabourPriceOut">
-                        <a href="adminLabourOut.php">
-                            <span class="sidebar-normal"> ค่าขึ้นยาง (ขายยาง) </span>
+                    <li id="id4SubMenuBackendLogisPrice">
+                        <a href="adminLogisPrice.php">
+                            <span class="sidebar-normal"> ค่าบรรทุกยาง </span>
                         </a>
                     </li>
                     <!--<li id="id4SubMenuBackendStock">

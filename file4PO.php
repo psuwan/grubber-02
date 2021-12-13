@@ -70,6 +70,9 @@ if (empty($_SESSION["USERLOGINNAME"])) {
     <link href="./css/bootstrap.min.css" rel="stylesheet"/>
     <link href="./css/now-ui-dashboard.css?v=1.5.0" rel="stylesheet"/>
     <link href="./css/style4Project.css" rel="stylesheet">
+
+    <!-- DateTimePicker Thai -->
+    <link rel="stylesheet" href="./css/thDateTimePicker.css">
 </head>
 
 <body>
@@ -140,7 +143,7 @@ if (empty($_SESSION["USERLOGINNAME"])) {
 
                                 <!-- Row #01 -->
                                 <div class="row">
-                                    <div class="col-md-4 pr-md-1">
+                                    <div class="col-md-3 pr-md-1">
                                         <div class="form-group">
                                             <label for="id4PONumber">เลขอ้างอิงการซื้อ</label>
                                             <input type="text" class="form-control" placeholder="เลขอ้างอิงการซื้อ"
@@ -148,7 +151,8 @@ if (empty($_SESSION["USERLOGINNAME"])) {
                                                    required value="">
                                         </div>
                                     </div>
-                                    <div class="col-md-4 px-md-1">
+
+                                    <div class="col-md-3 px-md-1">
                                         <div class="form-group">
                                             <label for="id4VlpnNumber">เลขทะเบียนรถ</label>&nbsp;<span
                                                     id="VLPNCheckResult"></span>&nbsp;
@@ -157,7 +161,8 @@ if (empty($_SESSION["USERLOGINNAME"])) {
                                                    onkeyup="chkAvailableVLPN(this.value);">
                                         </div>
                                     </div>
-                                    <div class="col-md-4 pl-md-1">
+
+                                    <div class="col-md-3 px-md-1">
                                         <div class="form-group">
                                             <label for="id4POSuppName">ผู้ขาย</label>
                                             <input type="text" name="POSuppName" id="id4POSuppName" class="form-control"
@@ -165,6 +170,16 @@ if (empty($_SESSION["USERLOGINNAME"])) {
                                                    value="">
                                         </div>
                                     </div>
+
+                                    <div class="col-md-3 pl-md-1">
+                                        <div class="form-group">
+                                            <label for="id4BillPODate">บิลลงวันที่</label>
+                                            <input type="text"
+                                                   class="form-control text-center font-weight-bold text-primary"
+                                                   placeholder="วันที่ออกบิล" name="billPODate" id="id4BillPODate">
+                                        </div>
+                                    </div>
+
                                 </div> <!-- End of Row #01 -->
 
                                 <!-- Row #02 -->
@@ -468,6 +483,9 @@ if (empty($_SESSION["USERLOGINNAME"])) {
 <script src="./js/now-ui-dashboard.min.js?v=1.5.0" type="text/javascript"></script>
 <script src="./js/script4PO.js"></script>
 
+<!-- DateTimePicker Thai -->
+<script src="./js/thDateTimePicker.js"></script>
+
 <!-- Hi-light active menu -->
 <script>
     // Try to still open submenu
@@ -688,6 +706,57 @@ if (empty($_SESSION["USERLOGINNAME"])) {
             }, 1);
         });*/
 </script>
+
+
+<!-- DATETIME PICKER -->
+<script type="text/javascript">
+    $(function () {
+
+        $.datetimepicker.setLocale('th'); // ต้องกำหนดเสมอถ้าใช้ภาษาไทย และ เป็นปี พ.ศ.
+
+        // กรณีใช้แบบ inline
+        /*  $("#testdate4").datetimepicker({
+              timepicker:false,
+              format:'d-m-Y',  // กำหนดรูปแบบวันที่ ที่ใช้ เป็น 00-00-0000
+              lang:'th',  // ต้องกำหนดเสมอถ้าใช้ภาษาไทย และ เป็นปี พ.ศ.
+              inline:true
+          });    */
+
+
+        // กรณีใช้แบบ input
+        $("#id4BillPODate").datetimepicker({
+            timepicker: false,
+            format: 'd-m-Y',  // กำหนดรูปแบบวันที่ ที่ใช้ เป็น 00-00-0000
+            lang: 'th',  // ต้องกำหนดเสมอถ้าใช้ภาษาไทย และ เป็นปี พ.ศ.
+            onSelectDate: function (dp, $input) {
+                var yearT = new Date(dp).getFullYear();
+                var yearTH = yearT + 543;
+                var fulldate = $input.val();
+                var fulldateTH = fulldate.replace(yearT, yearTH);
+                $input.val(fulldateTH);
+            },
+        });
+        // กรณีใช้กับ input ต้องกำหนดส่วนนี้ด้วยเสมอ เพื่อปรับปีให้เป็น ค.ศ. ก่อนแสดงปฏิทิน
+        $("#id4BillPODate").on("mouseenter mouseleave", function (e) {
+            var dateValue = $(this).val();
+            if (dateValue != "") {
+                var arr_date = dateValue.split("-"); // ถ้าใช้ตัวแบ่งรูปแบบอื่น ให้เปลี่ยนเป็นตามรูปแบบนั้น
+                // ในที่นี้อยู่ในรูปแบบ 00-00-0000 เป็น d-m-Y  แบ่งด่วย - ดังนั้น ตัวแปรที่เป็นปี จะอยู่ใน array
+                //  ตัวที่สอง arr_date[2] โดยเริ่มนับจาก 0
+                if (e.type == "mouseenter") {
+                    var yearT = arr_date[2] - 543;
+                }
+                if (e.type == "mouseleave") {
+                    var yearT = parseInt(arr_date[2]) + 543;
+                }
+                dateValue = dateValue.replace(arr_date[2], yearT);
+                $(this).val(dateValue);
+            }
+        });
+
+
+    });
+</script><!-- DATETIME PICKER -->
 
 </body>
 

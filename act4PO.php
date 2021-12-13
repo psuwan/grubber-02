@@ -22,7 +22,8 @@ $WgData = array(
     "QtyPallet" => filter_input(INPUT_POST, 'cntPallet'),
     "Wg4Pallet" => filter_input(INPUT_POST, 'wg4Pallet'),
     "WgScaleRd" => filter_input(INPUT_POST, 'wgScaleRd'),
-    "WgNetValue" => filter_input(INPUT_POST, 'wgScaleNet')
+    "WgNetValue" => filter_input(INPUT_POST, 'wgScaleNet'),
+    "billPODate" => filter_input(INPUT_POST, 'billPODate')
 );
 $wgNew = $WgData['POIsNew'];
 $wg4PONum = $WgData['PONumber'];
@@ -43,10 +44,15 @@ $wg4Pallet = $WgData['Wg4Pallet'];
 $wgValue = $WgData['WgScaleRd'];
 $netWg = $WgData['WgNetValue'];
 
+$wgBillDate = $WgData['billPODate'];
+if(empty($wgBillDate)){
+    $wgBillDate = $dt;
+}
+
 if (!empty($varpost_processName)) {
     switch ($varpost_processName) {
         case 'AddWg':
-            $sqlcmd_addWg = "INSERT INTO tbl_wg4buy (wg_ponum, wg_vlpn, wg_suppcode, wg_buytype, wg_type, wg_scale, wg_product, wg_palletqty, wg_eachpallet, wg_scalerd, wg_net, wg_createdat) VALUES ('$wg4PONum', '$wg4LPN', '$wg4SuppCode', '$PO_BuyType', '$wgType', '$wgScale', '$wg4Product', $palletQty, $wg4Pallet, $wgValue, $netWg, '$dt')";
+            $sqlcmd_addWg = "INSERT INTO tbl_wg4buy (wg_ponum, wg_vlpn, wg_suppcode, wg_buytype, wg_type, wg_scale, wg_product, wg_palletqty, wg_eachpallet, wg_scalerd, wg_net, wg_createdat) VALUES ('$wg4PONum', '$wg4LPN', '$wg4SuppCode', '$PO_BuyType', '$wgType', '$wgScale', '$wg4Product', $palletQty, $wg4Pallet, $wgValue, $netWg, '$wgBillDate')";
             $sqlres_addWg = mysqli_query($dbConn, $sqlcmd_addWg);
 
             if ($sqlres_addWg) {

@@ -25,22 +25,23 @@ $varget_id2edit = filter_input(INPUT_GET, "id2edit");
 if (!empty($varget_id2edit)) {
     $processName = "editLabourPriceOut";
 
-    $sqlcmd_labourOutEdit = "SELECT * FROM tbl_labourout WHERE id=" . $varget_id2edit;
-    $sqlres_labourOutEdit = mysqli_query($dbConn, $sqlcmd_labourOutEdit);
+    $sqlcmd_logisPriceEdit = "SELECT * FROM tbl_logisprice WHERE id=" . $varget_id2edit;
+    $sqlres_logisPriceEdit = mysqli_query($dbConn, $sqlcmd_logisPriceEdit);
 
-    if ($sqlres_labourOutEdit) {
-        $sqlfet_labourOutEdit = mysqli_fetch_assoc($sqlres_labourOutEdit);
+    if ($sqlres_logisPriceEdit) {
+        $sqlfet_logisPriceEdit = mysqli_fetch_assoc($sqlres_logisPriceEdit);
 
-        $lbCode = $sqlfet_labourOutEdit['lb_code'];
+        $lgCode = $sqlfet_logisPriceEdit['lg_code'];
 
-        $lbDate = $sqlfet_labourOutEdit['lb_date'];
-        list($yyy, $mmm, $ddd) = explode("-", $lbDate);
-        $lbDate = $ddd . "-" . $mmm . "-" . ($yyy + 543);
+        $lgDate = $sqlfet_logisPriceEdit['lg_date'];
+        list($yyy, $mmm, $ddd) = explode("-", $lgDate);
+        $lgDate = $ddd . "-" . $mmm . "-" . ($yyy + 543);
 
-        $lbCustomer = $sqlfet_labourOutEdit['lb_customer'];
-        $lbSuppLogis = $sqlfet_labourOutEdit['lb_supplogis'];
-        $lbWeight = $sqlfet_labourOutEdit['lb_weight'];
-        $lbPrice = $sqlfet_labourOutEdit['lb_price'];
+        $lgSuppLogis = $sqlfet_logisPriceEdit['lg_supplogis'];
+        $lgLocUp = $sqlfet_logisPriceEdit['lg_locationup'];
+        $lgLocDw = $sqlfet_logisPriceEdit['lg_locationdown'];
+        $lgWeight = $sqlfet_logisPriceEdit['lg_weight'];
+        $lgPrice = $sqlfet_logisPriceEdit['lg_price'];
     }
 } else {
     $processName = "addLabourPriceOut";
@@ -148,11 +149,11 @@ if (!empty($varget_id2edit)) {
                                     <!-- PRODUCT -->
                                     <div class="col-md-2 pr-md-1">
                                         <div class="form-group">
-                                            <label for="id4_dateLabourIn">วันที่</label>
+                                            <label for="id4_dateLogis">วันที่</label>
                                             <input type="text" placeholder=""
                                                    class="form-control form-control-sm text-primary font-weight-bold"
-                                                   name="dateLabourIn" id="id4_dateLabourIn" style="font-size:14px;"
-                                                   value="<?= $lbDate; ?>">
+                                                   name="dateLogis" id="id4_dateLogis" style="font-size:14px;"
+                                                   value="<?= $lgDate; ?>">
                                         </div>
                                     </div><!-- PRODUCT -->
 
@@ -162,7 +163,7 @@ if (!empty($varget_id2edit)) {
                                             <label for="id4_suppLogis">รถขนส่ง/เจ้าของ</label>
                                             <input type="text" class="form-control form-control-sm font-weight-bold"
                                                    placeholder="รถขนส่ง/เจ้าของ" style="font-size:14px;"
-                                                   name="suppLogis" id="id4_suppLogis" value="<?= $lbSuppLogis; ?>"
+                                                   name="suppLogis" id="id4_suppLogis" value="<?= $lgSuppLogis; ?>"
                                                    required list="suppLogisList">
                                         </div>
                                     </div><!-- CUSTOMER -->
@@ -173,7 +174,7 @@ if (!empty($varget_id2edit)) {
                                             <label for="id4_locationUp">สถานที่ขึ้น</label>
                                             <input type="text" class="form-control form-control-sm font-weight-bold"
                                                    placeholder="สถานที่ขึ้น" name="locationUp" id="id4_locationUp"
-                                                   style="font-size:14px" value="<?= $lbVLpn; ?>" required>
+                                                   style="font-size:14px" value="<?= $lgLocUp; ?>" required>
                                         </div>
                                     </div>
 
@@ -182,7 +183,7 @@ if (!empty($varget_id2edit)) {
                                             <label for="id4_locationDown">สถานที่ลง</label>
                                             <input type="text" class="form-control form-control-sm font-weight-bold"
                                                    placeholder="สถานที่ลง" name="locationDown" id="id4_locationDown"
-                                                   style="font-size:14px" value="<?= $lbVLpn; ?>" required>
+                                                   style="font-size:14px" value="<?= $lgLocDw; ?>" required>
                                         </div>
                                     </div>
 
@@ -194,7 +195,7 @@ if (!empty($varget_id2edit)) {
                                                    class="form-control form-control-sm font-weight-bold float"
                                                    placeholder="น้ำหนักยาง (กก.)" name="weight" id="id4_weight"
                                                    style="font-size:14px"
-                                                   value="<?= $lbWeight; ?>" required>
+                                                   value="<?= $lgWeight; ?>" required>
                                         </div>
                                     </div><!-- PRODUCT -->
 
@@ -205,7 +206,7 @@ if (!empty($varget_id2edit)) {
                                             <input type="text"
                                                    class="form-control form-control-sm font-weight-bold float"
                                                    placeholder="ค่าบรรทุก (บาท/กก.)" name="price" id="id4_price"
-                                                   style="font-size:14px" value="<?= $lbPrice; ?>" required>
+                                                   style="font-size:14px" value="<?= $lgPrice; ?>" required>
                                         </div>
                                     </div><!-- PRICE -->
 
@@ -226,7 +227,7 @@ if (!empty($varget_id2edit)) {
                                 </div><!-- Button "Reset" and "Submit" -->
 
                                 <input type="hidden" name="processName" value="<?= $processName; ?>">
-                                <input type="hidden" name="labourCode2Edit" value="<?= $lbCode; ?>">
+                                <input type="hidden" name="logisCode2Edit" value="<?= $lgCode; ?>">
 
                             </form>
                         </div>
@@ -245,7 +246,7 @@ if (!empty($varget_id2edit)) {
                                 <div class="row">
                                     <div class="col-md-8">
                                         <!--<h5 class="card-category">ข้อมูลทั้งหมด</h5>-->
-                                        <h5 class="card-title"> ค่าแรงขึ้นยางวันที่
+                                        <h5 class="card-title"> ค่าบรรทุกยางวันที่
                                             : <?= monthThai(dateBE($varpost_date2Report)); ?> </h5>
                                     </div>
                                     <div class="col-md-4 text-right input-group" style="font-size:14px">
@@ -267,37 +268,54 @@ if (!empty($varget_id2edit)) {
                                     <thead class=" text-primary">
                                     <tr>
                                         <th>วันที่</th>
-                                        <th>ผู้ขาย</th>
-                                        <th>ทะเบียนรถ</th>
+                                        <th>รถขนส่ง/เจ้าของ</th>
+                                        <th>สถานที่ขึ้น</th>
+                                        <th>สถานที่ลง</th>
                                         <th class="text-right">ปริมาณ</th>
                                         <th class="text-right">ค่าลง</th>
                                         <th class="text-right">รวมเป็นเงิน</th>
+                                        <th></th>
+                                        <th></th>
                                         <th></th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <?php
-                                    $sqlcmd_listLabourPirceIn = "SELECT * FROM tbl_labourin WHERE DATE(lb_timestamp)='" . $varpost_date2Report . "'";
-                                    $sqlres_listLabourPirceIn = mysqli_query($dbConn, $sqlcmd_listLabourPirceIn);
+                                    $sqlcmd_listLogisPrice = "SELECT * FROM tbl_logisprice WHERE DATE(lg_date)='" . $varpost_date2Report . "'";
+                                    $sqlres_listLogisPrice = mysqli_query($dbConn, $sqlcmd_listLogisPrice);
 
-                                    if ($sqlres_listLabourPirceIn) {
-                                        while ($sqlfet_listLabourPirceIn = mysqli_fetch_assoc($sqlres_listLabourPirceIn)) {
+                                    if ($sqlres_listLogisPrice) {
+                                        while ($sqlfet_listLogisPrice = mysqli_fetch_assoc($sqlres_listLogisPrice)) {
                                             ?>
                                             <tr>
-                                                <td><?= monthThai(dateBE($sqlfet_listLabourPirceIn['lb_date'])); ?></td>
-                                                <td><?= $sqlfet_listLabourPirceIn['lb_supplier']; ?></td>
-                                                <td><?= $sqlfet_listLabourPirceIn['lb_vlpn']; ?></td>
-                                                <td class="text-right"><?= number_format($sqlfet_listLabourPirceIn['lb_weight'], 2, '.', ','); ?>
+                                                <td><?= monthThai(dateBE($sqlfet_listLogisPrice['lg_date'])); ?></td>
+                                                <td><?= $sqlfet_listLogisPrice['lg_supplogis']; ?></td>
+                                                <td><?= $sqlfet_listLogisPrice['lg_locationup']; ?></td>
+                                                <td><?= $sqlfet_listLogisPrice['lg_locationdown']; ?></td>
+                                                <td class="text-right"><?= number_format($sqlfet_listLogisPrice['lg_weight'], 2, '.', ','); ?>
                                                     กก.
                                                 </td>
-                                                <td class="text-right"><?= $sqlfet_listLabourPirceIn['lb_price']; ?>
-                                                    บาท/กก.
+                                                <td class="text-right"><?php
+                                                    if ($sqlfet_listLogisPrice['lg_price'] > 1) {
+                                                        echo "เหมา: " . number_format($sqlfet_listLogisPrice['lg_price'], 2, '.', ',') . " บาท";
+                                                    } else {
+                                                        echo number_format($sqlfet_listLogisPrice['lg_price'], 2, '.', ',') . " บาท/กก.";
+                                                    }
+                                                    ?>
                                                 </td>
-                                                <td class="text-right"><?= number_format(($sqlfet_listLabourPirceIn['lb_weight'] * $sqlfet_listLabourPirceIn['lb_price']), 2, '.', ',') ?>
+                                                <td class="text-right"><?php
+                                                    if ($sqlfet_listLogisPrice['lg_price'] > 1) {
+                                                        echo number_format($sqlfet_listLogisPrice['lg_price'], 2, '.', ',');
+                                                    } else {
+                                                        echo number_format(($sqlfet_listLogisPrice['lg_price'] * $sqlfet_listLogisPrice['lg_weight']), 2, '.', ',');
+                                                    }
+                                                    ?>
                                                     บาท
                                                 </td>
+                                                <td></td>
+                                                <td></td>
                                                 <td>
-                                                    <a href="adminLabourIn.php?id2edit=<?= $sqlfet_listLabourPirceIn['id']; ?>"
+                                                    <a href="adminLogisPrice.php?id2edit=<?= $sqlfet_listLogisPrice['id']; ?>"
                                                        class="btn btn-round btn-warning btn-icon btn-sm"
                                                        data-toggle="tooltip" data-placement="right" title=" แก้ไข "><i
                                                                 class="bi bi-pencil-fill"></i></a>
@@ -378,7 +396,7 @@ if (!empty($varget_id2edit)) {
     //$("#id4IconMenuAdmin").addClass("text-primary");
     // Try to still open submenu
     $("#sub4Backend").addClass("show");
-    $("#id4SubMenuBackendLabourPriceOut").addClass("active");
+    $("#id4SubMenuBackendLogisPrice").addClass("active");
 </script><!-- Hi-light active menu -->
 
 <script>

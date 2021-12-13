@@ -73,7 +73,7 @@ if (!empty($varget_stockNumber)) {
             <div class="row">
 
                 <!-- Left side data -->
-                <div class="col-md-8 order-1 order-md-0">
+                <div class="col-md-12 order-1 order-md-0">
                     <div class="card">
                         <div class="card-header">
                             <h5 class="title"> รับสินค้า </h5>
@@ -83,11 +83,12 @@ if (!empty($varget_stockNumber)) {
                                 <div class="row">
 
                                     <!-- PRODUCT -->
-                                    <div class="col-md-6 pr-md-1">
+                                    <div class="col-md-4 pr-md-1">
                                         <label for="">สินค้า</label>
                                         <div class="form-group selectWrapper" style="width: 100%;">
                                             <select name="productCode" id="id4ProductCode"
-                                                    class="form-control selectBox">
+                                                    class="form-control form-control-sm selectBox"
+                                                    style="font-size:14px;">
                                                 <?php
                                                 $sqlcmd_listProducts = "SELECT * FROM tbl_products WHERE product_code<>'0000' ORDER BY product_order ASC";
                                                 $sqlres_listProducts = mysqli_query($dbConn, $sqlcmd_listProducts);
@@ -104,13 +105,23 @@ if (!empty($varget_stockNumber)) {
                                     </div><!-- PRODUCT -->
 
                                     <!-- PRODUCT QUANTITY -->
-                                    <div class="col-md-6 pl-md-1">
+                                    <div class="col-md-4 px-md-1">
                                         <div class="form-group">
-                                            <label for="id4SuppEmail">ปริมาณ</label>
-                                            <input type="text" class="form-control" placeholder=""
-                                                   name="productWeight" id="" value="">
+                                            <label for="id4_productWeight">ปริมาณ</label>
+                                            <input type="text" class="form-control form-control-sm font-weight-bold"
+                                                   placeholder="น้ำหนักรับเข้าคลัง" name="productWeight"
+                                                   id="id4_productWeight" value="">
                                         </div>
                                     </div><!-- PRODUCT QUANTITY -->
+
+
+                                    <div class="col-md-4 pl-md-1">
+                                        <div class="form-group">
+                                            <label for="id4_receivedReason">รับจาก</label>
+                                            <input type="text" class="form-control" placeholder="เหตุผล"
+                                                   name="receivedReason" id="id4_receivedReason" value="">
+                                        </div>
+                                    </div>
                                 </div>
 
 
@@ -149,7 +160,7 @@ if (!empty($varget_stockNumber)) {
                                          alt="..."
                                          id="id4ImgAvatar">
                                     <h5 class="title"><span
-                                            id="id4VehicleName2Show"><?php /*if (empty($vehicleTypeName)) echo "ประเภทสินค้า"; else echo $vehicleTypeName; */?></span>
+                                            id="id4VehicleName2Show"><?php /*if (empty($vehicleTypeName)) echo "ประเภทสินค้า"; else echo $vehicleTypeName; */ ?></span>
                                     </h5>
                                 </a>
                                 <hr>

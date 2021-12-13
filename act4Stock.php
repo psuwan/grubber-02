@@ -51,6 +51,8 @@ $varpost_processName = filter_input(INPUT_POST, 'processName');
 $varpost_stockNumber = filter_input(INPUT_POST, 'stockNumber');
 $varpost_productCode = filter_input(INPUT_POST, 'productCode');
 $varpost_productWeight = filter_input(INPUT_POST, 'productWeight');
+$varpost_receivedReason = filter_input(INPUT_POST, 'receivedReason');
+$varpost_loadedReason = filter_input(INPUT_POST, 'loadedReason');
 
 //INPUT FROM BUY PROCESS
 $varpost_poNumberBuy = filter_input(INPUT_POST, 'poNumberBuy');
@@ -93,7 +95,7 @@ if (!empty($varpost_processName)) {
             $sqlres_updateStock = mysqli_query($dbConn, $sqlcmd_updateStock);
 
             if ($sqlres_updateStock) {
-                writeLogStock("UPDATE STOCK, RECEIVED", " PRODUCT: " . $varpost_productCode . ", WEIGHT: " . $varpost_productWeight . " KG");
+                writeLogStock("UPDATE STOCK, RECEIVED", " PRODUCT: " . $varpost_productCode . ", WEIGHT: " . $varpost_productWeight . " KG, REASON: " . $varpost_receivedReason);
                 echo "<script>alert('อัพเดตข้อมูลแล้ว')</script>";
                 echo "<script>window.location.href='stockChk.php'</script>";
             } else {
@@ -109,7 +111,7 @@ if (!empty($varpost_processName)) {
             $sqlres_updateStock = mysqli_query($dbConn, $sqlcmd_updateStock);
 
             if ($sqlres_updateStock) {
-                writeLogStock("UPDATE STOCK, LOADED", " PRODUCT: " . $varpost_productCode . ", WEIGHT: " . $varpost_productWeight . " KG");
+                writeLogStock("UPDATE STOCK, LOADED", " PRODUCT: " . $varpost_productCode . ", WEIGHT: " . $varpost_productWeight . " KG, REASON: " . $varpost_loadedReason);
                 echo "<script>alert('อัพเดตข้อมูลแล้ว')</script>";
                 echo "<script>window.location.href='stockChk.php'</script>";
             } else {
