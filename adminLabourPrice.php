@@ -7,6 +7,15 @@ date_default_timezone_set('Asia/Bangkok');
 $dateNow = date("Y-m-d");
 $timeNow = date("H:i:s");
 
+// DATE TO REPORT
+$varpost_date2Report = filter_input(INPUT_POST, 'date2Report');
+if (empty($varpost_date2Report)) {
+    $varpost_date2Report = $dateNow;
+} else {
+    list($dd, $mm, $yy) = explode("-", $varpost_date2Report);
+    $varpost_date2Report = ($yy - 543) . "-" . $mm . "-" . $dd;
+}
+
 list($ddd, $mmm, $yyy) = explode("-", date("d-m-Y"));
 $dateNowPicker = $ddd . "-" . $mmm . "-" . ($yyy + 543);
 
@@ -16,7 +25,7 @@ $varget_id2edit = filter_input(INPUT_GET, "id2edit");
 if (!empty($varget_id2edit)) {
     $processName = "editLabourPriceIn";
 
-    $sqlcmd_labourInEdit = "SELECT * FROM tbl_labourin WHERE id=" . $varget_id2edit;
+    $sqlcmd_labourInEdit = "SELECT * FROM tbl_labourprice WHERE id=" . $varget_id2edit;
     $sqlres_labourInEdit = mysqli_query($dbConn, $sqlcmd_labourInEdit);
 
     if ($sqlres_labourInEdit) {
@@ -83,7 +92,7 @@ if (!empty($varget_id2edit)) {
         }
 
         .dataTables_length select {
-            border-radius: 30px !important;
+            -webkit-border-radius: 30px !important;
         }
 
         .dt-button {
@@ -137,7 +146,7 @@ if (!empty($varget_id2edit)) {
                                 <div class="row">
 
                                     <!-- PRODUCT -->
-                                    <div class="col-md-2 pr-md-1">
+                                    <div class="col-md-3 pr-md-1">
                                         <div class="form-group">
                                             <label for="id4_dateLabourIn">วันที่</label>
                                             <input type="text"
@@ -149,12 +158,12 @@ if (!empty($varget_id2edit)) {
                                     </div><!-- PRODUCT -->
 
                                     <!-- CUSTOMER -->
-                                    <div class="col-md-2 px-md-1">
+                                    <div class="col-md-3 px-md-1">
                                         <div class="form-group">
                                             <label for="id4_supplier">ชื่อผู้ขาย</label>
-                                            <input type="text" class="form-control" placeholder="ชื่อผู้ขาย"
-                                                   style="font-size:14px;"
-                                                   name="supplier" id="id4_supplier" value="<?= $lbSupp; ?>" required
+                                            <input type="text" class="form-control form-control-sm font-weight-bold"
+                                                   placeholder="ชื่อผู้ขาย" name="supplier" id="id4_supplier"
+                                                   style="font-size:14px" value="<?= $lbSupp; ?>" required
                                                    list="supplierList">
                                         </div>
                                     </div><!-- CUSTOMER -->
@@ -163,7 +172,8 @@ if (!empty($varget_id2edit)) {
                                     <div class="col-md-2 px-md-1">
                                         <div class="form-group">
                                             <label for="id4_vLpn">ทะเบียนรถ</label>
-                                            <input type="text" class="form-control" placeholder="ทะเบียนรถ"
+                                            <input type="text" class="form-control form-control-sm font-weight-bold"
+                                                   placeholder="ทะเบียนรถ" style="font-size:14px"
                                                    name="vLpn" id="id4_vLpn" value="<?= $lbVLpn; ?>" required>
                                         </div>
                                     </div><!-- VLPN -->
@@ -172,7 +182,9 @@ if (!empty($varget_id2edit)) {
                                     <div class="col-md-2 px-md-1">
                                         <div class="form-group">
                                             <label for="id4_weight">น้ำหนักยางที่ลง</label>
-                                            <input type="text" class="form-control float" placeholder="น้ำหนักยาง (กก.)"
+                                            <input type="text"
+                                                   class="form-control form-control-sm font-weight-bold float"
+                                                   placeholder="น้ำหนักยาง (กก.)" style="font-size:14px"
                                                    name="weight" id="id4_weight" value="<?= $lbWeight; ?>" required>
                                         </div>
                                     </div><!-- PRODUCT -->
@@ -181,7 +193,9 @@ if (!empty($varget_id2edit)) {
                                     <div class="col-md-2 pl-md-1">
                                         <div class="form-group">
                                             <label for="id4_price">ค่าลงยาง</label>
-                                            <input type="text" class="form-control float" placeholder="ค่าลงยาง (บาท)"
+                                            <input type="text"
+                                                   class="form-control form-control-sm font-weight-bold float"
+                                                   placeholder="ค่าลงยาง (บาท)" style="font-size:14px"
                                                    name="price" id="id4_price" value="<?= $lbPrice; ?>" required>
                                         </div>
                                     </div><!-- PRICE -->
@@ -217,8 +231,26 @@ if (!empty($varget_id2edit)) {
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header">
-                            <h5 class="card-category">ข้อมูลทั้งหมด</h5>
-                            <h4 class="card-title"> ประเภทสินค้า </h4>
+
+                            <form action="" method="post">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <!--<h5 class="card-category">ข้อมูลทั้งหมด</h5>-->
+                                        <h5 class="card-title"> ค่าแรงลงยางวันที่
+                                            : <?= monthThai(dateBE($varpost_date2Report)); ?> </h5>
+                                    </div>
+                                    <div class="col-md-4 text-right input-group" style="font-size:14px">
+                                        <input type="text" class="form-control" name="date2Report"
+                                               id="id4_date2Report" style="margin:10px 0px 10px 105px!important;"
+                                               placeholder="คลิกเลือกวันที่">
+                                        <div class="input-group-append mr-md-3">
+                                            <button class="btn btn-primary btn-round" type="submit" id="button-addon2">
+                                                แสดงรายงาน
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -236,7 +268,7 @@ if (!empty($varget_id2edit)) {
                                     </thead>
                                     <tbody>
                                     <?php
-                                    $sqlcmd_listLabourPirceIn = "SELECT * FROM tbl_labourin WHERE 1";
+                                    $sqlcmd_listLabourPirceIn = "SELECT * FROM tbl_labourprice WHERE DATE(lb_date)='" . $varpost_date2Report . "'";
                                     $sqlres_listLabourPirceIn = mysqli_query($dbConn, $sqlcmd_listLabourPirceIn);
 
                                     if ($sqlres_listLabourPirceIn) {
@@ -364,7 +396,6 @@ if (!empty($varget_id2edit)) {
 <!-- DATETIME PICKER -->
 <script type="text/javascript">
     $(function () {
-
         $.datetimepicker.setLocale('th'); // ต้องกำหนดเสมอถ้าใช้ภาษาไทย และ เป็นปี พ.ศ.
 
         // กรณีใช้แบบ inline
@@ -389,6 +420,7 @@ if (!empty($varget_id2edit)) {
                 $input.val(fulldateTH);
             },
         });
+
         // กรณีใช้กับ input ต้องกำหนดส่วนนี้ด้วยเสมอ เพื่อปรับปีให้เป็น ค.ศ. ก่อนแสดงปฏิทิน
         $("#id4_dateLabourIn").on("mouseenter mouseleave", function (e) {
             var dateValue = $(this).val();
@@ -407,6 +439,38 @@ if (!empty($varget_id2edit)) {
             }
         });
 
+        // id4_date2Report
+        // กรณีใช้แบบ input
+        $("#id4_date2Report").datetimepicker({
+            timepicker: false,
+            format: 'd-m-Y',  // กำหนดรูปแบบวันที่ ที่ใช้ เป็น 00-00-0000
+            lang: 'th',  // ต้องกำหนดเสมอถ้าใช้ภาษาไทย และ เป็นปี พ.ศ.
+            onSelectDate: function (dp, $input) {
+                var yearT = new Date(dp).getFullYear();
+                var yearTH = yearT + 543;
+                var fulldate = $input.val();
+                var fulldateTH = fulldate.replace(yearT, yearTH);
+                $input.val(fulldateTH);
+            },
+        });
+
+        // กรณีใช้กับ input ต้องกำหนดส่วนนี้ด้วยเสมอ เพื่อปรับปีให้เป็น ค.ศ. ก่อนแสดงปฏิทิน
+        $("#id4_date2Report").on("mouseenter mouseleave", function (e) {
+            var dateValue = $(this).val();
+            if (dateValue != "") {
+                var arr_date = dateValue.split("-"); // ถ้าใช้ตัวแบ่งรูปแบบอื่น ให้เปลี่ยนเป็นตามรูปแบบนั้น
+                // ในที่นี้อยู่ในรูปแบบ 00-00-0000 เป็น d-m-Y  แบ่งด่วย - ดังนั้น ตัวแปรที่เป็นปี จะอยู่ใน array
+                //  ตัวที่สอง arr_date[2] โดยเริ่มนับจาก 0
+                if (e.type == "mouseenter") {
+                    var yearT = arr_date[2] - 543;
+                }
+                if (e.type == "mouseleave") {
+                    var yearT = parseInt(arr_date[2]) + 543;
+                }
+                dateValue = dateValue.replace(arr_date[2], yearT);
+                $(this).val(dateValue);
+            }
+        });
 
     });
 </script><!-- DATETIME PICKER -->

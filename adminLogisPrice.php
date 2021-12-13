@@ -7,6 +7,15 @@ date_default_timezone_set('Asia/Bangkok');
 $dateNow = date("Y-m-d");
 $timeNow = date("H:i:s");
 
+// DATE TO REPORT
+$varpost_date2Report = filter_input(INPUT_POST, 'date2Report');
+if (empty($varpost_date2Report)) {
+    $varpost_date2Report = $dateNow;
+} else {
+    list($dd, $mm, $yy) = explode("-", $varpost_date2Report);
+    $varpost_date2Report = ($yy - 543) . "-" . $mm . "-" . $dd;
+}
+
 list($ddd, $mmm, $yyy) = explode("-", date("d-m-Y"));
 $dateNowPicker = $ddd . "-" . $mmm . "-" . ($yyy + 543);
 
@@ -16,25 +25,29 @@ $varget_id2edit = filter_input(INPUT_GET, "id2edit");
 if (!empty($varget_id2edit)) {
     $processName = "editLabourPriceOut";
 
-    $sqlcmd_labourInEdit = "SELECT * FROM tbl_labourin WHERE id=" . $varget_id2edit;
-    $sqlres_labourInEdit = mysqli_query($dbConn, $sqlcmd_labourInEdit);
+    $sqlcmd_labourOutEdit = "SELECT * FROM tbl_labourout WHERE id=" . $varget_id2edit;
+    $sqlres_labourOutEdit = mysqli_query($dbConn, $sqlcmd_labourOutEdit);
 
-    if ($sqlres_labourInEdit) {
-        $sqlfet_labourInEdit = mysqli_fetch_assoc($sqlres_labourInEdit);
+    if ($sqlres_labourOutEdit) {
+        $sqlfet_labourOutEdit = mysqli_fetch_assoc($sqlres_labourOutEdit);
 
-        $lbCode = $sqlfet_labourInEdit['lb_code'];
-        $lbDate = $sqlfet_labourInEdit['lb_date'];
-        $lbSupp = $sqlfet_labourInEdit['lb_supplier'];
-        $lbVLpn = $sqlfet_labourInEdit['lb_vlpn'];
-        $lbWeight = $sqlfet_labourInEdit['lb_weight'];
-        $lbPrice = $sqlfet_labourInEdit['lb_price'];
+        $lbCode = $sqlfet_labourOutEdit['lb_code'];
+
+        $lbDate = $sqlfet_labourOutEdit['lb_date'];
+        list($yyy, $mmm, $ddd) = explode("-", $lbDate);
+        $lbDate = $ddd . "-" . $mmm . "-" . ($yyy + 543);
+
+        $lbCustomer = $sqlfet_labourOutEdit['lb_customer'];
+        $lbSuppLogis = $sqlfet_labourOutEdit['lb_supplogis'];
+        $lbWeight = $sqlfet_labourOutEdit['lb_weight'];
+        $lbPrice = $sqlfet_labourOutEdit['lb_price'];
     }
 } else {
     $processName = "addLabourPriceOut";
 
     $lbDate = $dateNowPicker;
-    $lbSupp = '';
-    $lbVLpn = '';
+    $lbCustomer = '';
+    $lbSuppLogis = '';
     $lbWeight = '';
     $lbPrice = '';
 }
@@ -69,6 +82,7 @@ if (!empty($varget_id2edit)) {
 
     <!-- DATATABLES -->
     <link rel="stylesheet" href="./css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css">
     <style>
         #labourIn_filter input {
             border-radius: 30px;
@@ -78,6 +92,10 @@ if (!empty($varget_id2edit)) {
         }
 
         .dataTables_length select {
+            -webkit-border-radius: 30px !important;
+        }
+
+        .dt-button {
             border-radius: 30px !important;
         }
 
@@ -110,7 +128,7 @@ if (!empty($varget_id2edit)) {
 
         <!-- Header section -->
         <div class="panel-header h-auto d-flex justify-content-center">
-            <h2 class="text-warning font-weight-bold">ค่าแรงลงยาง</h2>
+            <h2 class="text-warning font-weight-bold">ค่าขนส่งยาง</h2>
         </div><!-- Header section -->
 
         <!-- Main content -->
@@ -121,7 +139,7 @@ if (!empty($varget_id2edit)) {
                 <div class="col-md-12 order-1 order-md-0">
                     <div class="card">
                         <div class="card-header">
-                            <h5 class="title"> บันทึกค่าแรงลงยาง </h5>
+                            <h5 class="title"> บันทึกค่าขนส่งยาง </h5>
                         </div>
                         <div class="card-body">
                             <form action="./act4LabourPrice.php" method="post">
@@ -131,9 +149,8 @@ if (!empty($varget_id2edit)) {
                                     <div class="col-md-2 pr-md-1">
                                         <div class="form-group">
                                             <label for="id4_dateLabourIn">วันที่</label>
-                                            <input type="text"
+                                            <input type="text" placeholder=""
                                                    class="form-control form-control-sm text-primary font-weight-bold"
-                                                   placeholder=""
                                                    name="dateLabourIn" id="id4_dateLabourIn" style="font-size:14px;"
                                                    value="<?= $lbDate; ?>">
                                         </div>
@@ -142,38 +159,53 @@ if (!empty($varget_id2edit)) {
                                     <!-- CUSTOMER -->
                                     <div class="col-md-2 px-md-1">
                                         <div class="form-group">
-                                            <label for="id4_supplier">ชื่อผู้ขาย</label>
-                                            <input type="text" class="form-control" placeholder="ชื่อผู้ขาย"
-                                                   style="font-size:14px;"
-                                                   name="supplier" id="id4_supplier" value="<?= $lbSupp; ?>" required
-                                                   list="supplierList">
+                                            <label for="id4_suppLogis">รถขนส่ง/เจ้าของ</label>
+                                            <input type="text" class="form-control form-control-sm font-weight-bold"
+                                                   placeholder="รถขนส่ง/เจ้าของ" style="font-size:14px;"
+                                                   name="suppLogis" id="id4_suppLogis" value="<?= $lbSuppLogis; ?>"
+                                                   required list="suppLogisList">
                                         </div>
                                     </div><!-- CUSTOMER -->
 
                                     <!-- VLPN -->
                                     <div class="col-md-2 px-md-1">
                                         <div class="form-group">
-                                            <label for="id4_vLpn">ทะเบียนรถ</label>
-                                            <input type="text" class="form-control" placeholder="ทะเบียนรถ"
-                                                   name="vLpn" id="id4_vLpn" value="<?= $lbVLpn; ?>" required>
+                                            <label for="id4_locationUp">สถานที่ขึ้น</label>
+                                            <input type="text" class="form-control form-control-sm font-weight-bold"
+                                                   placeholder="สถานที่ขึ้น" name="locationUp" id="id4_locationUp"
+                                                   style="font-size:14px" value="<?= $lbVLpn; ?>" required>
                                         </div>
-                                    </div><!-- VLPN -->
+                                    </div>
+
+                                    <div class="col-md-2 px-md-1">
+                                        <div class="form-group">
+                                            <label for="id4_locationDown">สถานที่ลง</label>
+                                            <input type="text" class="form-control form-control-sm font-weight-bold"
+                                                   placeholder="สถานที่ลง" name="locationDown" id="id4_locationDown"
+                                                   style="font-size:14px" value="<?= $lbVLpn; ?>" required>
+                                        </div>
+                                    </div>
 
                                     <!-- PRODUCT -->
                                     <div class="col-md-2 px-md-1">
                                         <div class="form-group">
-                                            <label for="id4_weight">น้ำหนักยางที่ลง</label>
-                                            <input type="text" class="form-control float" placeholder="น้ำหนักยาง (กก.)"
-                                                   name="weight" id="id4_weight" value="<?= $lbWeight; ?>" required>
+                                            <label for="id4_weight">น้ำหนักบรรทุก</label>
+                                            <input type="text"
+                                                   class="form-control form-control-sm font-weight-bold float"
+                                                   placeholder="น้ำหนักยาง (กก.)" name="weight" id="id4_weight"
+                                                   style="font-size:14px"
+                                                   value="<?= $lbWeight; ?>" required>
                                         </div>
                                     </div><!-- PRODUCT -->
 
                                     <!-- PRICE -->
                                     <div class="col-md-2 pl-md-1">
                                         <div class="form-group">
-                                            <label for="id4_price">ค่าลงยาง</label>
-                                            <input type="text" class="form-control float" placeholder="ค่าลงยาง (บาท)"
-                                                   name="price" id="id4_price" value="<?= $lbPrice; ?>" required>
+                                            <label for="id4_price">ค่าบรรทุก <span class="text-danger">(ถ้าเหมาให้กรอกราคาเหมา)</span></label>
+                                            <input type="text"
+                                                   class="form-control form-control-sm font-weight-bold float"
+                                                   placeholder="ค่าบรรทุก (บาท/กก.)" name="price" id="id4_price"
+                                                   style="font-size:14px" value="<?= $lbPrice; ?>" required>
                                         </div>
                                     </div><!-- PRICE -->
 
@@ -208,8 +240,26 @@ if (!empty($varget_id2edit)) {
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header">
-                            <h5 class="card-category">ข้อมูลทั้งหมด</h5>
-                            <h4 class="card-title"> ประเภทสินค้า </h4>
+
+                            <form action="" method="post">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <!--<h5 class="card-category">ข้อมูลทั้งหมด</h5>-->
+                                        <h5 class="card-title"> ค่าแรงขึ้นยางวันที่
+                                            : <?= monthThai(dateBE($varpost_date2Report)); ?> </h5>
+                                    </div>
+                                    <div class="col-md-4 text-right input-group" style="font-size:14px">
+                                        <input type="text" class="form-control" name="date2Report"
+                                               id="id4_date2Report" style="margin:10px 0px 10px 105px!important;"
+                                               placeholder="คลิกเลือกวันที่">
+                                        <div class="input-group-append mr-md-3">
+                                            <button class="btn btn-primary btn-round" type="submit" id="button-addon2">
+                                                แสดงรายงาน
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -227,7 +277,7 @@ if (!empty($varget_id2edit)) {
                                     </thead>
                                     <tbody>
                                     <?php
-                                    $sqlcmd_listLabourPirceIn = "SELECT * FROM tbl_labourin WHERE 1";
+                                    $sqlcmd_listLabourPirceIn = "SELECT * FROM tbl_labourin WHERE DATE(lb_timestamp)='" . $varpost_date2Report . "'";
                                     $sqlres_listLabourPirceIn = mysqli_query($dbConn, $sqlcmd_listLabourPirceIn);
 
                                     if ($sqlres_listLabourPirceIn) {
@@ -280,15 +330,15 @@ if (!empty($varget_id2edit)) {
 </div>
 
 <!-- SUPPLIER LIST -->
-<datalist id="supplierList">
+<datalist id="suppLogisList">
     <?php
-    $sqlcmd_listSuppliers = "SELECT * FROM tbl_suppliers WHERE 1";
-    $sqlres_listSuppliers = mysqli_query($dbConn, $sqlcmd_listSuppliers);
+    $sqlcmd_listSuppLogis = "SELECT * FROM tbl_supplogis WHERE 1";
+    $sqlres_listSuppLogis = mysqli_query($dbConn, $sqlcmd_listSuppLogis);
 
-    if ($sqlres_listSuppliers) {
-        while ($sqlfet_listSuppliers = mysqli_fetch_assoc($sqlres_listSuppliers)) {
+    if ($sqlres_listSuppLogis) {
+        while ($sqlfet_listSuppLogis = mysqli_fetch_assoc($sqlres_listSuppLogis)) {
             ?>
-            <option value="<?= $sqlfet_listSuppliers['supp_name']; ?>&nbsp;<?= $sqlfet_listSuppliers['supp_surname']; ?>"></option>
+            <option value="<?= $sqlfet_listSuppLogis['supplogis_vlpn']; ?>&nbsp;/&nbsp;<?= $sqlfet_listSuppLogis['supplogis_name']; ?>"></option>
             <?php
         }
     }
@@ -313,6 +363,13 @@ if (!empty($varget_id2edit)) {
 
 <!-- DATATABLES -->
 <script src="./js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.0.0/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.print.min.js"></script>
 
 <!-- Hi-light active menu -->
 <script>
@@ -321,7 +378,7 @@ if (!empty($varget_id2edit)) {
     //$("#id4IconMenuAdmin").addClass("text-primary");
     // Try to still open submenu
     $("#sub4Backend").addClass("show");
-    $("#id4SubMenuBackendLabourPriceIn").addClass("active");
+    $("#id4SubMenuBackendLabourPriceOut").addClass("active");
 </script><!-- Hi-light active menu -->
 
 <script>
@@ -348,7 +405,6 @@ if (!empty($varget_id2edit)) {
 <!-- DATETIME PICKER -->
 <script type="text/javascript">
     $(function () {
-
         $.datetimepicker.setLocale('th'); // ต้องกำหนดเสมอถ้าใช้ภาษาไทย และ เป็นปี พ.ศ.
 
         // กรณีใช้แบบ inline
@@ -373,6 +429,7 @@ if (!empty($varget_id2edit)) {
                 $input.val(fulldateTH);
             },
         });
+
         // กรณีใช้กับ input ต้องกำหนดส่วนนี้ด้วยเสมอ เพื่อปรับปีให้เป็น ค.ศ. ก่อนแสดงปฏิทิน
         $("#id4_dateLabourIn").on("mouseenter mouseleave", function (e) {
             var dateValue = $(this).val();
@@ -391,6 +448,38 @@ if (!empty($varget_id2edit)) {
             }
         });
 
+        // id4_date2Report
+        // กรณีใช้แบบ input
+        $("#id4_date2Report").datetimepicker({
+            timepicker: false,
+            format: 'd-m-Y',  // กำหนดรูปแบบวันที่ ที่ใช้ เป็น 00-00-0000
+            lang: 'th',  // ต้องกำหนดเสมอถ้าใช้ภาษาไทย และ เป็นปี พ.ศ.
+            onSelectDate: function (dp, $input) {
+                var yearT = new Date(dp).getFullYear();
+                var yearTH = yearT + 543;
+                var fulldate = $input.val();
+                var fulldateTH = fulldate.replace(yearT, yearTH);
+                $input.val(fulldateTH);
+            },
+        });
+
+        // กรณีใช้กับ input ต้องกำหนดส่วนนี้ด้วยเสมอ เพื่อปรับปีให้เป็น ค.ศ. ก่อนแสดงปฏิทิน
+        $("#id4_date2Report").on("mouseenter mouseleave", function (e) {
+            var dateValue = $(this).val();
+            if (dateValue != "") {
+                var arr_date = dateValue.split("-"); // ถ้าใช้ตัวแบ่งรูปแบบอื่น ให้เปลี่ยนเป็นตามรูปแบบนั้น
+                // ในที่นี้อยู่ในรูปแบบ 00-00-0000 เป็น d-m-Y  แบ่งด่วย - ดังนั้น ตัวแปรที่เป็นปี จะอยู่ใน array
+                //  ตัวที่สอง arr_date[2] โดยเริ่มนับจาก 0
+                if (e.type == "mouseenter") {
+                    var yearT = arr_date[2] - 543;
+                }
+                if (e.type == "mouseleave") {
+                    var yearT = parseInt(arr_date[2]) + 543;
+                }
+                dateValue = dateValue.replace(arr_date[2], yearT);
+                $(this).val(dateValue);
+            }
+        });
 
     });
 </script><!-- DATETIME PICKER -->
@@ -406,34 +495,68 @@ if (!empty($varget_id2edit)) {
 <script>
     $(document).ready(function () {
         $('#labourIn').DataTable({
-            "order": [[0, "desc"]],
-            language:
-                {
-                    "decimal": "",
-                    "emptyTable": "ไม่มีข้อมูล",
-                    "info": "แสดงผล _START_ ถึง _END_ จากทั้งหมด _TOTAL_ ข้อมูล",
-                    "infoEmpty": "แสดงผล 0 ถึง 0 จากทั้งหมด 0 ข้อมูล",
-                    "infoFiltered": "(กรองจากทั้งหมด _MAX_ ข้อมูล)",
-                    "infoPostFix": "",
-                    "thousands": ",",
-                    "lengthMenu": "แสดง _MENU_ ข้อมูลต่อหน้า",
-                    "loadingRecords": "กำลังโหลดข้อมูล...",
-                    "processing": "กำลังประมวลผล...",
-                    "search": "",
-                    "searchPlaceholder": "   ค้นหาในตาราง",
-                    "zeroRecords": "ไม่มีข้อมูลตรงกับที่ค้นหา",
-                    "paginate": {
-                        "first": "หน้าแรก",
-                        "last": "หน้าสุดท้าย",
-                        "next": "ถัดไป",
-                        "previous": "ก่อนหน้า"
-                    },
-                    "aria": {
-                        "sortAscending": ": activate to sort column ascending",
-                        "sortDescending": ": activate to sort column descending"
+            dom: 'Blfrtip',
+            buttons: ['copy', 'excel', {
+                extend: "print",
+                title: function () {
+                    var printTitle = 'ค่าแรงลงยาง';
+                    return printTitle
+                },
+                text: "พิมพ์",
+                customize: function (win) {
+                    var last = null;
+                    var current = null;
+                    var bod = [];
+
+                    var css = '@page { size: landscape; }',
+                        head = win.document.head || win.document.getElementsByTagName('head')[0],
+                        style = win.document.createElement('style');
+
+                    style.type = 'text/css';
+                    style.media = 'print';
+
+                    if (style.styleSheet) {
+                        style.styleSheet.cssText = css;
+                    } else {
+                        style.appendChild(win.document.createTextNode(css));
                     }
+
+                    head.appendChild(style);
                 }
+            }/*, {
+                extend: 'pdfHtml5',
+                orientation: 'landscape',
+                pageSize: 'A4'
+            }*/],
+            "order": [
+                [0, "desc"]
+            ],
+            language: {
+                "decimal": "",
+                "emptyTable": "ไม่มีข้อมูล",
+                "info": "แสดง _START_ ถึง _END_ จากทั้งหมด _TOTAL_ ข้อมูล",
+                "infoEmpty": "แสดง 0 ถึง 0 จาก 0 ข้อมูล",
+                "infoFiltered": "(กรองจากทั้งหมด _MAX_ ข้อมูล)",
+                "infoPostFix": "",
+                "thousands": ",",
+                "lengthMenu": "แสดง _MENU_ ข้อมูลต่อหน้า",
+                "loadingRecords": "กำลังโหลด...",
+                "processing": "กำลังประมวลผล...",
+                "search": "ค้นหาในตาราง:  ",
+                "zeroRecords": "ไม่พบข้อมูลที่ค้นหา",
+                "paginate": {
+                    "first": "หน้าแรก",
+                    "last": "หน้าสุดท้าย",
+                    "next": "ถัดไป",
+                    "previous": "ก่อนหน้า"
+                },
+                "aria": {
+                    "sortAscending": ": activate to sort column ascending",
+                    "sortDescending": ": activate to sort column descending"
+                }
+            }
         });
+
     });
 </script><!-- Datatable Setup -->
 
